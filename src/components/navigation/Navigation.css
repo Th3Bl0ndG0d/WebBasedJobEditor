@@ -1,0 +1,62 @@
+/* Navigatiebalk */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+}
+
+/* Linkerkant: evt logo en titel */
+.navbar div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar div p {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+}
+
+/* Rechterkant: navigatielinks en knop */
+.navbar ul {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+    align-items: center;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Logout-knop */
+.navbar button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.navbar button:hover {
+    background-color: #c0392b;
+}
+
+.active-menu-link {
+    border-bottom: none;
+}
+
+.default-menu-link {
+    border-bottom: 1px solid black;
+}
