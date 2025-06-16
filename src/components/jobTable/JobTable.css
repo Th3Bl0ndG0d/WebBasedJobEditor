@@ -1,0 +1,117 @@
+.job-overview-container {
+    background-color: var(--color-background-dark);
+    color: var(--color-text-light);
+    padding: 48px 32px;
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.job-overview-title {
+    font-weight: 700;
+    font-size: 38px;
+    margin-bottom: 32px;
+    color: var(--color-accent-red);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.job-overview-table {
+    width: 100%;
+    max-width: 900px;
+    border-collapse: separate;
+    border-spacing: 0 16px;
+    background-color: var(--color-table-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px var(--color-shadow-strong);
+    animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.job-overview-table thead tr {
+    background-color: var(--color-table-header-bg);
+    color: var(--color-text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.job-overview-table thead th {
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-muted);
+    user-select: none;
+    cursor: default;
+    transition: color 0.3s ease;
+    font-size: 16px;
+}
+
+.job-overview-table th:last-child,
+.job-overview-table td:last-child {
+    width: 160px;
+}
+
+.job-overview-table thead th:hover {
+    color: var(--color-accent-red);
+}
+
+.job-overview-table tbody tr {
+    background-color: var(--color-table-row-bg);
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.job-overview-table tbody tr.selected-row {
+    background-color: var(--color-accent-red-dark) !important;
+}
+
+.job-overview-table tbody tr:hover {
+    background-color: var(--color-table-row-hover);
+}
+
+.job-overview-table tbody td {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--color-border-muted);
+    color: var(--color-text-muted);
+    font-weight: 400;
+    user-select: text;
+    font-size: 16px;
+}
+
+.job-overview-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.action-icons {
+    display: flex;
+    gap: 32px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.icon {
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: 32px;
+    transition: color 0.3s ease;
+}
+
+.icon:hover {
+    color: var(--color-accent-red);
+}
+
+.action-icons-placeholder {
+    min-width: 140px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}

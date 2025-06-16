@@ -1,88 +1,90 @@
 import React, { useState } from 'react';
 import './Profile.css';
+import Button from "../../components/button/Button.jsx";
 
-function Profile() {
-    // State voor de invulbare velden
-    const [username, setUsername] = useState('janedoe');
-    const [email, setEmail] = useState('janedoe@example.com');
+function Profile({ mode = 'edit' }) {
+    const isEditMode = mode === 'edit';
+
+    const [username, setUsername] = useState(isEditMode ? 'janedoe' : '');
+    const [email, setEmail] = useState(isEditMode ? 'janedoe@example.com' : '');
     const [userType, setUserType] = useState('Operator');
+    const [error, setError] = useState('');
 
-    const handleSave = () => {
-        //Hier moet een API call komen
-        alert(`Gegevend die uiteindelijk opgeslagen worden.\n\nGebruikersnaam: ${username}\nEmail: ${email}\nType gebruiker: ${userType}`);
+    // Simulatie van bestaande gebruikers
+    const existingUsers = ['janedoe', 'admin123', 'operator1'];
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (!isEditMode) {
+            // Registratie: check of gebruiker al bestaat
+            if (existingUsers.includes(username.toLowerCase())) {
+                setError('Gebruikersnaam bestaat al. Kies een andere naam.');
+                return;
+            }
+            alert(`Nieuwe gebruiker aangemaakt:\nGebruikersnaam: ${username}\nEmail: ${email}\nRol: ${userType}`);
+        } else {
+            // Aanpassen
+            alert(`Gegevens opgeslagen:\nGebruikersnaam: ${username}\nEmail: ${email}\nRol: ${userType}`);
+        }
+
+        // Hier zou een API-call komen
     };
 
     return (
-        <div>
-            <h1 className="profile-title">Profielpagina</h1>
+        <div className="outer-container profile-container">
+            <div className="inner-container profile-form">
+                <form className="form-card profile-form" onSubmit={handleSubmit}>
+                    <h1 className="profile-title">
+                        {isEditMode ? 'Profiel Bewerken' : 'Registreren'}
+                    </h1>
 
-            <section className="profile-section">
-                <h2>Gegevens</h2>
-                <label>
-                    Gebruikersnaam:<br />
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={e => setUsername(e.target.value)}
+                    <div className="form-group">
+                        <label htmlFor="username">Gebruikersnaam</label>
+                        <input className="input-standard"
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={e => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="email">Emailadres</label>
+                        <input className="input-standard"
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="userType">Gebruikerstype</label>
+                        <select
+                            id="userType"
+                            value={userType}
+                            onChange={e => setUserType(e.target.value)}
+                        >
+                            <option value="Operator">Operator</option>
+                            <option value="Beheerder">Beheerder</option>
+                            <option value="Programmer">Programmer</option>
+                        </select>
+                    </div>
+
+                    {error && <p className="error-message">{error}</p>}
+
+                    <Button
+                        type="submit"
+                        label={isEditMode ? 'Opslaan' : 'Aanmaken'}
                     />
-                </label>
-                <br />
-                <label>
-                    Email:<br />
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                    />
-                </label>
-            </section>
-
-            <section className="profile-section">
-                <h2>Kies je gebruikers-type</h2>
-                <select value={userType} onChange={e => setUserType(e.target.value)}>
-                    <option>Operator</option>
-                    <option>Beheerder</option>
-                    <option>Programmer</option>
-                </select>
-                <p>Gekozen type: <strong>{userType}</strong></p>
-            </section>
-
-            <button onClick={handleSave} style={{ padding: '0.5rem 1rem', fontSize: '1rem' }}>
-                Save
-            </button>
+                </form>
+            </div>
         </div>
     );
 }
 
 export default Profile;
-
-// import React, { useState } from 'react';
-// import './Profile.css';  // zorg dat het pad klopt!
-//
-// function Profile() {
-//     const [userType, setUserType] = useState('Operator');
-//
-//     return (
-//         <div>
-//             <h1 className="profile-title">Profielpagina</h1>
-//
-//             <section className="profile-section">
-//                 <h2>Gegevens</h2>
-//                 <p><strong>Gebruikersnaam:</strong> janedoe</p>
-//                 <p><strong>Email:</strong> janedoe@example.com</p>
-//             </section>
-//
-//             <section className="profile-section">
-//                 <h2>Kies je gebruikers-type</h2>
-//                 <select value={userType} onChange={e => setUserType(e.target.value)}>
-//                     <option>Operator</option>
-//                     <option>Beheerder</option>
-//                     <option>Programmer</option>
-//                 </select>
-//                 <p>Gekozen type: <strong>{userType}</strong></p>
-//             </section>
-//         </div>
-//     );
-// }
-//
-// export default Profile;
