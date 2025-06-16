@@ -1,52 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-*{
-  padding: 0;
+/*////////////////////////
+    Table of Contents
+    1. Global Styles
+    2. Typography
+    3. Layout
+        3.1 Reusables
+    4. Components
+        4.1 Tables
+        4.2 Forms
+        4.3 Buttons
+    5. Animations
+////////////////////////*/
+
+/* ------------------------------- 1. Global Styles -------------------------------- */
+/*Source from F1TVPro*/
+:root {
+  --color-background-dark: #0b0d17;         /* Donkerblauwachtig zoals F1 */
+  --color-text-light: #f1f1f1;              /* Lichte tekst */
+  --color-accent-red: #e10600;              /* F1 rood accent */
+  --color-accent-red-dark: #b00000;         /* Donkerdere variant voor hover */
+  --color-accent-red-soft: #e1060033;       /* Accent voor focus shadows (20% dekking) */
+  --color-table-bg: #1e1e1e;                /* Donkere achtergrond tabel */
+  --color-table-header-bg: #2a2a2a;         /* Header kleur tabel */
+  --color-table-row-bg: #232323;            /* Rij achtergrond kleur */
+  --color-table-row-hover: #3c0000;         /* Hoverkleur rijen */
+  --color-border-muted: #444;               /* Subtiele borderkleur */
+  --color-text-muted: #ddd;                 /* Gedempte tekstkleur */
+  --color-border-light: #ccc;               /* Voor inputs */
+  --color-input-bg: #f9f9f9;                /* Input achtergrond */
+  --color-white: #ffffff;                   /* Wit */
+  --color-shadow-strong: #000000cc;         /* Zware schaduw (80% dekking) */
+  --color-shadow-medium: #0000004d;         /* Medium schaduw (30% dekking) */
+  --color-light-blue: #007bff;              /* Medium schaduw */
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--color-background-dark);
+  color: var(--color-text-light);
+  min-height: 100vh;
+}
+
 #root {
   max-width: 1920px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 32px;
   text-align: center;
 }
 
+/* ------------------------------- 2. Typography ----------------------------------- */
+h1 {
+  text-align: center;
+  color: var(--color-accent-red);
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+h2 {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
-/*html, body {*/
-/*  background-color: #000;*/
-/*  margin: 0;*/
-/*  padding: 0;*/
-/*}*/
-/*.logo {*/
-/*  height: 6em;*/
-/*  padding: 1.5em;*/
-/*  will-change: filter;*/
-/*  transition: filter 300ms;*/
-/*}*/
-/*.logo:hover {*/
-/*  filter: drop-shadow(0 0 2em #646cffaa);*/
-/*}*/
-/*.logo.react:hover {*/
-/*  filter: drop-shadow(0 0 2em #61dafbaa);*/
-/*}*/
+a {
+  color: var(--color-light-blue);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+/* ------------------------------- 3. Layout --------------------------------------- */
 
-/*@keyframes logo-spin {*/
-/*  from {*/
-/*    transform: rotate(0deg);*/
-/*  }*/
-/*  to {*/
-/*    transform: rotate(360deg);*/
-/*  }*/
-/*}*/
+/* --------------- 3.1 Reusables ----------------------- */
+.outer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-background-dark);
+  min-height: 100vh;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
 
-/*@media (prefers-reduced-motion: no-preference) {*/
-/*  a:nth-of-type(2) .logo {*/
-/*    animation: logo-spin infinite 20s linear;*/
-/*  }*/
-/*}*/
+.inner-container {
+  background: var(--color-white);
+  width: 100%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 
-/*.card {*/
-/*  padding: 2em;*/
-/*}*/
+}
 
-/*.read-the-docs {*/
-/*  color: #888;*/
-/*}*/
+.inner-container--wide {
+  max-width: 1200px;
+}
+
+/* ------------------------------- 4. Components ----------------------------------- */
+
+/* --------------- 4.1 Tables ------------------------- */
+
+
+
+
+
+
+
+
+/* --------------- 4.2 Forms ------------------------- */
+.form-card {
+  background: var(--color-white);
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 450px;
+}
+
+.input-standard,
+select{
+  width: 100%;
+  margin-bottom: 6px;
+  font-size: 16px;
+  border: 1px solid var(--color-border-light);
+  border-radius: 6px;
+  background-color: var(--color-input-bg);
+  box-sizing: border-box;
+  transition: border 0.2s ease;
+  padding: 12px 24px;
+}
+
+.input-standard:focus,
+select:focus{
+  outline: none;
+  border-color: var(--color-accent-red);
+  box-shadow: 0 0 0 2px var(--color-accent-red-soft);
+}
+
+/* --------------- 4.3 Buttons ------------------------ */
+.button-red {
+  background-color: var(--color-accent-red); /* of vervang met #e10600 voor F1-rood */
+  max-width: 200px;
+  width: 100%;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 12px 24px;
+  display: inline-block;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.button-red:hover {
+  background-color: var(--color-accent-red-dark);
+}
+/* --------------- 4.5 labels ------------------------ */
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--color-background-dark);
+  text-align: left;
+}
+
+
+/* ------------------------------- 5. Animations ----------------------------------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
