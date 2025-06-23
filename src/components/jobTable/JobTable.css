@@ -1,13 +1,15 @@
-.job-overview-container {
-    background-color: var(--color-background-dark);
-    color: var(--color-text-light);
-    padding: 48px 32px;
-    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
+/*.job-overview-container {*/
+/*    background-color: var(--color-background-dark);*/
+/*    color: var(--color-text-light);*/
+/*    !*padding: 48px 32px;*!*/
+/*    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+/*    min-height: 100vh;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: flex-start;*/
+/*    width: 100%;*/
+/*    margin: 0 auto;*/
+/*}*/
 
 .job-overview-title {
     font-weight: 700;
@@ -20,7 +22,6 @@
 
 .job-overview-table {
     width: 100%;
-    max-width: 900px;
     border-collapse: separate;
     border-spacing: 0 16px;
     background-color: var(--color-table-bg);

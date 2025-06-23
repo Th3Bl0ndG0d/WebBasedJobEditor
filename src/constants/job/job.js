@@ -1,11 +1,11 @@
 import Cylinder from "../cylinder/cylinder.js";
 
 
-const Job = (id, number, name, data, info, repeat = 1,cylinders = []) => ({
+const Job = (id, number, name, date, info, repeat = 1, cylinders = []) => ({
     id,
     number,
     name,
-    data,
+    data: date,
     info,
     repeat,
     cylinders, // array van Cylinder-objecten
