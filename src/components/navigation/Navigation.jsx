@@ -1,5 +1,8 @@
 import React from 'react';
 import './Navigation.css';
+import { Link } from 'react-router-dom';
+import JobOverview from "../../pages/jobOverview/JobOverview.jsx";
+import Profile from "../../pages/profile/Profile.jsx";
 
 function Navigation() {
     return (
@@ -9,16 +12,16 @@ function Navigation() {
                 <p>Web based job editor</p>
             </div>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/jobs">Jobs</a></li>
-                <li><a href="/settings">Settings</a></li>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/JobOverview">Jobs</Link></li>
+                <li><Link to="/profile/register">Settings</Link></li> {/* Link naar profiel bewerken */}
                 <li>
                     <button type="button">Logout</button>
                 </li>
             </ul>
         </nav>
-
     );
 }
+
 
 export default Navigation;

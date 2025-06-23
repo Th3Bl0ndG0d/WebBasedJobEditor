@@ -60,7 +60,7 @@ body {
 #root {
   max-width: 1920px;
   margin: 0 auto;
-  padding: 32px;
+  /*padding: 32px;*/
   text-align: center;
 }
 
@@ -166,7 +166,7 @@ select:focus{
   background-color: var(--color-accent-red); /* of vervang met #e10600 voor F1-rood */
   max-width: 200px;
   width: 100%;
-  color: white;
+  color: var(--color-white);
   border: none;
   border-radius: 6px;
   font-weight: bold;
@@ -176,6 +176,7 @@ select:focus{
   padding: 12px 24px;
   display: inline-block;
   text-align: center;
+  align-items: center;
   margin-top: 24px;
 }
 
