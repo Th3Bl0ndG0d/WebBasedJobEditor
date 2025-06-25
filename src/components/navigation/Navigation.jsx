@@ -1,27 +1,76 @@
+// import React from 'react';
+// import './Navigation.css';
+// import { useAuth } from "../../helpers/AuthContext.jsx";
+// import { Link, useNavigate } from 'react-router-dom';
+//
+// function Navigation() {
+//     const { logout, user } = useAuth();
+//     const navigate = useNavigate();
+//
+//     const handleLogout = () => {
+//         logout();
+//         navigate("/login");
+//     };
+//
+//     return (
+//         <nav className="navbar">
+//             <div>
+//                 <p>Web based job editor</p>
+//             </div>
+//             <ul>
+//                 <li><Link to="/">Home</Link></li>
+//                 <li><Link to="/JobOverview">Jobs</Link></li>
+//                 <li><Link to="/profile/edit">Settings</Link></li>
+//                 <li>
+//                     <button type="button" onClick={handleLogout}>Logout</button>
+//                 </li>
+//             </ul>
+//         </nav>
+//     );
+// }
+//
+// export default Navigation;
+
 import React from 'react';
 import './Navigation.css';
-import { Link } from 'react-router-dom';
-import JobOverview from "../../pages/jobOverview/JobOverview.jsx";
-import Profile from "../../pages/profile/Profile.jsx";
+import { useAuth } from "../../helpers/AuthContext.jsx";
+import { Link, useNavigate } from 'react-router-dom';
+import { FiUser } from 'react-icons/fi';
 
 function Navigation() {
+    const { logout, user } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
+
     return (
         <nav className="navbar">
             <div>
-                {/*<img src="logo.png" alt="Logo" height="30"/>*/}
                 <p>Web based job editor</p>
             </div>
-            <ul>
+
+            <ul className="nav-links">
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/JobOverview">Jobs</Link></li>
-                <li><Link to="/profile/register">Settings</Link></li> {/* Link naar profiel bewerken */}
+                <li><Link to="/profile/edit">Settings</Link></li>
+
+                {/* ✅ Alleen tonen als user bestaat */}
+                {user?.username && (
+                    <li className="nav-user">
+                        <FiUser size={16} />
+                        <span>{user.username}</span>
+                    </li>
+                )}
+
                 <li>
-                    <button type="button">Logout</button>
+                    <button type="button" onClick={handleLogout}>Logout</button>
                 </li>
             </ul>
         </nav>
     );
 }
-
 
 export default Navigation;
