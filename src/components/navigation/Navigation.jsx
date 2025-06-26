@@ -1,36 +1,3 @@
-// import React from 'react';
-// import './Navigation.css';
-// import { useAuth } from "../../helpers/AuthContext.jsx";
-// import { Link, useNavigate } from 'react-router-dom';
-//
-// function Navigation() {
-//     const { logout, user } = useAuth();
-//     const navigate = useNavigate();
-//
-//     const handleLogout = () => {
-//         logout();
-//         navigate("/login");
-//     };
-//
-//     return (
-//         <nav className="navbar">
-//             <div>
-//                 <p>Web based job editor</p>
-//             </div>
-//             <ul>
-//                 <li><Link to="/">Home</Link></li>
-//                 <li><Link to="/JobOverview">Jobs</Link></li>
-//                 <li><Link to="/profile/edit">Settings</Link></li>
-//                 <li>
-//                     <button type="button" onClick={handleLogout}>Logout</button>
-//                 </li>
-//             </ul>
-//         </nav>
-//     );
-// }
-//
-// export default Navigation;
-
 import React from 'react';
 import './Navigation.css';
 import { useAuth } from "../../helpers/AuthContext.jsx";
