@@ -85,6 +85,7 @@ import JobOverview from "./pages/jobOverview/JobOverview.jsx";
 import JobEditor from "./pages/jobcreator/JobCreator.jsx";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./helpers/AuthContext.jsx";
+import JobDetail from "./pages/jobdetails/JobDetails.jsx";
 
 // ProtectedRoute zorgt dat alleen ingelogde gebruikers toegang krijgen
 function ProtectedRoute({ children, roles }) {
@@ -111,6 +112,16 @@ function AppContent() {
             <Routes>
                 {/* Loginpagina altijd toegankelijk */}
                 <Route path="/login" element={<Login />} />
+
+                {/* Nieuw JobDetail route */}
+                <Route
+                    path="/job/:jobId"
+                    element={
+                        <ProtectedRoute>
+                            <JobDetail />
+                        </ProtectedRoute>
+                    }
+                />
 
                 {/* JobOverview alleen voor ingelogde gebruikers */}
                 <Route

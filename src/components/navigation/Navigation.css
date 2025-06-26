@@ -40,24 +40,18 @@
     text-decoration: underline;
 }
 
-/* Logout-knop */
-.navbar button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.navbar button:hover {
-    background-color: #c0392b;
-}
-
 .active-menu-link {
     border-bottom: none;
 }
 
 .default-menu-link {
     border-bottom: 1px solid black;
+}
+
+.navbar li {
+    display: flex;
+    align-items: center;
+}
+.navbar .button-red {
+    margin-top: 0; /* verwijder ongewenste margin uit algemene knopstijl */
 }

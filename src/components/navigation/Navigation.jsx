@@ -36,6 +36,7 @@ import './Navigation.css';
 import { useAuth } from "../../helpers/AuthContext.jsx";
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
+import Button from "../button/Button.jsx";
 
 function Navigation() {
     const { logout, user } = useAuth();
@@ -66,7 +67,7 @@ function Navigation() {
                 )}
 
                 <li>
-                    <button type="button" onClick={handleLogout}>Logout</button>
+                    <Button type="button" onClick={handleLogout} label="Logout" />
                 </li>
             </ul>
         </nav>
