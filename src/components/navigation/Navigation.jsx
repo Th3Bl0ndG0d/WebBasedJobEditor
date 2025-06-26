@@ -1,27 +1,45 @@
 import React from 'react';
 import './Navigation.css';
-import { Link } from 'react-router-dom';
-import JobOverview from "../../pages/jobOverview/JobOverview.jsx";
-import Profile from "../../pages/profile/Profile.jsx";
+import { useAuth } from "../../helpers/AuthContext.jsx";
+import { Link, useNavigate } from 'react-router-dom';
+import { FiUser } from 'react-icons/fi';
+import Button from "../button/Button.jsx";
+import JobCreator from "../../pages/jobcreator/JobCreator.jsx";
 
 function Navigation() {
+    const { logout, user } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
+
     return (
         <nav className="navbar">
             <div>
-                {/*<img src="logo.png" alt="Logo" height="30"/>*/}
                 <p>Web based job editor</p>
             </div>
-            <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/JobOverview">Jobs</Link></li>
-                <li><Link to="/profile/register">Settings</Link></li> {/* Link naar profiel bewerken */}
+
+            <ul className="nav-links">
+                <li><Link to="/">JobOverview</Link></li>
+                <li><Link to="/JobCreator">New job</Link></li>
+                <li><Link to="/profile/edit">Settings</Link></li>
+
+                {/* Alleen tonen als user bestaat */}
+                {user?.username && (
+                    <li className="nav-user">
+                        <FiUser size={16} />
+                        <span>{user.username}</span>
+                    </li>
+                )}
+
                 <li>
-                    <button type="button">Logout</button>
+                    <Button type="button" onClick={handleLogout} label="Logout" />
                 </li>
             </ul>
         </nav>
     );
 }
-
 
 export default Navigation;
