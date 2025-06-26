@@ -86,6 +86,7 @@ import JobEditor from "./pages/jobcreator/JobCreator.jsx";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./helpers/AuthContext.jsx";
 import JobDetail from "./pages/jobdetails/JobDetails.jsx";
+import JobCreator from "./pages/jobcreator/JobCreator.jsx";
 
 // ProtectedRoute zorgt dat alleen ingelogde gebruikers toegang krijgen
 function ProtectedRoute({ children, roles }) {
@@ -135,7 +136,7 @@ function AppContent() {
 
                 {/* JobEditor alleen voor ingelogde gebruikers */}
                 <Route
-                    path="/job-editor"
+                    path="/JobCreator"
                     element={
                         <ProtectedRoute>
                             <JobEditor />
@@ -154,7 +155,7 @@ function AppContent() {
                 />
 
 
-                {/* ✅ Registratiepagina: openbaar toegankelijk */}
+                {/*Registratiepagina: openbaar toegankelijk */}
                 <Route
                     path="/profile/register"
                     element={<Profile mode="register" />}
