@@ -28,10 +28,10 @@ function Navigation() {
                 <li><Link to="/profile/edit">Settings</Link></li>
 
                 {/* Alleen tonen als user bestaat */}
-                {user?.username && (
+                {user?.email && (
                     <li className="nav-user">
                         <FiUser size={16} />
-                        <span>{user.username}</span>
+                        <span>{user.email}</span>
                     </li>
                 )}
 

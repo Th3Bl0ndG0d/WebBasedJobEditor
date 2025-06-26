@@ -115,6 +115,7 @@
     {
       "id": 0,
       "email": "admin@example.com",
+      "username": "admin",
       "password": "admin",
       "roles": [
         "Beheerder"
@@ -123,6 +124,7 @@
     {
       "id": 1,
       "email": "operator@example.com",
+      "username": "operator",
       "password": "operator",
       "roles": [
         "Operator"
