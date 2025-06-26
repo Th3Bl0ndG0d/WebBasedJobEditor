@@ -1,10 +1,11 @@
 import React from 'react';
 import './Navigation.css';
-import { useAuth } from "../../helpers/AuthContext.jsx";
+
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
 import Button from "../button/Button.jsx";
 import JobCreator from "../../pages/jobcreator/JobCreator.jsx";
+import {useAuth} from "../../helpers/AuthProvider.jsx";
 
 function Navigation() {
     const { logout, user } = useAuth();

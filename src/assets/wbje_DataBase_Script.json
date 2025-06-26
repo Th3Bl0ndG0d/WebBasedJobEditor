@@ -1,0 +1,534 @@
+{
+  "collections": [
+    {
+      "name": "jobs",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "number",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "info",
+          "type": "string"
+        },
+        {
+          "name": "repeat",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "cylinders",
+          "type": "reference:cylinders",
+          "required": true
+        }
+      ],
+      "permissions": {
+        "GET": [
+          "anonymous",
+          "Operator",
+          "Beheerder"
+        ],
+        "POST": [
+          "Beheerder"
+        ],
+        "PUT": [
+          "Beheerder"
+        ],
+        "DELETE": [
+          "Beheerder"
+        ]
+      }
+    },
+    {
+      "name": "cylinders",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "plates",
+          "type": "reference:plates",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "plates",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "topHeight",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "bottomHeight",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "x",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": 0,
+      "email": "admin@example.com",
+      "password": "admin",
+      "roles": [
+        "Beheerder"
+      ]
+    },
+    {
+      "id": 1,
+      "email": "operator@example.com",
+      "password": "operator",
+      "roles": [
+        "Operator"
+      ]
+    }
+  ],
+  "data": {
+    "jobs": [
+      {
+        "id": 1,
+        "number": "JOB-001",
+        "name": "Verpakking Design A",
+        "data": "Flexo Print",
+        "info": "Klant: Verpakkingen BV",
+        "repeat": 620,
+        "cylinders": [
+          {
+            "id": 101,
+            "name": "Cylinder A1",
+            "plates": [
+              {
+                "id": 1001,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              },
+              {
+                "id": 1002,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          },
+          {
+            "id": 102,
+            "name": "Cylinder A2",
+            "plates": [
+              {
+                "id": 1003,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              },
+              {
+                "id": 1004,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "number": "JOB-002",
+        "name": "Etiketten Serie B",
+        "data": "Digital Print",
+        "info": "Etiketten voor flessen",
+        "repeat": 500,
+        "cylinders": [
+          {
+            "id": 103,
+            "name": "Cylinder B3",
+            "plates": [
+              {
+                "id": 1005,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "number": "JOB-003",
+        "name": "Doosontwerp C",
+        "data": "Offset Print",
+        "info": "Bedrukte dozen met logo",
+        "repeat": 450,
+        "cylinders": [
+          {
+            "id": 104,
+            "name": "Cylinder C4",
+            "plates": [
+              {
+                "id": 1006,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              },
+              {
+                "id": 1007,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "number": "JOB-004",
+        "name": "Label D",
+        "data": "Gravure",
+        "info": "Wijnetiket",
+        "repeat": 300,
+        "cylinders": [
+          {
+            "id": 105,
+            "name": "Cylinder D5",
+            "plates": [
+              {
+                "id": 1008,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "number": "JOB-005",
+        "name": "Plastic Wrap E",
+        "data": "Flexo Print",
+        "info": "Transparante folie",
+        "repeat": 700,
+        "cylinders": [
+          {
+            "id": 106,
+            "name": "Cylinder E6",
+            "plates": [
+              {
+                "id": 1009,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "number": "JOB-006",
+        "name": "Papieren zak F",
+        "data": "Digital Print",
+        "info": "Biologisch afbreekbaar",
+        "repeat": 200,
+        "cylinders": [
+          {
+            "id": 107,
+            "name": "Cylinder F7",
+            "plates": [
+              {
+                "id": 1010,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "number": "JOB-007",
+        "name": "Krantopmaak G",
+        "data": "Offset Print",
+        "info": "Regionale krant",
+        "repeat": 1200,
+        "cylinders": [
+          {
+            "id": 108,
+            "name": "Cylinder G8",
+            "plates": [
+              {
+                "id": 1011,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "number": "JOB-008",
+        "name": "Zakontwerp H",
+        "data": "Flexo Print",
+        "info": "Zak voor diervoer",
+        "repeat": 520,
+        "cylinders": [
+          {
+            "id": 109,
+            "name": "Cylinder H9",
+            "plates": [
+              {
+                "id": 1012,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "number": "JOB-009",
+        "name": "Etiket I",
+        "data": "Digital Print",
+        "info": "Sausfles",
+        "repeat": 400,
+        "cylinders": [
+          {
+            "id": 110,
+            "name": "Cylinder I10",
+            "plates": [
+              {
+                "id": 1013,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "number": "JOB-010",
+        "name": "Verpakking J",
+        "data": "Offset Print",
+        "info": "Vaatwasmiddel",
+        "repeat": 620,
+        "cylinders": [
+          {
+            "id": 111,
+            "name": "Cylinder J11",
+            "plates": [
+              {
+                "id": 1014,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "number": "JOB-011",
+        "name": "Promo Poster K",
+        "data": "Digital Print",
+        "info": "Supermarktposter",
+        "repeat": 180,
+        "cylinders": [
+          {
+            "id": 112,
+            "name": "Cylinder K12",
+            "plates": [
+              {
+                "id": 1015,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "number": "JOB-012",
+        "name": "Sticker L",
+        "data": "Flexo Print",
+        "info": "Tuincentrum",
+        "repeat": 280,
+        "cylinders": [
+          {
+            "id": 113,
+            "name": "Cylinder L13",
+            "plates": [
+              {
+                "id": 1016,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "number": "JOB-013",
+        "name": "Verzenddoos M",
+        "data": "Offset Print",
+        "info": "Webshop dozen",
+        "repeat": 750,
+        "cylinders": [
+          {
+            "id": 114,
+            "name": "Cylinder M14",
+            "plates": [
+              {
+                "id": 1017,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "number": "JOB-014",
+        "name": "Cadeaupapier N",
+        "data": "Flexo Print",
+        "info": "Feestdagen editie",
+        "repeat": 660,
+        "cylinders": [
+          {
+            "id": 115,
+            "name": "Cylinder N15",
+            "plates": [
+              {
+                "id": 1018,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "number": "JOB-015",
+        "name": "Gebaksdoos O",
+        "data": "Digital Print",
+        "info": "Bakkerijverpakking",
+        "repeat": 340,
+        "cylinders": [
+          {
+            "id": 116,
+            "name": "Cylinder O16",
+            "plates": [
+              {
+                "id": 1019,
+                "width": 300,
+                "topHeight": 400,
+                "bottomHeight": 380,
+                "x": 10,
+                "y": 10
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

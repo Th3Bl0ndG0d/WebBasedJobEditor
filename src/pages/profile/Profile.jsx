@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import Button from "../../components/button/Button.jsx";
-import { useAuth } from "../../helpers/AuthContext.jsx";
+
 import { useNavigate } from "react-router-dom";
+import {useAuth} from "../../helpers/AuthProvider.jsx";
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';

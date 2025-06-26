@@ -84,7 +84,8 @@ import Login from "./pages/login/Login.jsx";
 import JobOverview from "./pages/jobOverview/JobOverview.jsx";
 import JobEditor from "./pages/jobcreator/JobCreator.jsx";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./helpers/AuthContext.jsx";
+// import { AuthProvider, useAuth } from "./helpers/AuthContext.jsx";
+import {AuthProvider, useAuth} from "./helpers/AuthProvider.jsx";
 import JobDetail from "./pages/jobdetails/JobDetails.jsx";
 import JobCreator from "./pages/jobcreator/JobCreator.jsx";
 
