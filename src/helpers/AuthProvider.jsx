@@ -1,10 +1,15 @@
 import React, { createContext, useContext, useState } from 'react';
-import { login as loginUser, logout as logoutUser, getCurrentUser } from '../helpers/login.js';
+import { login as loginUser, logout as logoutUser, getCurrentUser } from './login.js';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(() => getCurrentUser());
+const [user, setUser] = useState(() => {
+    const current = getCurrentUser();
+    console.log("🧠 AuthProvider init met user:", current);
+    return current;
+});
+
 
     const login = async (email, password) => {
         const success = await loginUser(email, password);
@@ -34,3 +39,5 @@ export function AuthProvider({ children }) {
 export function useAuth() {
     return useContext(AuthContext);
 }
+AuthProvider.jsx
+

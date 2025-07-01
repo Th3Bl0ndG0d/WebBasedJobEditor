@@ -73,7 +73,22 @@
           "type": "reference:plates",
           "required": true
         }
-      ]
+      ],
+      "permissions": {
+        "GET": [
+          "anonymous",
+          "Operator",
+          "Beheerder"
+        ],
+        "POST": [
+          "Beheerder"
+        ],
+        "PUT": [
+          "Beheerder"
+        ],
+        "DELETE": [
+          "Beheerder"
+        ]}
     },
     {
       "name": "plates",
@@ -108,7 +123,22 @@
           "type": "number",
           "required": true
         }
-      ]
+      ],
+      "permissions": {
+        "GET": [
+          "anonymous",
+          "Operator",
+          "Beheerder"
+        ],
+        "POST": [
+          "Beheerder"
+        ],
+        "PUT": [
+          "Beheerder"
+        ],
+        "DELETE": [
+          "Beheerder"
+        ]}
     }
   ],
   "users": [

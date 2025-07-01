@@ -1,13 +1,31 @@
 import './JobDetails.css';
 import { useParams } from "react-router-dom";
-import jobDatabase from "../../constants/jobDatabase/jobDemoDatabase.js";
+import { useEffect, useState } from "react";
+
+import { toast } from 'react-toastify';
+import {getJobById} from "../../helpers/getJobByID.js";
 
 const JobDetail = () => {
     const { jobId } = useParams();
-    const job = jobDatabase.find((j) => j.id.toString() === jobId);
+    const [job, setJob] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchJob = async () => {
+            const result = await getJobById(jobId, toast);
+            setJob(result);
+            setLoading(false);
+        };
+
+        fetchJob();
+    }, [jobId]);
+
+    if (loading) {
+        return <p>⏳ Laden...</p>;
+    }
 
     if (!job) {
-        return <p>Job not found.</p>;
+        return <p>❌ Job niet gevonden.</p>;
     }
 
     return (

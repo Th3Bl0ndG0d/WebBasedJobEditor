@@ -18,4 +18,5 @@ If you are developing a production application, we recommend using TypeScript wi
 - npm install phosphor-react
 - npm audit fix
 - npm fund
+--npm install react-toastify
 

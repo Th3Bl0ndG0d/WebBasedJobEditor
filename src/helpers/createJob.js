@@ -19,7 +19,6 @@ export async function createJob(jobObject) {
                 headers: {
                     Authorization: `Bearer ${currentUser.token}`,
                     'Content-Type': 'application/json',
-                    'novi-education-project-id': 'ecb55e45-972c-4a35-8fc0-933ef319f560',
                 },
             }
         );

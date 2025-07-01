@@ -5,11 +5,10 @@ const Job = (id, number, name, date, info, repeat = 1, cylinders = []) => ({
     id,
     number,
     name,
-    data: date,
+    date,       // ✅ correcte veldnaam
     info,
-    repeat,
-    cylinders, // array van Cylinder-objecten
-
+    repeat,     // ✅ correct getal
+    cylinders,  // ✅ correct array
 });
 
 export default Job;
