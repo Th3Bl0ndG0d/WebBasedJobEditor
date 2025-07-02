@@ -5,8 +5,9 @@ import Button from "../../components/button/Button.jsx";
 import { useNavigate } from "react-router-dom";
 import {useAuth} from "../../context/AuthProvider.jsx";
 import SelectField from "../../components/selectField/SelectField.jsx";
-import FormGroup from "../../components/FormGroup/formGroup.jsx";
+import FormGroup from "../../components/formGroup/formGroup.jsx";
 import InputField from "../../components/inputField/InputField.jsx";
+import ButtonGroup from "../../components/buttonGroup/ButtonGroup.jsx";
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
@@ -147,6 +148,15 @@ function Profile({ mode = 'edit' }) {
         alert(`Gebruiker "${selectedUser}" is verwijderd.`);
     };
 
+    const handleCancel = () => {
+        navigate("/");
+    };
+    console.log('🧪 Form status:', {
+        isEditMode,
+        isAdmin,
+        selectedUser,
+    });
+
     return (
         <div className="outer-container profile-container">
             <div className="inner-container profile-form">
@@ -230,7 +240,7 @@ function Profile({ mode = 'edit' }) {
                     {error && <p className="error-message">{error}</p>}
 
                     {/* Actieknoppen */}
-                    <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+                    <ButtonGroup>
                         <Button
                             type="submit"
                             label={
@@ -239,14 +249,22 @@ function Profile({ mode = 'edit' }) {
                                     : 'Aanmaken'
                             }
                         />
-                        {isEditMode && isAdmin && selectedUser && (
+                        {(isEditMode && selectedUser && isAdmin) ? (
+                            console.log('🗑️ Toon Verwijder-knop') ||
                             <Button
                                 type="button"
                                 label="Verwijderen"
                                 onClick={handleDelete}
                             />
+                        ) : (
+                            console.log('↩️ Toon Annuleer-knop') ||
+                            <Button
+                                type="button"
+                                label="Annuleren"
+                                onClick={handleCancel}
+                            />
                         )}
-                    </div>
+                    </ButtonGroup>
                 </form>
             </div>
         </div>

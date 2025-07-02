@@ -157,27 +157,7 @@ select:focus{
 }
 
 /* --------------- 4.3 Buttons ------------------------ */
-/*.button-red {*/
-/*  background-color: var(--color-accent-red); !* of vervang met #e10600 voor F1-rood *!*/
-/*  max-width: 200px;*/
-/*  width: 100%;*/
-/*  color: var(--color-white);*/
-/*  border: none;*/
-/*  border-radius: 6px;*/
-/*  font-weight: bold;*/
-/*  font-size: 16px;*/
-/*  cursor: pointer;*/
-/*  transition: background-color 0.3s ease;*/
-/*  padding: 12px 24px;*/
-/*  display: inline-block;*/
-/*  text-align: center;*/
-/*  align-items: center;*/
-/*  margin-top: 24px;*/
-/*}*/
-
-/*.button-red:hover {*/
-/*  background-color: var(--color-accent-red-dark);*/
-/*}*/
+/*verplaatst naar het button component*/
 /* --------------- 4.5 labels ------------------------ */
 
 label {

@@ -26,8 +26,8 @@
 /* Vierkante knop (bijv. 32x32) */
 .button-square {
     composes: button-base;
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
     padding: 0;
 }
 
