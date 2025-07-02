@@ -1,18 +1,32 @@
 import './InputField.css';
 
-function InputField({	type,
+function InputField({
+						type,
 						inputValue,
 						handleInputChange,
 						placeholder,
-						className = '',
 						id,
-						required = false}) {
+						required = false,
+						variant = 'normal',
+					}) {
+	let className;
+
+	switch (variant) {
+		case 'narrow':
+			className = 'input-base input-narrow';
+			break;
+		case 'normal':
+		default:
+			className = 'input-base';
+			break;
+	}
+
 	return (
 		<>
 			<input
 				id={id}
 				type={type}
-				className={`input-standard ${className}`.trim()}//Evt verschillende types uitfilteren voor styling?
+				className={className}
 				value={inputValue}
 				placeholder={placeholder}
 				required={required}

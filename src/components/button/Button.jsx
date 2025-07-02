@@ -1,8 +1,18 @@
 import './Button.css';
-
-function Button({ type, onClick, label }) {
+// Nu kunnen de twee verschillende tyle knoppen vanuit 1 component aangeroepen worden.
+function Button({ type, onClick, label, variant = "normal" }) {
+	let className;
+	switch (variant) {
+		case "square":
+			className = "button-base button-square";
+			break;
+		case "normal":
+		default:
+			className = "button-base button-normal";
+			break;
+	}
 	return (
-		<button className="button-red" type={type} onClick={onClick}>
+		<button className={className} type={type} onClick={onClick}>
 			{label}
 		</button>
 	);

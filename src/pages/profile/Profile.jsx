@@ -4,6 +4,9 @@ import Button from "../../components/button/Button.jsx";
 
 import { useNavigate } from "react-router-dom";
 import {useAuth} from "../../context/AuthProvider.jsx";
+import SelectField from "../../components/selectField/SelectField.jsx";
+import FormGroup from "../../components/FormGroup/formGroup.jsx";
+import InputField from "../../components/inputField/InputField.jsx";
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
@@ -162,43 +165,43 @@ function Profile({ mode = 'edit' }) {
 
                     {/* Dropdown voor beheerder om gebruiker te kiezen */}
                     {isAdmin && isEditMode && (
-                        <div className="form-group">
-                            <label htmlFor="userSelect">Selecteer gebruiker</label>
-                            <select
+                        <FormGroup label="Selecteer gebruiker" htmlFor="userSelect">
+                            <SelectField
                                 id="userSelect"
                                 value={selectedUser}
-                                onChange={(e) => setSelectedUser(e.target.value)}
-                            >
-                                <option value="">-- Nieuwe gebruiker toevoegen --</option>
-                                {userList.map(u => (
-                                    <option key={u.username} value={u.username}>{u.username}</option>
-                                ))}
-                            </select>
-                        </div>
+                                handleChange={setSelectedUser}
+                                options={[
+                                    { value: "", label: "-- Nieuwe gebruiker toevoegen --" },
+                                    ...userList.map((u) => ({
+                                        value: u.username,
+                                        label: u.username,
+                                    })),
+                                ]}
+                            />
+                        </FormGroup>
                     )}
 
+
                    {/* Email */}
-                    <div className="form-group">
-                        <label htmlFor="email">Emailadres</label>
-                        <input
-                            className="input-standard"
+                    <FormGroup label="Emailadres" htmlFor="email">
+                        <InputField
                             id="email"
                             type="email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
+                            inputValue={email}
+                            handleInputChange={setEmail}
+                            className="input-standard"
                             required
                         />
-                    </div>
+                    </FormGroup>
 
                     {/* Wachtwoord: altijd zichtbaar */}
-                    <div className="form-group">
-                        <label htmlFor="password">Wachtwoord</label>
-                        <input
-                            className="input-standard"
+                    <FormGroup label="Wachtwoord" htmlFor="password">
+                        <InputField
                             id="password"
                             type="password"
-                            value={password}
-                            onChange={e => setPassword(e.target.value)}
+                            inputValue={password}
+                            handleInputChange={setPassword}
+                            className="input-standard"
                             required={!isEditMode || (isAdmin && !selectedUser)}
                             placeholder={
                                 isEditMode && password === ''
@@ -206,22 +209,22 @@ function Profile({ mode = 'edit' }) {
                                     : 'Wachtwoord'
                             }
                         />
-                    </div>
+                    </FormGroup>
 
                     {/* Rol-selectie */}
-                    <div className="form-group">
-                        <label htmlFor="userType">Gebruikerstype</label>
-                        <select
+                    <FormGroup label="Gebruikerstype" htmlFor="userType">
+                        <SelectField
                             id="userType"
                             value={userType}
-                            onChange={e => setUserType(e.target.value)}
+                            handleChange={setUserType}
                             disabled={!isAdmin && isEditMode}
-                        >
-                            <option value="Operator">Operator</option>
-                            <option value="Beheerder">Beheerder</option>
-                            <option value="Programmer">Programmer</option>
-                        </select>
-                    </div>
+                            options={[
+                                { value: "Operator", label: "Operator" },
+                                { value: "Beheerder", label: "Beheerder" },
+                                { value: "Programmer", label: "Programmer" },
+                            ]}
+                        />
+                    </FormGroup>
 
                     {/* Foutmelding */}
                     {error && <p className="error-message">{error}</p>}

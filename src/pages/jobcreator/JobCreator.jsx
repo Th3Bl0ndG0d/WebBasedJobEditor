@@ -6,6 +6,7 @@ import Job from "../../constants/job/job";
 import Button from "../../components/button/Button.jsx";
 import { createFullJob } from "../../helpers/jobAPI.js";
 import { toast } from 'react-toastify';
+import InputField from "../../components/inputField/InputField.jsx";
 
 /**
  * Component: JobCreator
@@ -227,28 +228,48 @@ const JobCreator = () => {
                                 <label className="-cylinder">
                                     Aantal Cylinders
                                     <div className="increment-field-cylinder">
-                                        <button type="button" className="f1tv-btn" onClick={() => decrement(setNumCylinders, numCylinders)}>-</button>
-                                        <input
-                                            type="number"
-                                            className="amount"
-                                            value={numCylinders}
-                                            onChange={e => setNumCylinders(parseInt(e.target.value))}
+                                        <Button
+                                            type="button"
+                                            variant="square"
+                                            onClick={() => decrement(setNumCylinders, numCylinders)}
+                                            label="-"
                                         />
-                                        <button type="button" className="f1tv-btn" onClick={() => increment(setNumCylinders, numCylinders)}>+</button>
+                                        <InputField
+                                            type="number"
+                                            inputValue={numCylinders}
+                                            handleInputChange={value => setNumCylinders(parseInt(value))}
+                                            className="amount"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="square"
+                                            onClick={() => increment(setNumCylinders, numCylinders)}
+                                            label="+"
+                                        />
                                     </div>
                                 </label>
 
                                 <label className="-plate">
                                     Aantal Platen/Cylinder
                                     <div className="increment-field-plate">
-                                        <button type="button" className="f1tv-btn" onClick={() => decrement(setPlatesPerCylinder, platesPerCylinder)}>-</button>
-                                        <input
-                                            type="number"
-                                            className="amount"
-                                            value={platesPerCylinder}
-                                            onChange={e => setPlatesPerCylinder(parseInt(e.target.value))}
+                                        <Button
+                                            type="button"
+                                            variant="square"
+                                            onClick={() => decrement(setPlatesPerCylinder, platesPerCylinder)}
+                                            label="-"
                                         />
-                                        <button type="button" className="f1tv-btn" onClick={() => increment(setPlatesPerCylinder, platesPerCylinder)}>+</button>
+                                        <InputField
+                                            type="number"
+                                            inputValue={platesPerCylinder}
+                                            handleInputChange={value => setPlatesPerCylinder(parseInt(value))}
+                                            className="amount"
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="square"
+                                            onClick={() => increment(setPlatesPerCylinder, platesPerCylinder)}
+                                            label="+"
+                                        />
                                     </div>
                                 </label>
                             </div>

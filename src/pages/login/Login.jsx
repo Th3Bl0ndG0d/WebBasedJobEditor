@@ -3,6 +3,7 @@ import './Login.css';
 import Button from "../../components/button/Button.jsx";
 import { useNavigate, Link } from "react-router-dom";
 import {useAuth} from "../../context/AuthProvider.jsx";
+import InputField from "../../components/inputField/InputField.jsx";
 
 // import { ensureDefaultUsersInStorage } from "../../helpers/defaultUsers.js";
 
@@ -77,24 +78,24 @@ function Login() {
                     <h1>Inloggen WBJE</h1>
 
                     <label htmlFor="email">Emailadres</label>
-                    <Input
-                        className="input-standard"
-                        type="email"
+                    <InputField
                         id="email"
+                        type="email"
+                        inputValue={email}
+                        handleInputChange={setEmail}
+                        className="input-standard"
                         placeholder="Vul je email in"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
 
                     <label htmlFor="password">Wachtwoord</label>
-                    <input
-                        className="input-standard"
-                        type="password"
+                    <InputField
                         id="password"
+                        type="password"
+                        inputValue={password}
+                        handleInputChange={setPassword}
                         placeholder="Vul je wachtwoord in"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        className="input-standard"
                         required
                     />
 
