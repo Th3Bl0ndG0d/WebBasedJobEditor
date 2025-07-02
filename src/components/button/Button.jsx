@@ -1,6 +1,7 @@
 import './Button.css';
 // Nu kunnen de twee verschillende tyle knoppen vanuit 1 component aangeroepen worden.
 function Button({ type, onClick, label, variant = "normal" }) {
+
 	const variantMap = {
 		square: "button-base button-square",
 		nav: "button-base button-navigation",
