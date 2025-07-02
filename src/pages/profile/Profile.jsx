@@ -151,11 +151,13 @@ function Profile({ mode = 'edit' }) {
     const handleCancel = () => {
         navigate("/");
     };
-    console.log('🧪 Form status:', {
-        isEditMode,
-        isAdmin,
-        selectedUser,
-    });
+
+    // Even kijken wat de status precies is. was even nodig voor de juiste logica :D
+    // console.log('🧪 Form status:', {
+    //     isEditMode,
+    //     isAdmin,
+    //     selectedUser,
+    // });
 
     return (
         <div className="outer-container profile-container">

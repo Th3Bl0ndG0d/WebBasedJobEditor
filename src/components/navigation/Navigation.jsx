@@ -1,11 +1,10 @@
 import React from 'react';
 import './Navigation.css';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
 import Button from "../button/Button.jsx";
-import JobCreator from "../../pages/jobcreator/JobCreator.jsx";
-import {useAuth} from "../../context/AuthProvider.jsx";
+import { useAuth } from "../../context/AuthProvider.jsx";
 
 function Navigation() {
     const { logout, user } = useAuth();
@@ -23,9 +22,9 @@ function Navigation() {
             </div>
 
             <ul className="nav-links">
-                <li><Link to="/">JobOverview</Link></li>
-                <li><Link to="/JobCreator">New job</Link></li>
-                <li><Link to="/profile/edit">Settings</Link></li>
+                <li><NavLink to="/JobOverview" end className={({ isActive }) => isActive ? "active-tab" : ""}>JobOverview</NavLink></li>
+                <li><NavLink to="/JobCreator" className={({ isActive }) => isActive ? "active-tab" : ""}>New job</NavLink></li>
+                <li><NavLink to="/profile/edit" className={({ isActive }) => isActive ? "active-tab" : ""}>Settings</NavLink></li>
 
                 {/* Alleen tonen als user bestaat */}
                 {user?.email && (
@@ -36,7 +35,7 @@ function Navigation() {
                 )}
 
                 <li>
-                    <Button type="button" onClick={handleLogout} label="Logout" />
+                    <Button type="button" onClick={handleLogout} label="Logout" variant={"nav"} />
                 </li>
             </ul>
         </nav>
