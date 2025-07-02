@@ -3,6 +3,8 @@ import './Login.css';
 import Button from "../../components/button/Button.jsx";
 import { useNavigate, Link } from "react-router-dom";
 import {useAuth} from "../../context/AuthProvider.jsx";
+import InputField from "../../components/inputField/InputField.jsx";
+import FormGroup from "../../components/formGroup/formGroup.jsx";
 
 // import { ensureDefaultUsersInStorage } from "../../helpers/defaultUsers.js";
 
@@ -37,38 +39,6 @@ function Login() {
             setError('Inloggen mislukt. Controleer je e-mailadres en wachtwoord.');
         }
     };
-    // const handleLogin = (e) => {
-    //     e.preventDefault();
-    //     setError('');
-    //
-    //     const users = JSON.parse(localStorage.getItem('users')) || [];
-    //     const foundUser = users.find(user => user.email === email);
-    //
-    //     if (!foundUser) {
-    //         console.warn('Geen gebruiker gevonden met e-mailadres:', email);
-    //         setError('Geen gebruiker gevonden met dit e-mailadres.');
-    //         return;
-    //     }
-    //
-    //     if (foundUser.password !== password) {
-    //         console.warn("Ongeldig wachtwoord voor:', email);
-    //         setError('Wachtwoord komt niet overeen.');
-    //         return;
-    //     }
-    //
-    //     // ✅ Volledige gebruiker doorgeven aan context
-    //     login(foundUser);
-    //     console.log(`✅ Ingelogd als: ${foundUser.username} (${foundUser.role})`);
-    //
-    //     // Navigatie op basis van rol
-    //     if (foundUser.role === 'Beheerder') {
-    //         navigate("/profile/edit");
-    //     } else {
-    //         navigate("/JobOverview");
-    //     }
-    // };
-
-
 
     return (
         <div className="outer-container login-wrapper">
@@ -76,27 +46,29 @@ function Login() {
                 <form className="form-card login-form" onSubmit={handleLogin}>
                     <h1>Inloggen WBJE</h1>
 
-                    <label htmlFor="email">Emailadres</label>
-                    <Input
-                        className="input-standard"
-                        type="email"
-                        id="email"
-                        placeholder="Vul je email in"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+                    <FormGroup label="Emailadres" htmlFor="email">
+                        <InputField
+                            id="email"
+                            type="email"
+                            inputValue={email}
+                            handleInputChange={setEmail}
+                            className="input-standard"
+                            placeholder="Vul je email in"
+                            required
+                        />
+                    </FormGroup>
 
-                    <label htmlFor="password">Wachtwoord</label>
-                    <input
-                        className="input-standard"
-                        type="password"
-                        id="password"
-                        placeholder="Vul je wachtwoord in"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+                    <FormGroup label="Wachtwoord" htmlFor="password">
+                        <InputField
+                            id="password"
+                            type="password"
+                            inputValue={password}
+                            handleInputChange={setPassword}
+                            placeholder="Vul je wachtwoord in"
+                            className="input-standard"
+                            required
+                        />
+                    </FormGroup>
 
                     {error && <p className="error-message">{error}</p>}
 

@@ -35,28 +35,6 @@
     letter-spacing: 1px;
 }
 
-
-
-.f1tv-btn {
-    background-color: var(--color-accent-red);
-    color: var(--color-white);
-    border: none;
-    width: 32px;
-    height: 32px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    padding: 0;
-}
-
-.f1tv-btn:hover {
-    background-color: var(--color-accent-red-dark);
-}
-
 .increment-field {
     display: flex;
     align-items: center;

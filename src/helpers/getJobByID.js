@@ -1,13 +1,7 @@
 import axios from 'axios';
 import { getCurrentUser } from './login.js';
+import {getHeaders} from "./getHeaders.js";
 
-// 📌 Genereert standaardheaders met token voor alle API-aanroepen
-function getHeaders(token) {
-    return {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-    };
-}
 
 // 🔍 Haalt één job op, inclusief gekoppelde cylinders en plates via filters
 export async function getJobById(jobId, toast) {

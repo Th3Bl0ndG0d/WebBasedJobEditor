@@ -3,8 +3,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: black;
-    color: white;
+    background-color: var(--color-background-dark);
+    color: var(--color-text-light);
     width: 100%;
     padding: 10px 20px;
 }
@@ -17,9 +17,9 @@
 }
 
 .navbar div p {
-    font-size: 1.2em;
+    font-size: 18px;
     font-weight: bold;
-    color: white;
+    color: var(--color-text-light);
 }
 
 /* Rechterkant: navigatielinks en knop */
@@ -28,30 +28,40 @@
     gap: 15px;
     list-style: none;
     align-items: center;
+    padding: 0;
+    margin: 0;
 }
 
 .navbar a {
     text-decoration: none;
-    color: white;
+    color: var(--color-text-light);
     font-weight: bold;
+    font-size: 16px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out, color 0.2s;
 }
 
 .navbar a:hover {
     text-decoration: underline;
+    color: var(--color-accent-red-dark);
 }
 
-.active-menu-link {
-    border-bottom: none;
+/* Actieve link (huidige pagina) */
+.nav-links li .active-tab {
+    color: var(--color-accent-red);
+    text-decoration: underline;
+    font-weight: bold;
 }
 
-.default-menu-link {
-    border-bottom: 1px solid black;
+/* Niet-actieve links */
+.nav-links li a:not(.active-tab) {
+    color: var(--color-text-light);
 }
 
+/* Lijstitem styling */
 .navbar li {
     display: flex;
     align-items: center;
 }
-.navbar .button-red {
-    margin-top: 0; /* verwijder ongewenste margin uit algemene knopstijl */
-}
+

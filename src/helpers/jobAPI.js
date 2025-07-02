@@ -1,13 +1,6 @@
 import axios from 'axios';
 import { getCurrentUser } from './login.js';
-
-// 📌 Genereert standaardheaders met token voor alle API-aanroepen
-function getHeaders(token) {
-    return {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-    };
-}
+import {getHeaders} from "./getHeaders.js";
 
 // 🔧 Maakt een enkele plaat aan via de API
 export async function createPlate(plate, toast) {

@@ -9,6 +9,7 @@
     transition: border 0.2s ease;
     padding: 12px 24px;
     height: 48px;
+    appearance: none;
 }
 
 .input-base:focus {
