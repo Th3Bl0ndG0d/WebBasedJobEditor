@@ -1,0 +1,282 @@
+{
+  "collections": [
+    {
+      "name": "jobs",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "number",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "date",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "info",
+          "type": "string"
+        },
+        {
+          "name": "repeat",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "permissions": {
+        "GET": [
+          "anonymous",
+          "Operator",
+          "Beheerder"
+        ],
+        "POST": [
+          "Beheerder"
+        ],
+        "PUT": [
+          "Beheerder"
+        ],
+        "DELETE": [
+          "Beheerder"
+        ]
+      }
+    },
+    {
+      "name": "cylinders",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "jobId",
+          "type": "reference:jobs",
+          "required": true
+        }
+      ],
+      "permissions": {
+        "GET": [
+          "anonymous",
+          "Operator",
+          "Beheerder"
+        ],
+        "POST": [
+          "Beheerder"
+        ],
+        "PUT": [
+          "Beheerder"
+        ],
+        "DELETE": [
+          "Beheerder"
+        ]
+      }
+    },
+    {
+      "name": "plates",
+      "fields": [
+        {
+          "name": "id",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "topHeight",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "bottomHeight",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "x",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "required": true
+        },
+        {
+          "name": "cylinderId",
+          "type": "reference:cylinders",
+          "required": true
+        }
+      ],
+      "permissions": {
+        "GET": [
+          "anonymous",
+          "Operator",
+          "Beheerder"
+        ],
+        "POST": [
+          "Beheerder"
+        ],
+        "PUT": [
+          "Beheerder"
+        ],
+        "DELETE": [
+          "Beheerder"
+        ]
+      }
+    }
+  ],
+  "users": [
+    {
+      "id": 0,
+      "email": "admin@example.com",
+      "username": "admin",
+      "password": "admin",
+      "roles": [
+        "Beheerder"
+      ]
+    },
+    {
+      "id": 1,
+      "email": "operator@example.com",
+      "username": "operator",
+      "password": "operator",
+      "roles": [
+        "Operator"
+      ]
+    }
+  ],
+  "data": {
+    "jobs": [
+      {
+        "number": "JOB-001",
+        "name": "TestJob",
+        "data": "Flexo Print",
+        "info": "Klant: Verpakkingen BV",
+        "repeat": 620,
+        "id": 1
+      },
+      {
+        "number": "JOB-002",
+        "name": "TestJob Twee",
+        "data": "Digital Print",
+        "info": "Klant: Voorbeeldbedrijf",
+        "repeat": 450,
+        "id": 2
+      }
+    ],
+    "cylinders": [
+      {
+        "name": "Cylinder A1",
+        "jobId": 1,
+        "id": 101
+      },
+      {
+        "name": "Cylinder A2",
+        "jobId": 1,
+        "id": 102
+      },
+      {
+        "name": "Cylinder B1",
+        "jobId": 2,
+        "id": 201
+      },
+      {
+        "name": "Cylinder B2",
+        "jobId": 2,
+        "id": 202
+      }
+    ],
+    "plates": [
+      {
+        "id": 1001,
+        "width": 300,
+        "topHeight": 400,
+        "bottomHeight": 380,
+        "x": 10,
+        "y": 10,
+        "cylinderId": 101
+      },
+      {
+        "id": 1002,
+        "width": 300,
+        "topHeight": 400,
+        "bottomHeight": 380,
+        "x": 20,
+        "y": 10,
+        "cylinderId": 101
+      },
+      {
+        "id": 1003,
+        "width": 300,
+        "topHeight": 400,
+        "bottomHeight": 380,
+        "x": 10,
+        "y": 20,
+        "cylinderId": 102
+      },
+      {
+        "id": 1004,
+        "width": 300,
+        "topHeight": 400,
+        "bottomHeight": 380,
+        "x": 20,
+        "y": 20,
+        "cylinderId": 102
+      },
+      {
+        "id": 2001,
+        "width": 310,
+        "topHeight": 410,
+        "bottomHeight": 390,
+        "x": 15,
+        "y": 10,
+        "cylinderId": 201
+      },
+      {
+        "id": 2002,
+        "width": 310,
+        "topHeight": 410,
+        "bottomHeight": 390,
+        "x": 25,
+        "y": 10,
+        "cylinderId": 201
+      },
+      {
+        "id": 2003,
+        "width": 310,
+        "topHeight": 410,
+        "bottomHeight": 390,
+        "x": 15,
+        "y": 20,
+        "cylinderId": 202
+      },
+      {
+        "id": 2004,
+        "width": 310,
+        "topHeight": 410,
+        "bottomHeight": 390,
+        "x": 25,
+        "y": 20,
+        "cylinderId": 202
+      }
+    ]
+  }
+}

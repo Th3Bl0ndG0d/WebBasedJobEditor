@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import Button from "../../components/button/Button.jsx";
-import { useAuth } from "../../helpers/AuthContext.jsx";
+
 import { useNavigate } from "react-router-dom";
+import {useAuth} from "../../context/AuthProvider.jsx";
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
     const { user, login } = useAuth();
     const navigate = useNavigate();
-    const isAdmin = user?.role === 'Beheerder';
+    const isAdmin = user?.roles?.includes('Beheerder');
 
     // Lokale toestand voor formulierwaarden
-    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [userType, setUserType] = useState('Operator');
@@ -38,14 +38,10 @@ function Profile({ mode = 'edit' }) {
         const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
         setUserList(storedUsers);
 
-        if (!isAdmin && isEditMode) {
-            const current = storedUsers.find(u => u.username === user?.username);
-            if (current) {
-                console.log('📄 Profiel geladen voor:', current.username);
-                setUsername(current.username);
-                setEmail(current.email);
-                setUserType(current.role);
-            }
+        if (!isAdmin && isEditMode && user) {
+            console.log('📄 Profiel geladen vanuit context:', user.email);
+            setEmail(user.email);
+            setUserType(user.roles?.[0] || 'Operator'); // of wat van toepassing is
         }
     }, [isEditMode, isAdmin, user]);
 
@@ -58,14 +54,12 @@ function Profile({ mode = 'edit' }) {
             const userData = userList.find(u => u.username === selectedUser);
             if (userData) {
                 console.log('👤 Gebruiker geselecteerd:', userData.username);
-                setUsername(userData.username);
                 setEmail(userData.email);
                 setPassword('');
                 setUserType(userData.role);
             }
         } else if (isAdmin && isEditMode) {
             console.log('🆕 Nieuwe gebruiker toevoegen (geen selectie)');
-            setUsername('');
             setEmail('');
             setPassword('');
             setUserType('Operator');
@@ -85,19 +79,19 @@ function Profile({ mode = 'edit' }) {
 
         // Nieuw registreren
         if (!isEditMode || (isEditMode && isAdmin && !selectedUser)) {
-            if (updatedUsers.find(u => u.username.toLowerCase() === username.toLowerCase())) {
-                console.warn('⚠️ Gebruikersnaam bestaat al:', username);
-                setError('Gebruikersnaam bestaat al. Kies een andere naam.');
-                return;
-            }
+            // if (updatedUsers.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+            //     console.warn('⚠️ Gebruikersnaam bestaat al:', username);
+            //     setError('Gebruikersnaam bestaat al. Kies een andere naam.');
+            //     return;
+            // }
 
-            const newUser = { username, email, password, role: userType };
+            const newUser = { email, password, role: userType };
             updatedUsers.push(newUser);
             localStorage.setItem('users', JSON.stringify(updatedUsers));
             setUserList(updatedUsers);
 
             console.log('✅ Nieuwe gebruiker aangemaakt:', newUser);
-            alert(`Nieuwe gebruiker aangemaakt:\nGebruikersnaam: ${username}\nEmail: ${email}\nRol: ${userType}`);
+            alert(`Nieuwe gebruiker aangemaakt:\nEmail: ${email}\nRol: ${userType}`);
 
             if (!isEditMode) {
                 login(newUser);
@@ -108,7 +102,7 @@ function Profile({ mode = 'edit' }) {
         }
 
         // Bewerken bestaande gebruiker
-        const index = updatedUsers.findIndex(u => u.username === username);
+        const index = updatedUsers.findIndex(u => u.email === email);
         if (index >= 0) {
             updatedUsers[index] = {
                 ...updatedUsers[index],
@@ -121,7 +115,7 @@ function Profile({ mode = 'edit' }) {
             setUserList(updatedUsers);
 
             console.log('✏️ Gebruiker bijgewerkt:', updatedUsers[index]);
-            alert(`Gebruiker bijgewerkt:\nGebruikersnaam: ${username}\nEmail: ${email}\nRol: ${userType}`);
+            alert(`Gebruiker bijgewerkt:\nEmail: ${email}\nRol: ${userType}`);
         } else {
             console.error('❌ Geen bestaande gebruiker geselecteerd.');
             alert(`Geen bestaande gebruiker geselecteerd.`);
@@ -143,7 +137,6 @@ function Profile({ mode = 'edit' }) {
         console.log('🗑️ Gebruiker verwijderd:', selectedUser);
 
         setSelectedUser('');
-        setUsername('');
         setEmail('');
         setPassword('');
         setUserType('Operator');
@@ -184,20 +177,7 @@ function Profile({ mode = 'edit' }) {
                         </div>
                     )}
 
-                    {/* Gebruikersnaam */}
-                    <div className="form-group">
-                        <label htmlFor="username">Gebruikersnaam</label>
-                        <input
-                            className="input-standard"
-                            id="username"
-                            type="text"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    {/* Email */}
+                   {/* Email */}
                     <div className="form-group">
                         <label htmlFor="email">Emailadres</label>
                         <input

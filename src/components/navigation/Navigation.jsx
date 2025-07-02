@@ -1,10 +1,11 @@
 import React from 'react';
 import './Navigation.css';
-import { useAuth } from "../../helpers/AuthContext.jsx";
+
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
 import Button from "../button/Button.jsx";
 import JobCreator from "../../pages/jobcreator/JobCreator.jsx";
+import {useAuth} from "../../context/AuthProvider.jsx";
 
 function Navigation() {
     const { logout, user } = useAuth();
@@ -27,10 +28,10 @@ function Navigation() {
                 <li><Link to="/profile/edit">Settings</Link></li>
 
                 {/* Alleen tonen als user bestaat */}
-                {user?.username && (
+                {user?.email && (
                     <li className="nav-user">
                         <FiUser size={16} />
-                        <span>{user.username}</span>
+                        <span>{user.email}</span>
                     </li>
                 )}
 

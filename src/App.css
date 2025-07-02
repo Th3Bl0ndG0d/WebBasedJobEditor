@@ -136,6 +136,7 @@ a:hover {
   max-width: 450px;
 }
 
+/*Lastig dit. Want ga ik dit straks bij meerdere componenten zetten....*/
 .input-standard,
 select,
 textarea{
@@ -188,6 +189,10 @@ label {
   margin-bottom: 12px;
   color: var(--color-background-dark);
   text-align: left;
+}
+.job-loading-message {
+  color: var(--color-text-light)!important;
+  font-size: 16px;
 }
 
 
