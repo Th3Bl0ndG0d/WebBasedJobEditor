@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './Login.css';
 import Button from "../../components/button/Button.jsx";
 import { useNavigate, Link } from "react-router-dom";
-import {useAuth} from "../../helpers/AuthProvider.jsx";
+import {useAuth} from "../../context/AuthProvider.jsx";
 
 // import { ensureDefaultUsersInStorage } from "../../helpers/defaultUsers.js";
 
@@ -77,7 +77,7 @@ function Login() {
                     <h1>Inloggen WBJE</h1>
 
                     <label htmlFor="email">Emailadres</label>
-                    <input
+                    <Input
                         className="input-standard"
                         type="email"
                         id="email"

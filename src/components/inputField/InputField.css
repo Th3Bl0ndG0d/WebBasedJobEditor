@@ -1,0 +1,18 @@
+.input-standard {
+    width: 100%;
+    margin-bottom: 12px;
+    font-size: 16px;
+    border: 1px solid var(--color-border-light) !important;
+    border-radius: 6px;
+    background-color: var(--color-input-bg) !important;
+    box-sizing: border-box;
+    transition: border 0.2s ease;
+    padding: 12px 24px;
+    height: 48px;
+}
+
+.input-standard:focus {
+    outline: none;
+    border-color: var(--color-accent-red);
+    box-shadow: 0 0 0 2px var(--color-accent-red-soft);
+}

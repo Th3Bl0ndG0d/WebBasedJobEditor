@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import JobTable from "../../components/jobTable/JobTable.jsx";
-import { useAuth } from "../../helpers/AuthProvider.jsx";
+import { useAuth } from "../../context/AuthProvider.jsx";
 import { getJobs } from "../../helpers/getJobs.js";
 
 const JobOverview = () => {

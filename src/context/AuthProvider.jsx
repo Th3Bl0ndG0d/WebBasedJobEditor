@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { login as loginUser, logout as logoutUser, getCurrentUser } from './login.js';
+import { login as loginUser, logout as logoutUser, getCurrentUser } from '../helpers/login.js';
 
 const AuthContext = createContext();
 

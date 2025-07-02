@@ -3,7 +3,7 @@ import './Profile.css';
 import Button from "../../components/button/Button.jsx";
 
 import { useNavigate } from "react-router-dom";
-import {useAuth} from "../../helpers/AuthProvider.jsx";
+import {useAuth} from "../../context/AuthProvider.jsx";
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
