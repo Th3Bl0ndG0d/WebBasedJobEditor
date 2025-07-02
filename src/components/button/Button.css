@@ -17,7 +17,6 @@
 /* Normale brede knop */
 .button-normal {
     composes: button-base;
-
     font-size: 16px;
     padding: 12px 24px;
     text-align: center;

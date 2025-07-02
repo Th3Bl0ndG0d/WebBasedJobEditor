@@ -1,0 +1,65 @@
+.custom-toast {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;                            /* Meer ruimte tussen icoon en tekst */
+    padding: 16px 20px;                   /* Grotere binnenmarges */
+    border-radius: 8px;                   /* Iets rondere hoeken */
+    font-size: 16px;                      /* Grotere tekst */
+    background-color: var(--color-table-bg);
+    box-shadow: 0 6px 16px var(--color-shadow-medium);
+    border-left: 5px solid;               /* Dikkere linkerbalk */
+    color: var(--color-text-light);
+}
+
+/* Icon styling */
+.custom-toast .icon-wrapper {
+    font-size: 26px;                      /* Groter icoon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid currentColor;       /* Dikkere rand rond icoon */
+    border-radius: 50%;
+    padding: 6px;
+}
+
+/* ✅ Type-afhankelijke kleuren */
+
+/* Succes */
+
+
+
+.custom-toast.success {
+    border-left-color: var(--color-green);
+}
+.custom-toast.success .icon-wrapper {
+    color:var(--color-green);
+    border-color: var(--color-green);
+}
+
+/* Fout */
+.custom-toast.error {
+    border-left-color: var(--color-accent-red);
+}
+.custom-toast.error .icon-wrapper {
+    color: var(--color-accent-red);
+    border-color: var(--color-accent-red);
+}
+
+/* Waarschuwing */
+.custom-toast.warning {
+    border-left-color: var(--color-orange);
+}
+.custom-toast.warning .icon-wrapper {
+    color: var(--color-orange);
+    border-color: var(--color-orange);
+}
+
+/* Info */
+.custom-toast.info {
+    border-left-color: var(--color-light-blue);
+}
+.custom-toast.info .icon-wrapper {
+    color: var(--color-light-blue);
+    border-color: var(--color-light-blue);
+}

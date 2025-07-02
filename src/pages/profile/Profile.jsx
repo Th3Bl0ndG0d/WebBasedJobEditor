@@ -3,11 +3,17 @@ import './Profile.css';
 import Button from "../../components/button/Button.jsx";
 
 import { useNavigate } from "react-router-dom";
-import {useAuth} from "../../context/AuthProvider.jsx";
+import { useAuth } from "../../context/AuthProvider.jsx";
 import SelectField from "../../components/selectField/SelectField.jsx";
 import FormGroup from "../../components/formGroup/formGroup.jsx";
 import InputField from "../../components/inputField/InputField.jsx";
 import ButtonGroup from "../../components/buttonGroup/ButtonGroup.jsx";
+import { getUsers } from "../../helpers/getUsers.js";
+
+import {addUser} from "../../helpers/addUser.js";
+import CustomToast from "../../components/cutomToast/CustomToast.jsx";
+import {updateUser} from "../../helpers/updateUser.js";
+import {deleteUser} from "../../helpers/deleteUser.js";
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
@@ -35,17 +41,22 @@ function Profile({ mode = 'edit' }) {
     }, [isEditMode, user, navigate]);
 
     /**
-     * Bij eerste render: laad gebruikerslijst uit lokale opslag
+     * Bij eerste render: laad gebruikerslijst uit API
      * Voor niet-beheerders: vul eigen profieldata in.
      */
     useEffect(() => {
-        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-        setUserList(storedUsers);
+        async function loadUsers() {
+            if (!user?.token) return;
+            const users = await getUsers(user.token);
+            setUserList(users);
+        }
+
+        loadUsers();
 
         if (!isAdmin && isEditMode && user) {
             console.log('📄 Profiel geladen vanuit context:', user.email);
             setEmail(user.email);
-            setUserType(user.roles?.[0] || 'Operator'); // of wat van toepassing is
+            setUserType(user.roles?.[0] || 'Operator');
         }
     }, [isEditMode, isAdmin, user]);
 
@@ -55,9 +66,9 @@ function Profile({ mode = 'edit' }) {
      */
     useEffect(() => {
         if (selectedUser) {
-            const userData = userList.find(u => u.username === selectedUser);
+            const userData = userList.find(u => u.email === selectedUser);
             if (userData) {
-                console.log('👤 Gebruiker geselecteerd:', userData.username);
+                console.log('👤 Gebruiker geselecteerd:', userData.email);
                 setEmail(userData.email);
                 setPassword('');
                 setUserType(userData.role);
@@ -75,98 +86,119 @@ function Profile({ mode = 'edit' }) {
      * - Nieuw toevoegen (register-mode of admin zonder selectie)
      * - Bewerken (alleen bij bestaande selectie)
      */
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
-        let updatedUsers = [...userList];
-
         // Nieuw registreren
         if (!isEditMode || (isEditMode && isAdmin && !selectedUser)) {
-            // if (updatedUsers.find(u => u.username.toLowerCase() === username.toLowerCase())) {
-            //     console.warn('⚠️ Gebruikersnaam bestaat al:', username);
-            //     setError('Gebruikersnaam bestaat al. Kies een andere naam.');
-            //     return;
-            // }
+            const newUser = { email, password, roles: [userType] };
 
-            const newUser = { email, password, role: userType };
-            updatedUsers.push(newUser);
-            localStorage.setItem('users', JSON.stringify(updatedUsers));
-            setUserList(updatedUsers);
+            try {
+                const createdUser = await addUser(newUser);
+                if (createdUser) {
+                    setUserList(prev => [...prev, createdUser]);
+                    CustomToast.success(`Gebruiker aangemaakt: ${createdUser.email}`);
 
-            console.log('✅ Nieuwe gebruiker aangemaakt:', newUser);
-            alert(`Nieuwe gebruiker aangemaakt:\nEmail: ${email}\nRol: ${userType}`);
-
-            if (!isEditMode) {
-                login(newUser);
-                navigate(userType === "Beheerder" ? "/profile/edit" : "/JobOverview");
+                    if (!isEditMode) {
+                        // Gebruik context login zoals in Login.jsx
+                        const success = await login(email, password);
+                        if (success) {
+                            navigate(userType === "Beheerder" ? "/profile/edit" : "/JobOverview");
+                        } else {
+                            CustomToast.error("Automatisch inloggen mislukt.");
+                            navigate("/login");
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('❌ Gebruiker toevoegen mislukt:', err);
+                CustomToast.error("Gebruiker aanmaken mislukt.");
             }
 
             return;
         }
 
-        // Bewerken bestaande gebruiker
-        const index = updatedUsers.findIndex(u => u.email === email);
-        if (index >= 0) {
-            updatedUsers[index] = {
-                ...updatedUsers[index],
-                email,
-                role: userType,
-                ...(password && { password })  // Alleen bij ingevuld wachtwoord
-            };
+        // Bewerken bestaande gebruiker (admin met selectie)
+        if (isEditMode && isAdmin && selectedUser) {
+            const userData = userList.find(u => u.email === selectedUser);
+            if (!userData || !userData._id) {
+                CustomToast.error("Gebruiker-ID niet gevonden.");
+                return;
+            }
 
-            localStorage.setItem('users', JSON.stringify(updatedUsers));
-            setUserList(updatedUsers);
+            const updates = {};
+            if (password) updates.password = password;
+            // rol updaten als array
+            if (!userData.roles || userData.roles[0] !== userType) updates.roles = [userType];
 
-            console.log('✏️ Gebruiker bijgewerkt:', updatedUsers[index]);
-            alert(`Gebruiker bijgewerkt:\nEmail: ${email}\nRol: ${userType}`);
-        } else {
-            console.error('❌ Geen bestaande gebruiker geselecteerd.');
-            alert(`Geen bestaande gebruiker geselecteerd.`);
+            if (Object.keys(updates).length === 0) {
+                CustomToast.info("Geen wijzigingen om op te slaan.");
+                return;
+            }
+
+            try {
+                const success = await updateUser(userData._id, updates, user.token);
+                if (success) {
+                    CustomToast.success(`Gebruiker "${selectedUser}" is bijgewerkt.`);
+                    // Optioneel: userList verversen
+                    const refreshedUsers = await getUsers(user.token);
+                    setUserList(refreshedUsers);
+                    setPassword('');
+                } else {
+                    CustomToast.error("Bijwerken mislukt.");
+                }
+            } catch (err) {
+                console.error("❌ Fout bij bijwerken:", err);
+                CustomToast.error("Bijwerken mislukt.");
+            }
         }
     };
+
 
     /**
      * Verwijder geselecteerde gebruiker (alleen beheerder)
      */
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!selectedUser) return;
+
+        const userData = userList.find(u => u.email === selectedUser);
+        if (!userData || !userData._id) {
+            CustomToast.error("Gebruiker-ID niet gevonden.");
+            return;
+        }
+
         const confirmed = window.confirm(`Weet je zeker dat je gebruiker "${selectedUser}" wilt verwijderen?`);
         if (!confirmed) return;
 
-        const updatedUsers = userList.filter(u => u.username !== selectedUser);
-        localStorage.setItem('users', JSON.stringify(updatedUsers));
-        setUserList(updatedUsers);
-
-        console.log('🗑️ Gebruiker verwijderd:', selectedUser);
-
-        setSelectedUser('');
-        setEmail('');
-        setPassword('');
-        setUserType('Operator');
-
-        alert(`Gebruiker "${selectedUser}" is verwijderd.`);
+        try {
+            const success = await deleteUser(userData._id, user.token);
+            if (success) {
+                CustomToast.success(`Gebruiker "${selectedUser}" is verwijderd.`);
+                setUserList(prev => prev.filter(u => u._id !== userData._id));
+                setSelectedUser('');
+                setEmail('');
+                setPassword('');
+                setUserType('Operator');
+            } else {
+                CustomToast.error("Verwijderen mislukt.");
+            }
+        } catch (err) {
+            console.error("❌ Fout bij verwijderen:", err);
+            CustomToast.error("Verwijderen mislukt.");
+        }
     };
+
+
 
     const handleCancel = () => {
         navigate("/");
     };
 
-    // Even kijken wat de status precies is. was even nodig voor de juiste logica :D
-    // console.log('🧪 Form status:', {
-    //     isEditMode,
-    //     isAdmin,
-    //     selectedUser,
-    // });
-
     return (
         <div className="outer-container profile-container">
             <div className="inner-container profile-form">
                 <form className="form-card profile-form" onSubmit={handleSubmit}>
-                    {/*<h1 className="profile-title">*/}
-                    {/*    {isEditMode ? 'Profiel Bewerken' : 'Registreren'}*/}
-                    {/*</h1>*/}
-
                     <h1 className="profile-title">
                         {isEditMode && isAdmin && !selectedUser
                             ? 'Nieuwe gebruiker'
@@ -185,16 +217,15 @@ function Profile({ mode = 'edit' }) {
                                 options={[
                                     { value: "", label: "-- Nieuwe gebruiker toevoegen --" },
                                     ...userList.map((u) => ({
-                                        value: u.username,
-                                        label: u.username,
+                                        value: u.email,
+                                        label: u.email,
                                     })),
                                 ]}
                             />
                         </FormGroup>
                     )}
 
-
-                   {/* Email */}
+                    {/* Email */}
                     <FormGroup label="Emailadres" htmlFor="email">
                         <InputField
                             id="email"
@@ -252,14 +283,12 @@ function Profile({ mode = 'edit' }) {
                             }
                         />
                         {(isEditMode && selectedUser && isAdmin) ? (
-                            console.log('🗑️ Toon Verwijder-knop') ||
                             <Button
                                 type="button"
                                 label="Verwijderen"
                                 onClick={handleDelete}
                             />
                         ) : (
-                            console.log('↩️ Toon Annuleer-knop') ||
                             <Button
                                 type="button"
                                 label="Annuleren"
