@@ -1,0 +1,29 @@
+.form-group label:empty::before {
+    content: "\00a0"; /* non-breaking space */
+    display: inline-block;
+    height: 20px; /* pas aan op wat je labelhoogte normaal is */
+}
+
+.form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px; /* of 4px als je echt strak wil */
+}
+/* Thema's */
+.form-grid--light {
+    background-color: transparent;
+}
+
+.form-grid--dark {
+    background-color: #1f1f1f;
+}
+
+
+/*Mischien niet de meest mooie oplossing. Maar werkt goed voor het aantal platen en cylinders*/
+.form-group label {
+    max-width: 48px;       /* minimale ruimte voor uitlijning */
+    white-space: nowrap;   /* laat tekst niet afbreken */
+    overflow: visible;     /* laat tekst buiten label stromen */
+}

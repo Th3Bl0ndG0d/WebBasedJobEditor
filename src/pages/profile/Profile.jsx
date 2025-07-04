@@ -34,7 +34,7 @@ function Profile({ mode = 'edit' }) {
      * Enkel ongeauthenticeerde gebruikers mogen registreren.
      */
     useEffect(() => {
-        if (!isEditMode && user) {
+        if (!isEditMode && user) {a
             console.log('🔁 Redirect: ingelogde gebruiker probeert te registreren');
             navigate("/JobOverview");
         }

@@ -1,0 +1,35 @@
+.form-grid {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 16px 0;
+}
+
+/* Richting: rij of kolom */
+.form-grid--row {
+    flex-direction: row;
+    align-items: flex-start;
+}
+.form-grid--column {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Thema: label en invoer op donkere of lichte achtergrond */
+.form-grid--dark label {
+    color: white;
+}
+
+.form-grid--light label {
+    color: black;
+}
+
+
+/* Spacing types */
+.form-grid--loose {
+    gap: 20px;
+}
+
+.form-grid--tight {
+    gap: 5px;
+}

@@ -35,50 +35,52 @@
     letter-spacing: 1px;
 }
 
-.increment-field {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+/*.increment-field {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    gap: 8px;*/
+/*}*/
 
-/* Alleen voor cylinder- en plate-aanpassingen, niet voor repeat */
-.increment-field-cylinder,
-.increment-field-plate {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-}
+/*!* Alleen voor cylinder- en plate-aanpassingen, niet voor repeat *!*/
+/*.increment-field-cylinder,*/
+/*.increment-field-plate {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: flex-start;*/
+/*    gap: 8px;*/
+/*}*/
 
-/* Alleen inputvelden binnen deze twee */
-.increment-field-cylinder input.amount,
-.increment-field-plate input.amount {
-    text-align: center;
-    width: 60px;
-    max-width: 80px;
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--color-border-muted);
-    font-size: 16px;
-    background-color: var(--color-white);
-    color: black;
-}
-.field-row {
-    display: flex;
-    flex-wrap: wrap;
-    flex: 1 1 150px;
-    gap: 16px;
-    min-width: 100px;
-    align-items: flex-start;
-}
+/*!* Alleen inputvelden binnen deze twee *!*/
+/*.increment-field-cylinder input.amount,*/
+/*.increment-field-plate input.amount {*/
+/*    text-align: center;*/
+/*    width: 60px;*/
+/*    max-width: 80px;*/
+/*    padding: 6px 8px;*/
+/*    border-radius: 6px;*/
+/*    border: 1px solid var(--color-border-muted);*/
+/*    font-size: 16px;*/
+/*    background-color: var(--color-white);*/
+/*    color: black;*/
+/*}*/
 
-.field-row label {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 150px;
-    min-width: 60px;
-    color: white;
-}
+/*Komt nu vanuit het component FormGrid. Na wat google leek me dit een moeie oplossing*/
+/*.field-row {*/
+/*    display: flex;*/
+/*    flex-wrap: wrap;*/
+/*    flex: 1 1 150px;*/
+/*    gap: 16px;*/
+/*    min-width: 100px;*/
+/*    align-items: flex-start;*/
+/*}*/
+
+/*.field-row label {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    flex: 1 1 150px;*/
+/*    min-width: 60px;*/
+/*    color: white;*/
+/*}*/
 
 input[type="text"],
 input[type="number"] {

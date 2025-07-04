@@ -1,20 +1,22 @@
 .custom-toast {
-    margin: 0;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     gap: 16px;                            /* Meer ruimte tussen icoon en tekst */
     padding: 16px 20px;                   /* Grotere binnenmarges */
     border-radius: 8px;                   /* Iets rondere hoeken */
-    font-size: 16px;                      /* Grotere tekst */
+    font-size: 32px;                      /* Grotere tekst */
     background-color: var(--color-table-bg);
     box-shadow: 0 6px 16px var(--color-shadow-medium);
     border-left: 5px solid;               /* Dikkere linkerbalk */
     color: var(--color-text-light);
+    width: 100%;              /* Of bv. 300px of max-content of fit-content */
+    max-width: 1000px;         /* Optioneel: beperk maximale breedte */
 }
 
 /* Icon styling */
 .custom-toast .icon-wrapper {
-    font-size: 26px;                      /* Groter icoon */
+    font-size: 32px;                      /* Groter icoon */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,12 +25,7 @@
     padding: 6px;
 }
 
-/* ✅ Type-afhankelijke kleuren */
-
 /* Succes */
-
-
-
 .custom-toast.success {
     border-left-color: var(--color-green);
 }
@@ -36,7 +33,6 @@
     color:var(--color-green);
     border-color: var(--color-green);
 }
-
 /* Fout */
 .custom-toast.error {
     border-left-color: var(--color-accent-red);
@@ -45,7 +41,6 @@
     color: var(--color-accent-red);
     border-color: var(--color-accent-red);
 }
-
 /* Waarschuwing */
 .custom-toast.warning {
     border-left-color: var(--color-orange);

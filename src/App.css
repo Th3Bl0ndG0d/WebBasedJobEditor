@@ -69,9 +69,12 @@ body {
 
 /* Override basis toast-container */
 .Toastify__toast {
+  width: 100% !important;
+  max-width: 600px !important; /* of breder indien gewenst */
+  margin: 0 auto !important;
+  padding: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  padding: 0 !important;
 }
 
 /* Verwijder extra styling van de body wrapper */
