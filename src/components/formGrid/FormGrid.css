@@ -3,6 +3,7 @@
     gap: 24px;
     flex-wrap: wrap;
     padding: 16px 0;
+    width: 100%;
 }
 
 /* Richting: rij of kolom */

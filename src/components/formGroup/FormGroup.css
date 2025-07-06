@@ -1,25 +1,36 @@
-.form-group label:empty::before {
-    content: "\00a0"; /* non-breaking space */
-    display: inline-block;
-    height: 20px; /* pas aan op wat je labelhoogte normaal is */
+.form-group {
+    display: flex;
+    flex-direction: column; /* standaard */
+    justify-content: flex-start;
+    gap: 4px;
+
 }
 
-.form-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 8px; /* of 4px als je echt strak wil */
+.form-group--column {
+    width: 100%;
+    /*background-color: lightblue;*/
 }
+
+/* Laat groei toe binnen row-layout */
+.form-group--row.form-group--grow {
+    flex: 1 1 0;
+}
+
+/* Geen groei binnen row-layout */
+.form-group--row.form-group--nogrow {
+    flex: 0 0 auto;
+    align-items: center;
+}
+
+
 /* Thema's */
 .form-grid--light {
     background-color: transparent;
 }
 
 .form-grid--dark {
-    background-color: #1f1f1f;
+    background-color: transparent;
 }
-
 
 /*Mischien niet de meest mooie oplossing. Maar werkt goed voor het aantal platen en cylinders*/
 .form-group label {

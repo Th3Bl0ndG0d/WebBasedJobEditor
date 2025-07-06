@@ -1,5 +1,4 @@
 .input-base {
-    width: 100%;
     margin-bottom: 12px;
     font-size: 16px;
     border: 1px solid var(--color-border-light) !important;
@@ -9,6 +8,9 @@
     transition: border 0.2s ease;
     padding: 12px 24px;
     height: 48px;
+    width: 100%;                /* vaste breedte, niet max-width */
+    max-width: 800px;
+
 }
 
 .input-base:focus {
@@ -18,7 +20,7 @@
 }
 
 .input-narrow {
-    max-width: 120px;
+    max-width: 150px;
 }
 
 .input-number {

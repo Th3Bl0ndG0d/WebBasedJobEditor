@@ -5,11 +5,13 @@ import Plate from "../../constants/plate/plate";
 import Job from "../../constants/job/job";
 import Button from "../../components/button/Button.jsx";
 import { createFullJob } from "../../helpers/jobAPI.js";
-import { toast } from 'react-toastify';
+
 import InputField from "../../components/inputField/InputField.jsx";
 import FormGroup from "../../components/formGroup/formGroup.jsx";
 import ButtonGroup from "../../components/buttonGroup/ButtonGroup.jsx";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
+import CustomToast from "../../components/cutomToast/CustomToast.jsx";
+import InputWithButtonControls from "../../components/inputWithButtonControls/InputWithButtonControls.jsx";
 
 /**
  * Component: JobCreator
@@ -46,20 +48,6 @@ const JobCreator = () => {
     const updateJobDetails = (field, value) => {
         setJobDetails({ ...jobDetails, [field]: value });
     };
-
-    /**
-     * Verhoogt een numerieke waarde met 1
-     * @param {function} setter - setState functie
-     * @param {number} value - huidige waarde
-     */
-    const increment = (setter, value) => setter(value + 1);
-
-    /**
-     * Verlaagt een numerieke waarde met 1, maar niet onder de grenswaarde 1.
-     * @param {function} setter - setState functie
-     * @param {number} value - huidige waarde
-     */
-    const decrement = (setter, value) => setter(Math.max(1, value - 1));
 
     /**
      * Genereert een nieuw Job-object op basis van de huidige invoer.
@@ -166,14 +154,14 @@ const JobCreator = () => {
      */
     const submitJob = async () => {
         console.log("📤 Start verzenden complete job...");
-        toast.info("🔄 Job wordt aangemaakt...", { autoClose: 2000 });
+        CustomToast.info("🔄 Job wordt aangemaakt...", { autoClose: 2000 });
 
-        const response = await createFullJob(job, toast);
+        const response = await createFullJob(job, CustomToast);
 
         if (response) {
-            toast.success("✅ Job succesvol aangemaakt!", { autoClose: 3000 });
+            CustomToast.success("✅ Job succesvol aangemaakt!", { autoClose: 3000 });
         } else {
-            toast.error("❌ Fout bij jobcreatie. Zie console.", { autoClose: false });
+            CustomToast.error("❌ Fout bij jobcreatie. Zie console.", { autoClose: false });
         }
     };
 
@@ -216,7 +204,7 @@ const JobCreator = () => {
                                         type="text"
                                         inputValue={jobDetails.info}
                                         handleInputChange={(val) => updateJobDetails("info", val)}
-                                        variant="narrow"
+                                        variant="normal"
                                     />
                                 </FormGroup>
                             </FormGrid>
@@ -260,68 +248,24 @@ const JobCreator = () => {
                         <section className="boxed-section">
                             <h2 className="section-title boxed-section-title">Aantal instellingen</h2>
 
-                            <FormGrid theme="dark" spacing="tight">
-                                {/* Aantal Cylinders */}
-                                <FormGroup>
-                                    <Button
-                                        type="button"
-                                        variant="square"
-                                        onClick={() => decrement(setNumCylinders, numCylinders)}
-                                        label="-"
-                                    />
-                                </FormGroup>
-
-                                <FormGroup label="# Cylinders" htmlFor="cylinder-amount">
-                                    <InputField
-                                        id="cylinder-amount"
-                                        type="number"
-                                        inputValue={numCylinders}
-                                        handleInputChange={(value) => setNumCylinders(parseInt(value))}
-                                        variant="number"
-                                        className="amount"
-                                    />
-                                </FormGroup>
-
-                                <FormGroup>
-                                    <Button
-                                        type="button"
-                                        variant="square"
-                                        onClick={() => increment(setNumCylinders, numCylinders)}
-                                        label="+"
-                                    />
-                                </FormGroup>
-
-                                {/* Aantal Platen per Cylinder */}
-                                <FormGroup>
-                                    <Button
-                                        type="button"
-                                        variant="square"
-                                        onClick={() => decrement(setPlatesPerCylinder, platesPerCylinder)}
-                                        label="-"
-                                    />
-                                </FormGroup>
-
-                                <FormGroup label="# Plates" htmlFor="plate-amount">
-                                    <InputField
-                                        id="plate-amount"
-                                        type="number"
-                                        inputValue={platesPerCylinder}
-                                        handleInputChange={(value) => setPlatesPerCylinder(parseInt(value))}
-                                        variant="number"
-                                        className="amount"
-                                    />
-                                </FormGroup>
-
-                                <FormGroup>
-                                    <Button
-                                        type="button"
-                                        variant="square"
-                                        onClick={() => increment(setPlatesPerCylinder, platesPerCylinder)}
-                                        label="+"
-                                    />
-                                </FormGroup>
+                            <FormGrid theme="dark" spacing="tight" direction="row">
+                                <InputWithButtonControls
+                                    id="cylinder-amount"
+                                    label="# Cylinders"
+                                    value={numCylinders}
+                                    onChange={setNumCylinders}
+                                    grow={true}
+                                />
+                                <InputWithButtonControls
+                                    id="plate-amount"
+                                    label="# Plates"
+                                    value={platesPerCylinder}
+                                    onChange={setPlatesPerCylinder}
+                                    grow={true}
+                                />
                             </FormGrid>
                         </section>
+
 
                         <div className="field-row">
                             <Button type="button" onClick={generateJob} label="Genereer Job" />

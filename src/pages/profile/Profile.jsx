@@ -14,6 +14,7 @@ import {addUser} from "../../helpers/addUser.js";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import {updateUser} from "../../helpers/updateUser.js";
 import {deleteUser} from "../../helpers/deleteUser.js";
+import FormGrid from "../../components/formGrid/FromGrid.jsx";
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
@@ -34,7 +35,7 @@ function Profile({ mode = 'edit' }) {
      * Enkel ongeauthenticeerde gebruikers mogen registreren.
      */
     useEffect(() => {
-        if (!isEditMode && user) {a
+        if (!isEditMode && user) {
             console.log('🔁 Redirect: ingelogde gebruiker probeert te registreren');
             navigate("/JobOverview");
         }
@@ -207,95 +208,104 @@ function Profile({ mode = 'edit' }) {
                                 : 'Profiel Bewerken'}
                     </h1>
 
-                    {/* Dropdown voor beheerder om gebruiker te kiezen */}
-                    {isAdmin && isEditMode && (
-                        <FormGroup label="Selecteer gebruiker" htmlFor="userSelect">
+                    {/* Formulier met flexibele layout */}
+                    <FormGrid direction="column" theme="light" spacing="loose">
+                        {/* Dropdown voor beheerder om gebruiker te kiezen */}
+                        {isAdmin && isEditMode && (
+                            <FormGroup label="Selecteer gebruiker" htmlFor="userSelect">
+                                <SelectField
+                                    id="userSelect"
+                                    value={selectedUser}
+                                    handleChange={setSelectedUser}
+                                    options={[
+                                        { value: "", label: "-- Nieuwe gebruiker toevoegen --" },
+                                        ...userList.map((u) => ({
+                                            value: u.email,
+                                            label: u.email,
+                                        })),
+                                    ]}
+                                />
+                            </FormGroup>
+                        )}
+
+                        {/* Email */}
+                        <FormGroup label="Emailadres" htmlFor="email">
+                            <InputField
+                                id="email"
+                                type="email"
+                                inputValue={email}
+                                handleInputChange={setEmail}
+                                className="input-standard"
+                                required
+                            />
+                        </FormGroup>
+
+                        {/* Wachtwoord: altijd zichtbaar */}
+                        <FormGroup label="Wachtwoord" htmlFor="password">
+                            <InputField
+                                id="password"
+                                type="password"
+                                inputValue={password}
+                                handleInputChange={setPassword}
+                                className="input-standard"
+                                required={!isEditMode || (isAdmin && !selectedUser)}
+                                placeholder={
+                                    isEditMode && password === ''
+                                        ? 'Laat leeg om wachtwoord niet te wijzigen'
+                                        : 'Wachtwoord'
+                                }
+                            />
+                        </FormGroup>
+
+                        {/* Rol-selectie */}
+                        <FormGroup label="Gebruikerstype" htmlFor="userType">
                             <SelectField
-                                id="userSelect"
-                                value={selectedUser}
-                                handleChange={setSelectedUser}
+                                id="userType"
+                                value={userType}
+                                handleChange={setUserType}
+                                disabled={!isAdmin && isEditMode}
                                 options={[
-                                    { value: "", label: "-- Nieuwe gebruiker toevoegen --" },
-                                    ...userList.map((u) => ({
-                                        value: u.email,
-                                        label: u.email,
-                                    })),
+                                    { value: "Operator", label: "Operator" },
+                                    { value: "Beheerder", label: "Beheerder" },
+                                    { value: "Programmer", label: "Programmer" },
                                 ]}
                             />
                         </FormGroup>
-                    )}
 
-                    {/* Email */}
-                    <FormGroup label="Emailadres" htmlFor="email">
-                        <InputField
-                            id="email"
-                            type="email"
-                            inputValue={email}
-                            handleInputChange={setEmail}
-                            className="input-standard"
-                            required
-                        />
-                    </FormGroup>
-
-                    {/* Wachtwoord: altijd zichtbaar */}
-                    <FormGroup label="Wachtwoord" htmlFor="password">
-                        <InputField
-                            id="password"
-                            type="password"
-                            inputValue={password}
-                            handleInputChange={setPassword}
-                            className="input-standard"
-                            required={!isEditMode || (isAdmin && !selectedUser)}
-                            placeholder={
-                                isEditMode && password === ''
-                                    ? 'Laat leeg om wachtwoord niet te wijzigen'
-                                    : 'Wachtwoord'
-                            }
-                        />
-                    </FormGroup>
-
-                    {/* Rol-selectie */}
-                    <FormGroup label="Gebruikerstype" htmlFor="userType">
-                        <SelectField
-                            id="userType"
-                            value={userType}
-                            handleChange={setUserType}
-                            disabled={!isAdmin && isEditMode}
-                            options={[
-                                { value: "Operator", label: "Operator" },
-                                { value: "Beheerder", label: "Beheerder" },
-                                { value: "Programmer", label: "Programmer" },
-                            ]}
-                        />
-                    </FormGroup>
-
-                    {/* Foutmelding */}
-                    {error && <p className="error-message">{error}</p>}
-
-                    {/* Actieknoppen */}
-                    <ButtonGroup>
-                        <Button
-                            type="submit"
-                            label={
-                                isEditMode
-                                    ? (isAdmin && !selectedUser ? 'Toevoegen' : 'Opslaan')
-                                    : 'Aanmaken'
-                            }
-                        />
-                        {(isEditMode && selectedUser && isAdmin) ? (
-                            <Button
-                                type="button"
-                                label="Verwijderen"
-                                onClick={handleDelete}
-                            />
-                        ) : (
-                            <Button
-                                type="button"
-                                label="Annuleren"
-                                onClick={handleCancel}
-                            />
+                        {/* Foutmelding */}
+                        {error && (
+                            <FormGroup label=" ">
+                                <p className="error-message">{error}</p>
+                            </FormGroup>
                         )}
-                    </ButtonGroup>
+
+                        {/* Actieknoppen */}
+                        <FormGroup label=" ">
+                            <ButtonGroup>
+                                <Button
+                                    type="submit"
+                                    label={
+                                        isEditMode
+                                            ? (isAdmin && !selectedUser ? 'Toevoegen' : 'Opslaan')
+                                            : 'Aanmaken'
+                                    }
+                                />
+                                {(isEditMode && selectedUser && isAdmin) ? (
+                                    <Button
+                                        type="button"
+                                        label="Verwijderen"
+                                        onClick={handleDelete}
+                                    />
+                                ) : (
+                                    <Button
+                                        type="button"
+                                        label="Annuleren"
+                                        onClick={handleCancel}
+                                    />
+                                )}
+                            </ButtonGroup>
+                        </FormGroup>
+                    </FormGrid>
                 </form>
             </div>
         </div>

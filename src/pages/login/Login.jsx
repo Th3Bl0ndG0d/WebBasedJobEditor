@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './Login.css';
 import Button from "../../components/button/Button.jsx";
 import { useNavigate, Link } from "react-router-dom";
-import {useAuth} from "../../context/AuthProvider.jsx";
+import { useAuth } from "../../context/AuthProvider.jsx";
 import InputField from "../../components/inputField/InputField.jsx";
 import FormGroup from "../../components/formGroup/formGroup.jsx";
-
-// import { ensureDefaultUsersInStorage } from "../../helpers/defaultUsers.js";
-
+import FormGrid from "../../components/formGrid/FromGrid.jsx";
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -16,11 +14,9 @@ function Login() {
     const { login, user } = useAuth();
     const navigate = useNavigate();
 
-    // Reageer op update van user na login anders loopo je altijd een stap achter. Denk aan de les..
     useEffect(() => {
         if (user) {
             console.log(`Ingelogd als: ${user.email}${user.roles ? ` (${user.roles.join(', ')})` : ''}`);
-
             if (user.roles?.includes('Beheerder')) {
                 navigate("/profile/edit");
             } else {
@@ -32,9 +28,7 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
-
         const success = await login(email, password);
-
         if (!success) {
             setError('Inloggen mislukt. Controleer je e-mailadres en wachtwoord.');
         }
@@ -46,37 +40,47 @@ function Login() {
                 <form className="form-card login-form" onSubmit={handleLogin}>
                     <h1>Inloggen WBJE</h1>
 
-                    <FormGroup label="Emailadres" htmlFor="email">
-                        <InputField
-                            id="email"
-                            type="email"
-                            inputValue={email}
-                            handleInputChange={setEmail}
-                            className="input-standard"
-                            placeholder="Vul je email in"
-                            required
-                        />
-                    </FormGroup>
+                    <FormGrid direction="column" theme="light" spacing="loose">
+                        <FormGroup label="Emailadres" htmlFor="email">
+                            <InputField
+                                id="email"
+                                type="email"
+                                inputValue={email}
+                                handleInputChange={setEmail}
+                                className="input-standard"
+                                placeholder="Vul je email in"
+                                required
+                            />
+                        </FormGroup>
 
-                    <FormGroup label="Wachtwoord" htmlFor="password">
-                        <InputField
-                            id="password"
-                            type="password"
-                            inputValue={password}
-                            handleInputChange={setPassword}
-                            placeholder="Vul je wachtwoord in"
-                            className="input-standard"
-                            required
-                        />
-                    </FormGroup>
+                        <FormGroup label="Wachtwoord" htmlFor="password">
+                            <InputField
+                                id="password"
+                                type="password"
+                                inputValue={password}
+                                handleInputChange={setPassword}
+                                placeholder="Vul je wachtwoord in"
+                                className="input-standard"
+                                required
+                            />
+                        </FormGroup>
 
-                    {error && <p className="error-message">{error}</p>}
+                        {error && (
+                            <FormGroup label=" ">
+                                <p className="error-message">{error}</p>
+                            </FormGroup>
+                        )}
 
-                    <Button type="submit" label="Inloggen" />
+                        <FormGroup label=" ">
+                            <Button type="submit" label="Inloggen" />
+                        </FormGroup>
 
-                    <p className="forgot-password">
-                        <Link to="/profile/register">Nieuwe gebruiker aanmaken</Link>
-                    </p>
+                        <FormGroup label=" ">
+                            <p className="forgot-password">
+                                <Link to="/profile/register">Nieuwe gebruiker aanmaken</Link>
+                            </p>
+                        </FormGroup>
+                    </FormGrid>
                 </form>
             </div>
         </div>

@@ -156,20 +156,6 @@ a:hover {
   max-width: 450px;
 }
 
-/*Lastig dit. Want ga ik dit straks bij meerdere componenten zetten....*/
-textarea{
-  width: 100%;
-  margin-bottom: 12px;
-  font-size: 16px;
-  border: 1px solid var(--color-border-light)!important;
-  border-radius: 6px;
-  background-color: var(--color-input-bg)!important;
-  box-sizing: border-box;
-  transition: border 0.2s ease;
-  padding: 12px 24px;
-  height: 48px;
-}
-
 select:focus{
   outline: none;
   border-color: var(--color-accent-red);
@@ -180,17 +166,7 @@ select:focus{
 /*verplaatst naar het button component*/
 /* --------------- 4.5 labels ------------------------ */
 
-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--color-background-dark);
-  text-align: left;
-}
-.job-loading-message {
-  color: var(--color-text-light)!important;
-  font-size: 16px;
-}
+/*Verplaatst naar het label component*/
 
 
 /* ------------------------------- 5. Animations ----------------------------------- */

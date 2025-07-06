@@ -1,15 +1,18 @@
 import axios from 'axios';
 import { getCurrentUser } from './login.js';
 import {getHeaders} from "./getHeaders.js";
+import CustomToast from "../components/cutomToast/CustomToast.jsx";
+
+
 
 
 // 🔍 Haalt één job op, inclusief gekoppelde cylinders en plates via filters
-export async function getJobById(jobId, toast) {
+export async function getJobById(jobId) {
     const currentUser = getCurrentUser();
 
     // ⛔ Gebruiker niet ingelogd of token ontbreekt
     if (!currentUser || !currentUser.token) {
-        toast?.error("❌ Geen geldige gebruiker.");
+        CustomToast?.error("Geen geldige gebruiker.");
         return null;
     }
 
@@ -65,13 +68,13 @@ export async function getJobById(jobId, toast) {
         // ✅ Stap 4: Voeg alle cylinders (met hun plates) toe aan de job
         job.cylinders = cylinders;
 
-        toast?.success("✅ Volledige jobstructuur succesvol geladen.");
+        CustomToast?.success("✅ Volledige jobstructuur succesvol geladen.");
         console.log("🎯 Volledige jobobject samengesteld:", job);
         return job;
 
     } catch (err) {
         console.error("❌ Fout bij ophalen van jobgegevens:", err);
-        toast?.error("❌ Job ophalen mislukt.");
+        CustomToast?.error("Job ophalen mislukt.");
         return null;
     }
 }

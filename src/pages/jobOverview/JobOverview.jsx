@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import JobTable from "../../components/jobTable/JobTable.jsx";
 import { useAuth } from "../../context/AuthProvider.jsx";
 import { getJobs } from "../../helpers/getJobs.js";
+import CustomToast from "../../components/cutomToast/CustomToast.jsx";
+import {deleteJob} from "../../helpers/deleteJob.js";
 
 const JobOverview = () => {
     const [selectedJobId, setSelectedJobId] = useState(null);
@@ -48,10 +50,25 @@ const JobOverview = () => {
         setSelectedJobId(newSelected);
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         console.log(`🗑️ Verzoek tot verwijderen van job met ID: ${id}`);
-        alert(`Delete job with ID: ${id}`);
+
+        const confirmed = window.confirm("Weet je zeker dat je deze job wilt verwijderen?");
+        if (!confirmed) {
+            console.log("❌ Verwijderen geannuleerd door gebruiker.");
+            return;
+        }
+
+        const success = await deleteJob(id); // gebruik custom toast
+        if (success) {
+            CustomToast.success("✅ Job succesvol verwijderd.");
+            setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
+            setSelectedJobId(null);
+        } else {
+            CustomToast.error("❌ Verwijderen van job is mislukt.");
+        }
     };
+
 
     const handleCopy = (id) => {
         console.log(`📄 Verzoek tot kopiëren van job met ID: ${id}`);
