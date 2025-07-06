@@ -184,7 +184,6 @@ const JobCreator = () => {
                                         type="text"
                                         inputValue={jobDetails.number}
                                         handleInputChange={(val) => updateJobDetails("number", val)}
-                                        variant="narrow"
                                     />
                                 </FormGroup>
 
@@ -194,7 +193,6 @@ const JobCreator = () => {
                                         type="text"
                                         inputValue={jobDetails.name}
                                         handleInputChange={(val) => updateJobDetails("name", val)}
-                                        variant="narrow"
                                     />
                                 </FormGroup>
 
@@ -204,10 +202,10 @@ const JobCreator = () => {
                                         type="text"
                                         inputValue={jobDetails.info}
                                         handleInputChange={(val) => updateJobDetails("info", val)}
-                                        variant="normal"
                                     />
                                 </FormGroup>
                             </FormGrid>
+
                         </section>
 
                         {/* Cylinderinstellingen incl. repeat */}
@@ -248,20 +246,18 @@ const JobCreator = () => {
                         <section className="boxed-section">
                             <h2 className="section-title boxed-section-title">Aantal instellingen</h2>
 
-                            <FormGrid theme="dark" spacing="tight" direction="row">
+                            <FormGrid theme="dark" spacing="tight" direction="row" layout={"space-evenly"} >
                                 <InputWithButtonControls
                                     id="cylinder-amount"
                                     label="# Cylinders"
                                     value={numCylinders}
                                     onChange={setNumCylinders}
-                                    grow={true}
                                 />
                                 <InputWithButtonControls
                                     id="plate-amount"
                                     label="# Plates"
                                     value={platesPerCylinder}
                                     onChange={setPlatesPerCylinder}
-                                    grow={true}
                                 />
                             </FormGrid>
                         </section>

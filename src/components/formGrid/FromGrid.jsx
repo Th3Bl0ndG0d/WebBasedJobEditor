@@ -1,23 +1,3 @@
-// import React from "react";
-// import "./FormGrid.css";
-//
-// const FormGrid = ({
-//                       children,
-//                       theme = "light",
-//                       spacing = "loose",
-//                       direction = "row" // ✅ Nieuw: richting meegeven
-//                   }) => {
-//     const classes = [
-//         "form-grid",
-//         `form-grid--${theme}`,
-//         `form-grid--${spacing}`,
-//         `form-grid--${direction}` // ✅ Richtingklasse toevoegen
-//     ].join(" ");
-//
-//     return <div className={classes}>{children}</div>;
-// };
-//
-// export default FormGrid;
 import React from "react";
 import "./FormGrid.css";
 
@@ -25,13 +5,15 @@ const FormGrid = ({
                       children,
                       theme = "light",
                       spacing = "loose",
-                      direction = "row"
+                      direction = "row",
+                      layout = "default"
                   }) => {
     const classes = [
         "form-grid",
         `form-grid--${theme}`,
         `form-grid--${spacing}`,
-        `form-grid--${direction}`
+        `form-grid--${direction}`,
+        `form-grid--${layout}`
     ].join(" ");
 
     // Injecteer zowel direction als theme in elke child
