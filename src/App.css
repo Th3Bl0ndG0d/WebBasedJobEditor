@@ -32,9 +32,11 @@
   --color-white: #ffffff;                   /* Wit */
   --color-shadow-strong: #000000cc;         /* Zware schaduw (80% dekking) */
   --color-shadow-medium: #0000004d;         /* Medium schaduw (30% dekking) */
+  --color-blue: blue;              /* Medium schaduw */
   --color-light-blue: #007bff;              /* Medium schaduw */
   --color-green: green;
   --color-orange: orange;
+  --color-purple: purple;
 }
 
 *,

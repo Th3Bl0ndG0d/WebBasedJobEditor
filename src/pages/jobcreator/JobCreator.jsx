@@ -12,6 +12,7 @@ import ButtonGroup from "../../components/buttonGroup/ButtonGroup.jsx";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import InputWithButtonControls from "../../components/inputWithButtonControls/InputWithButtonControls.jsx";
+import {Link, useNavigate} from "react-router-dom";
 
 /**
  * Component: JobCreator
@@ -19,6 +20,8 @@ import InputWithButtonControls from "../../components/inputWithButtonControls/In
  * Gebruikt een gestandaardiseerde invoerstructuur en valideert de essentiële invoervelden alvorens het object te genereren.
  */
 const JobCreator = () => {
+
+    const navigate = useNavigate();
     // Interne status voor de algemene jobmetadata (nummer, naam, info)
     const [jobDetails, setJobDetails] = useState({
         number: "",
@@ -58,13 +61,13 @@ const JobCreator = () => {
 
         // Minimale validatie: nummer en naam zijn verplicht
         if (!jobDetails.number || !jobDetails.name) {
-            alert("Vul ten minste 'Number' en 'Name' in voor de job.");
+            CustomToast.error("Vul ten minste 'Number' en 'Name' in voor de job.");
             return;
         }
 
         // Validatie van het herhalingsgetal (mag niet leeg of NaN zijn)
         if (!repeatByCylinder || isNaN(repeatByCylinder)) {
-            alert("Vul een geldig getal in voor 'Repeat'.");
+            CustomToast.error("Vul een geldig getal in voor 'Repeat'.");
             return;
         }
 
@@ -72,7 +75,7 @@ const JobCreator = () => {
         const requiredFields = ["width", "topHeight", "bottomHeight", "x", "y"];
         for (const field of requiredFields) {
             if (!templatePlate[field].trim()) {
-                alert(`Veld "${field}" van de plate mag niet leeg zijn.`);
+                CustomToast.error(`Veld "${field}" van de plate mag niet leeg zijn.`);
                 return;
             }
         }
@@ -153,17 +156,30 @@ const JobCreator = () => {
      * Geeft feedback via toastmeldingen.
      */
     const submitJob = async () => {
-        console.log("📤 Start verzenden complete job...");
-        CustomToast.info("🔄 Job wordt aangemaakt...", { autoClose: 2000 });
+            console.log("📤 Start verzenden complete job...");
+            CustomToast.info("Job wordt aangemaakt...", { autoClose: 2000 });
 
-        const response = await createFullJob(job, CustomToast);
+            const response = await createFullJob(job, CustomToast);
 
-        if (response) {
-            CustomToast.success("✅ Job succesvol aangemaakt!", { autoClose: 3000 });
-        } else {
-            CustomToast.error("❌ Fout bij jobcreatie. Zie console.", { autoClose: false });
-        }
-    };
+            if (response) {
+                CustomToast.success(
+                    <>
+                        Job <strong>{job.name}</strong> is aangemaakt.<br />
+                        <Link to={`/jobOverview`} className="link-button">
+                            ➤ Ga naar job overzicht
+                        </Link>
+                    </>,
+                    { autoClose: 6000 }
+                );
+
+                setJob(null); // reset formulier
+                setJobDetails({ number: "", name: "", info: "", repeat: 1250 });
+            } else {
+                CustomToast.error("Fout bij jobcreatie. Zie console.", { autoClose: false });
+            }
+        };
+
+
 
     // Render de component
     return (

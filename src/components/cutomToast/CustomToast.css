@@ -58,3 +58,24 @@
     color: var(--color-light-blue);
     border-color: var(--color-light-blue);
 }
+
+.custom-toast.debug {
+    border-left-color: var(--color-purple); /* Voeg deze toe aan :root indien nodig */
+}
+.custom-toast.debug .icon-wrapper {
+    color: var(--color-purple);
+    border-color: var(--color-purple);
+}
+
+.link-button {
+    background: none;
+    border: none;
+    color: var(--color-light-blue);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: 18px;
+}
+.link-button:hover {
+    color: var(--color-blue);
+}

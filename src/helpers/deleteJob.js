@@ -3,7 +3,20 @@ import axios from 'axios';
 import { getHeaders } from './getHeaders.js';
 import { getCurrentUser } from './login.js';
 import { getJobById } from './getJobByID.js';
+import { parseApiError } from './parseApiError.js';
+import {createDebugger} from "../components/debugger/createDebugger.jsx";
 
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: true,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: true,
+    }
+});
 /**
  * Verwijdert een enkele plaat.
  */
@@ -13,9 +26,9 @@ async function deletePlate(plateId, token) {
             `https://novi-backend-api-wgsgz.ondigitalocean.app/api/plates/${plateId}`,
             { headers: getHeaders(token) }
         );
-        console.log(`   ✅ Plaat ${plateId} verwijderd.`);
+        debug.notify("success", `Plaat ${plateId} verwijderd.`);
     } catch (error) {
-        handleAxiosError(error, `plaat ${plateId}`);
+        debug.notify("error", parseApiError(error), { detail: error });
         throw error;
     }
 }
@@ -29,9 +42,9 @@ async function deleteCylinder(cylinderId, token) {
             `https://novi-backend-api-wgsgz.ondigitalocean.app/api/cylinders/${cylinderId}`,
             { headers: getHeaders(token) }
         );
-        console.log(`   ✅ Cylinder ${cylinderId} verwijderd.`);
+        debug.notify("success", `Cylinder ${cylinderId} verwijderd.`);
     } catch (error) {
-        handleAxiosError(error, `cylinder ${cylinderId}`);
+        debug.notify("error", parseApiError(error), { detail: error });
         throw error;
     }
 }
@@ -45,9 +58,9 @@ async function deleteJobRecord(jobId, token) {
             `https://novi-backend-api-wgsgz.ondigitalocean.app/api/jobs/${jobId}`,
             { headers: getHeaders(token) }
         );
-        console.log(`   ✅ Job ${jobId} verwijderd.`);
+        debug.notify("success", `Job ${jobId} verwijderd.`);
     } catch (error) {
-        handleAxiosError(error, `job ${jobId}`);
+        debug.notify("error", parseApiError(error), { detail: error });
         throw error;
     }
 }
@@ -60,17 +73,17 @@ async function deleteJobRecord(jobId, token) {
  */
 export async function deleteJob(jobId) {
     try {
-        console.log(`🗑️ Verzoek tot verwijderen van job: ${jobId}`);
+        debug.notify("debug", `Verzoek tot verwijderen van job: ${jobId}`);
 
         const currentUser = getCurrentUser();
         if (!currentUser || !currentUser.token) {
-            console.warn("❌ Geen geldige gebruiker/token gevonden.");
+            debug.notify("error", "Geen geldige gebruiker/token gevonden.");
             return false;
         }
 
         const job = await getJobById(jobId);
         if (!job) {
-            console.warn("❌ Job kon niet worden opgehaald.");
+            debug.notify("error", "Job kon niet worden opgehaald.");
             return false;
         }
 
@@ -83,29 +96,11 @@ export async function deleteJob(jobId) {
 
         await deleteJobRecord(jobId, currentUser.token);
 
-        console.log("✅ Verwijderen van job succesvol afgerond.");
+        debug.notify("success", "Verwijderen van job succesvol afgerond.");
         return true;
 
     } catch (err) {
-        console.error("❌ Verwijderen van job mislukt:", err);
+        debug.notify("error", "Verwijderen van job mislukt.", { detail: err });
         return false;
-    }
-}
-
-/**
- * Algemene Axios-foutafhandeling met logging.
- */
-function handleAxiosError(error, context = '') {
-    console.error(`❌ Fout bij ${context}:`, error);
-
-    if (error.response) {
-        console.error("📡 Server response:", {
-            status: error.response.status,
-            data: error.response.data,
-        });
-    } else if (error.request) {
-        console.error("📭 Geen serverantwoord ontvangen:", error.request);
-    } else {
-        console.error("🛠️ Fout bij opzetten van request:", error.message);
     }
 }

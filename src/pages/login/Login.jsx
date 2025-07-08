@@ -6,6 +6,20 @@ import { useAuth } from "../../context/AuthProvider.jsx";
 import InputField from "../../components/inputField/InputField.jsx";
 import FormGroup from "../../components/formGroup/formGroup.jsx";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
+import { createDebugger } from "../../components/debugger/createDebugger.jsx";
+
+// Debugger configureren zoals in login.js
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: true,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: false,
+    }
+});
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -17,7 +31,7 @@ function Login() {
     useEffect(() => {
         if (user) {
             console.log(`Ingelogd als: ${user.email}${user.roles ? ` (${user.roles.join(', ')})` : ''}`);
-            if (user.roles?.includes('Beheerder')) {
+            if (user.roles?.includes('beheerder')) {
                 navigate("/profile/edit");
             } else {
                 navigate("/JobOverview");
@@ -30,7 +44,9 @@ function Login() {
         setError('');
         const success = await login(email, password);
         if (!success) {
-            setError('Inloggen mislukt. Controleer je e-mailadres en wachtwoord.');
+            const msg = 'Inloggen mislukt. Controleer je e-mailadres en wachtwoord.';
+            debug.notify('error', msg); // toast errormelding
+            setError(msg); // visuele foutmelding
         }
     };
 

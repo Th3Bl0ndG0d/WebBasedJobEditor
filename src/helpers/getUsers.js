@@ -1,9 +1,28 @@
 import axios from 'axios';
+import {createDebugger} from "../components/debugger/createDebugger.jsx";
+
+//Debugger: alleen errors en success als toast, zonder console
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: false,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: true,
+    }
+});
+
 const PROJECT_ID = import.meta.env.VITE_PROJECT_ID;
 
+/**
+ * Haalt alle gebruikers op via de backend API.
+ * @returns {Promise<Array>} Een array van gebruikers of lege array bij fout
+ */
 export async function getUsers() {
     try {
-        console.log("📥 Gebruikers ophalen vanaf API...");
+        debug.notify("debug", "Gebruikers ophalen vanaf API...");
 
         const res = await axios.get(
             'https://novi-backend-api-wgsgz.ondigitalocean.app/api/users',
@@ -15,11 +34,11 @@ export async function getUsers() {
             }
         );
 
-        console.log("📦 Gebruikers ontvangen:", res.data);
+        debug.notify("success", "Gebruikers ontvangen", { detail: res.data });
         return res.data;
 
     } catch (err) {
-        console.error("❌ Fout bij ophalen gebruikers:", err);
+        debug.notify("error", "Fout bij ophalen gebruikers", { detail: err });
         return [];
     }
 }

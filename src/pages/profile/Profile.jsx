@@ -9,12 +9,14 @@ import FormGroup from "../../components/formGroup/formGroup.jsx";
 import InputField from "../../components/inputField/InputField.jsx";
 import ButtonGroup from "../../components/buttonGroup/ButtonGroup.jsx";
 import { getUsers } from "../../helpers/getUsers.js";
-
-import {addUser} from "../../helpers/addUser.js";
+import { addUser } from "../../helpers/addUser.js";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
-import {updateUser} from "../../helpers/updateUser.js";
-import {deleteUser} from "../../helpers/deleteUser.js";
+import { deleteUser } from "../../helpers/deleteUser.js";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
+import { createDebugger } from "../../helpers/createDebugger.js";
+import { parseApiError } from "../../helpers/parseApiError.js";
+
+const debug = createDebugger();
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
@@ -36,7 +38,7 @@ function Profile({ mode = 'edit' }) {
      */
     useEffect(() => {
         if (!isEditMode && user) {
-            console.log('🔁 Redirect: ingelogde gebruiker probeert te registreren');
+            debug.notify("info", "Redirect: ingelogde gebruiker probeert te registreren");
             navigate("/JobOverview");
         }
     }, [isEditMode, user, navigate]);
@@ -55,7 +57,7 @@ function Profile({ mode = 'edit' }) {
         loadUsers();
 
         if (!isAdmin && isEditMode && user) {
-            console.log('📄 Profiel geladen vanuit context:', user.email);
+            debug.notify("debug", `Profiel geladen vanuit context: ${user.email}`);
             setEmail(user.email);
             setUserType(user.roles?.[0] || 'Operator');
         }
@@ -69,13 +71,13 @@ function Profile({ mode = 'edit' }) {
         if (selectedUser) {
             const userData = userList.find(u => u.email === selectedUser);
             if (userData) {
-                console.log('👤 Gebruiker geselecteerd:', userData.email);
+                debug.notify("debug", `Gebruiker geselecteerd: ${userData.email}`);
                 setEmail(userData.email);
                 setPassword('');
                 setUserType(userData.role);
             }
         } else if (isAdmin && isEditMode) {
-            console.log('🆕 Nieuwe gebruiker toevoegen (geen selectie)');
+            debug.notify("debug", "Nieuwe gebruiker toevoegen (geen selectie)");
             setEmail('');
             setPassword('');
             setUserType('Operator');
@@ -99,22 +101,20 @@ function Profile({ mode = 'edit' }) {
                 const createdUser = await addUser(newUser);
                 if (createdUser) {
                     setUserList(prev => [...prev, createdUser]);
-                    CustomToast.success(`Gebruiker aangemaakt: ${createdUser.email}`);
+                    debug.notify("success", `Gebruiker aangemaakt: ${createdUser.email}`);
 
                     if (!isEditMode) {
-                        // Gebruik context login zoals in Login.jsx
                         const success = await login(email, password);
                         if (success) {
                             navigate(userType === "Beheerder" ? "/profile/edit" : "/JobOverview");
                         } else {
-                            CustomToast.error("Automatisch inloggen mislukt.");
+                            debug.notify("error", "Automatisch inloggen mislukt.");
                             navigate("/login");
                         }
                     }
                 }
             } catch (err) {
-                console.error('❌ Gebruiker toevoegen mislukt:', err);
-                CustomToast.error("Gebruiker aanmaken mislukt.");
+                debug.notify("error", parseApiError(err));
             }
 
             return;
@@ -123,39 +123,22 @@ function Profile({ mode = 'edit' }) {
         // Bewerken bestaande gebruiker (admin met selectie)
         if (isEditMode && isAdmin && selectedUser) {
             const userData = userList.find(u => u.email === selectedUser);
-            if (!userData || !userData._id) {
-                CustomToast.error("Gebruiker-ID niet gevonden.");
+            if (!userData || !userData.email) {
+                debug.notify("error", "Gebruiker niet gevonden.");
                 return;
             }
 
             const updates = {};
             if (password) updates.password = password;
-            // rol updaten als array
             if (!userData.roles || userData.roles[0] !== userType) updates.roles = [userType];
 
             if (Object.keys(updates).length === 0) {
-                CustomToast.info("Geen wijzigingen om op te slaan.");
+                debug.notify("info", "Geen wijzigingen om op te slaan.");
                 return;
             }
-
-            try {
-                const success = await updateUser(userData._id, updates, user.token);
-                if (success) {
-                    CustomToast.success(`Gebruiker "${selectedUser}" is bijgewerkt.`);
-                    // Optioneel: userList verversen
-                    const refreshedUsers = await getUsers(user.token);
-                    setUserList(refreshedUsers);
-                    setPassword('');
-                } else {
-                    CustomToast.error("Bijwerken mislukt.");
-                }
-            } catch (err) {
-                console.error("❌ Fout bij bijwerken:", err);
-                CustomToast.error("Bijwerken mislukt.");
-            }
+            debug.notify("warning", "Functie niet geimplementeerd!");
         }
     };
-
 
     /**
      * Verwijder geselecteerde gebruiker (alleen beheerder)
@@ -164,33 +147,27 @@ function Profile({ mode = 'edit' }) {
         if (!selectedUser) return;
 
         const userData = userList.find(u => u.email === selectedUser);
-        if (!userData || !userData._id) {
-            CustomToast.error("Gebruiker-ID niet gevonden.");
+        if (!userData || !userData.email) {
+            debug.notify("error", "Gebruiker niet gevonden.");
             return;
         }
 
-        const confirmed = window.confirm(`Weet je zeker dat je gebruiker "${selectedUser}" wilt verwijderen?`);
-        if (!confirmed) return;
-
         try {
-            const success = await deleteUser(userData._id, user.token);
+            const success = await deleteUser(userData.email, user.token);
             if (success) {
-                CustomToast.success(`Gebruiker "${selectedUser}" is verwijderd.`);
-                setUserList(prev => prev.filter(u => u._id !== userData._id));
+                debug.notify("success", `Gebruiker "${selectedUser}" is verwijderd.`);
+                setUserList(prev => prev.filter(u => u.email !== userData.email));
                 setSelectedUser('');
                 setEmail('');
                 setPassword('');
                 setUserType('Operator');
             } else {
-                CustomToast.error("Verwijderen mislukt.");
+                debug.notify("error", "Verwijderen mislukt.");
             }
         } catch (err) {
-            console.error("❌ Fout bij verwijderen:", err);
-            CustomToast.error("Verwijderen mislukt.");
+            debug.notify("error", parseApiError(err));
         }
     };
-
-
 
     const handleCancel = () => {
         navigate("/");

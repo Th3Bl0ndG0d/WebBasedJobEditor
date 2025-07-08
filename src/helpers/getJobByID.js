@@ -1,25 +1,39 @@
 import axios from 'axios';
 import { getCurrentUser } from './login.js';
-import {getHeaders} from "./getHeaders.js";
-import CustomToast from "../components/cutomToast/CustomToast.jsx";
+import { getHeaders } from './getHeaders.js';
+import {createDebugger} from "../components/debugger/createDebugger.jsx";
+import {parseApiError} from "./parseAPIError.js";
 
 
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: true,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: false,
+    }
+});
 
-
-// 🔍 Haalt één job op, inclusief gekoppelde cylinders en plates via filters
+/**
+ * Haalt één volledige jobstructuur op, inclusief cylinders en plates.
+ * @param {string} jobId - Het ID van de job die opgehaald moet worden
+ * @returns {Promise<Object|null>} De job inclusief geneste structuur of null bij fout
+ */
 export async function getJobById(jobId) {
     const currentUser = getCurrentUser();
 
-    // ⛔ Gebruiker niet ingelogd of token ontbreekt
     if (!currentUser || !currentUser.token) {
-        CustomToast?.error("Geen geldige gebruiker.");
+        debug.notify("error", "Geen geldige gebruiker.");
         return null;
     }
 
     try {
-        console.log(`📥 Start ophalen van job met ID: ${jobId}`);
+        debug.notify("debug", `Start ophalen van job met ID: ${jobId}`);
 
-        // 📦 Stap 1: Haal de job zelf op via ID
+        // Stap 1: Haal job op
         const jobRes = await axios.get(
             `https://novi-backend-api-wgsgz.ondigitalocean.app/api/jobs/${jobId}`,
             {
@@ -28,53 +42,44 @@ export async function getJobById(jobId) {
         );
 
         const job = jobRes.data;
-        console.log("✅ Job succesvol opgehaald:", job);
+        debug.notify("success", "Job succesvol opgehaald", { detail: job });
 
-        // 🛢️ Stap 2: Haal alle cylinders op die gekoppeld zijn aan deze job via filter
+        // Stap 2: Haal cylinders op
         const cylRes = await axios.get(
-            'https://novi-backend-api-wgsgz.ondigitalocean.app/api/cylinders',
+            `https://novi-backend-api-wgsgz.ondigitalocean.app/api/jobs/${job.id}/cylinders`,
             {
-                headers: getHeaders(currentUser.token),
-                params: {
-                    'filter[jobId]': job.id
-                }
+                headers: getHeaders(currentUser.token)
             }
         );
 
         const cylinders = cylRes.data;
-        console.log(`🔍 ${cylinders.length} cylinders opgehaald voor job ${job.id}:`, cylinders);
+        debug.notify("debug", `${cylinders.length} cylinders opgehaald`, { detail: cylinders });
 
-        // 🧩 Stap 3: Haal voor elke cylinder de bijbehorende plates op via cylinderId
+        // Stap 3: Haal voor elke cylinder de plates op
         for (const cylinder of cylinders) {
-            console.log(`🔄 Ophalen van plates voor cylinder ID: ${cylinder.id}`);
+            debug.notify("debug", `Ophalen van plates voor cylinder ID: ${cylinder.id}`);
 
             const platesRes = await axios.get(
-                'https://novi-backend-api-wgsgz.ondigitalocean.app/api/plates',
+                `https://novi-backend-api-wgsgz.ondigitalocean.app/api/cylinders/${cylinder.id}/plates`,
                 {
-                    headers: getHeaders(currentUser.token),
-                    params: {
-                        'filter[cylinderId]': cylinder.id
-                    }
+                    headers: getHeaders(currentUser.token)
                 }
             );
 
             const plates = platesRes.data;
-            console.log(`🧩 ${plates.length} plates gevonden voor cylinder ${cylinder.id}:`, plates);
+            debug.notify("debug", `${plates.length} plates gevonden`, { detail: plates });
 
-            // 📌 Voeg opgehaalde plates toe aan de huidige cylinder
             cylinder.plates = plates;
         }
 
-        // ✅ Stap 4: Voeg alle cylinders (met hun plates) toe aan de job
+        // Voeg cylinders toe aan job
         job.cylinders = cylinders;
 
-        CustomToast?.success("✅ Volledige jobstructuur succesvol geladen.");
-        console.log("🎯 Volledige jobobject samengesteld:", job);
+        debug.notify("debug", "Volledige jobstructuur succesvol geladen");
         return job;
 
     } catch (err) {
-        console.error("❌ Fout bij ophalen van jobgegevens:", err);
-        CustomToast?.error("Job ophalen mislukt.");
+        debug.notify("error", parseApiError(err));
         return null;
     }
 }
