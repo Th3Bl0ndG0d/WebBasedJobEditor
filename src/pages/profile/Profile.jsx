@@ -10,11 +10,10 @@ import InputField from "../../components/inputField/InputField.jsx";
 import ButtonGroup from "../../components/buttonGroup/ButtonGroup.jsx";
 import { getUsers } from "../../helpers/getUsers.js";
 import { addUser } from "../../helpers/addUser.js";
-import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import { deleteUser } from "../../helpers/deleteUser.js";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
-import { createDebugger } from "../../helpers/createDebugger.js";
-import { parseApiError } from "../../helpers/parseApiError.js";
+import {parseApiError } from "../../helpers/parseApiError.js";
+import {createDebugger} from "../../components/debugger/createDebugger.jsx";
 
 const debug = createDebugger();
 
@@ -22,12 +21,12 @@ function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
     const { user, login } = useAuth();
     const navigate = useNavigate();
-    const isAdmin = user?.roles?.includes('Beheerder');
+    const isAdmin = user?.roles?.includes('beheerder');
 
     // Lokale toestand voor formulierwaarden
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userType, setUserType] = useState('Operator');
+    const [userType, setUserType] = useState('operator');
     const [error, setError] = useState('');
     const [userList, setUserList] = useState([]);
     const [selectedUser, setSelectedUser] = useState('');
@@ -59,7 +58,7 @@ function Profile({ mode = 'edit' }) {
         if (!isAdmin && isEditMode && user) {
             debug.notify("debug", `Profiel geladen vanuit context: ${user.email}`);
             setEmail(user.email);
-            setUserType(user.roles?.[0] || 'Operator');
+            setUserType(user.roles?.[0] || 'operator');
         }
     }, [isEditMode, isAdmin, user]);
 
@@ -74,13 +73,14 @@ function Profile({ mode = 'edit' }) {
                 debug.notify("debug", `Gebruiker geselecteerd: ${userData.email}`);
                 setEmail(userData.email);
                 setPassword('');
-                setUserType(userData.role);
+                setUserType(userData.roles?.[0].toLowerCase() || 'operator');
+
             }
         } else if (isAdmin && isEditMode) {
             debug.notify("debug", "Nieuwe gebruiker toevoegen (geen selectie)");
             setEmail('');
             setPassword('');
-            setUserType('Operator');
+            setUserType('operator');
         }
     }, [selectedUser, userList, isAdmin, isEditMode]);
 
@@ -106,7 +106,7 @@ function Profile({ mode = 'edit' }) {
                     if (!isEditMode) {
                         const success = await login(email, password);
                         if (success) {
-                            navigate(userType === "Beheerder" ? "/profile/edit" : "/JobOverview");
+                            navigate(userType === "beheerder" ? "/profile/edit" : "/JobOverview");
                         } else {
                             debug.notify("error", "Automatisch inloggen mislukt.");
                             navigate("/login");
@@ -151,6 +151,8 @@ function Profile({ mode = 'edit' }) {
             debug.notify("error", "Gebruiker niet gevonden.");
             return;
         }
+
+
 
         try {
             const success = await deleteUser(userData.email, user.token);
@@ -242,9 +244,9 @@ function Profile({ mode = 'edit' }) {
                                 handleChange={setUserType}
                                 disabled={!isAdmin && isEditMode}
                                 options={[
-                                    { value: "Operator", label: "Operator" },
-                                    { value: "Beheerder", label: "Beheerder" },
-                                    { value: "Programmer", label: "Programmer" },
+                                    { value: "operator", label: "Operator" },
+                                    { value: "beheerder", label: "Beheerder" },
+                                    { value: "programmer", label: "Programmer" },
                                 ]}
                             />
                         </FormGroup>

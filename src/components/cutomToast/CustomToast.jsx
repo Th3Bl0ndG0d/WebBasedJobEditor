@@ -8,14 +8,30 @@ import {iconMap} from "../../helpers/iconMap.jsx";
 /**
  * Standaard inhoud voor een toast.
  */
+// function ToastContent({ type, message }) {
+//     return (
+//         <div className={`custom-toast ${type}`}>
+//             <span className="toast-icon">{iconMap[type]?.jsx}</span>
+//             <span className="toast-message">{message}</span>
+//         </div>
+//     );
+// }
+
 function ToastContent({ type, message }) {
     return (
         <div className={`custom-toast ${type}`}>
             <span className="toast-icon">{iconMap[type]?.jsx}</span>
-            <span className="toast-message">{message}</span>
+            {/* Als message een string is, stop hem in een <span>; anders render direct als JSX */}
+            {typeof message === 'string' ? (
+                <span className="toast-message">{message}</span>
+            ) : (
+                <div className="toast-message">{message}</div>
+            )}
         </div>
     );
 }
+
+
 
 const CustomToast = {
     success: (msg, opts = {}) => toast(<ToastContent type="success" message={msg} />, opts),

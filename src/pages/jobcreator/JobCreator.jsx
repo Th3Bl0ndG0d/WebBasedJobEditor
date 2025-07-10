@@ -8,12 +8,23 @@ import { createFullJob } from "../../helpers/jobAPI.js";
 
 import InputField from "../../components/inputField/InputField.jsx";
 import FormGroup from "../../components/formGroup/formGroup.jsx";
-import ButtonGroup from "../../components/buttonGroup/ButtonGroup.jsx";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
-import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import InputWithButtonControls from "../../components/inputWithButtonControls/InputWithButtonControls.jsx";
-import {Link, useNavigate} from "react-router-dom";
-
+import {Link} from "react-router-dom";
+import {createDebugger} from "../../components/debugger/createDebugger.jsx";
+import CustomToast from "../../components/cutomToast/CustomToast.jsx";
+// Debugger instellen
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: false,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: false,
+    }
+});
 /**
  * Component: JobCreator
  * Doel: Faciliteert het aanmaken van een Job-object inclusief bijbehorende cylinders en platen.
@@ -21,7 +32,6 @@ import {Link, useNavigate} from "react-router-dom";
  */
 const JobCreator = () => {
 
-    const navigate = useNavigate();
     // Interne status voor de algemene jobmetadata (nummer, naam, info)
     const [jobDetails, setJobDetails] = useState({
         number: "",
@@ -57,17 +67,16 @@ const JobCreator = () => {
      * Valideert verplichte velden en construeert het object inclusief cylinders en platen.
      */
     const generateJob = () => {
-        console.log("🚀 Genereer job gestart...");
-
+        debug.notify("debug", "Genereer job gestart...");
         // Minimale validatie: nummer en naam zijn verplicht
         if (!jobDetails.number || !jobDetails.name) {
-            CustomToast.error("Vul ten minste 'Number' en 'Name' in voor de job.");
+            debug.notify("error", "Vul ten minste 'Number' en 'Name' in voor de job.");
             return;
         }
 
         // Validatie van het herhalingsgetal (mag niet leeg of NaN zijn)
         if (!repeatByCylinder || isNaN(repeatByCylinder)) {
-            CustomToast.error("Vul een geldig getal in voor 'Repeat'.");
+            debug.notify("error", "Vul een geldig getal in voor 'Repeat'.");
             return;
         }
 
@@ -75,7 +84,7 @@ const JobCreator = () => {
         const requiredFields = ["width", "topHeight", "bottomHeight", "x", "y"];
         for (const field of requiredFields) {
             if (!templatePlate[field].trim()) {
-                CustomToast.error(`Veld "${field}" van de plate mag niet leeg zijn.`);
+                debug.notify("error", `Veld "${field}" van de plate mag niet leeg zijn.`);
                 return;
             }
         }
@@ -113,8 +122,7 @@ const JobCreator = () => {
             repeatByCylinder,
             cylinders
         );
-
-        console.log("✅ Job gegenereerd:", newJob);
+        debug.notify("debug", "Job gegenereerd:", newJob);
         setJob(newJob);
     };
 
@@ -156,12 +164,13 @@ const JobCreator = () => {
      * Geeft feedback via toastmeldingen.
      */
     const submitJob = async () => {
-            console.log("📤 Start verzenden complete job...");
-            CustomToast.info("Job wordt aangemaakt...", { autoClose: 2000 });
-
-            const response = await createFullJob(job, CustomToast);
+            debug.notify("debug", "Job wordt aangemaakt...");
+            const response = await createFullJob(job);
 
             if (response) {
+
+                debug.notify("succes", "Job wordt aangemaakt...");
+                // Hier nog een xtje goed naar kijken.
                 CustomToast.success(
                     <>
                         Job <strong>{job.name}</strong> is aangemaakt.<br />
@@ -172,10 +181,12 @@ const JobCreator = () => {
                     { autoClose: 6000 }
                 );
 
+
+
                 setJob(null); // reset formulier
                 setJobDetails({ number: "", name: "", info: "", repeat: 1250 });
             } else {
-                CustomToast.error("Fout bij jobcreatie. Zie console.", { autoClose: false });
+                debug.notify("succes", "Fout bij jobcreatie.");
             }
         };
 

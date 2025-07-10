@@ -2,23 +2,23 @@ import { FiCheckCircle, FiXCircle, FiAlertTriangle, FiInfo, FiTerminal } from 'r
 
 export const iconMap = {
     success: {
-        jsx: <FiCheckCircle />,
+        jsx: <div className="icon-wrapper"><FiCheckCircle /></div>,
         text: '✅'
     },
     error: {
-        jsx: <FiXCircle />,
+        jsx: <div className="icon-wrapper"><FiXCircle /></div>,
         text: '❌'
     },
     warning: {
-        jsx: <FiAlertTriangle />,
+        jsx: <div className="icon-wrapper"><FiAlertTriangle /></div>,
         text: '⚠️'
     },
     info: {
-        jsx: <FiInfo />,
+        jsx: <div className="icon-wrapper"><FiInfo /></div>,
         text: 'ℹ️'
     },
     debug: {
-        jsx: <FiTerminal />,
+        jsx: <div className="icon-wrapper"><FiTerminal /></div>,
         text: '🐞'
     }
 };
