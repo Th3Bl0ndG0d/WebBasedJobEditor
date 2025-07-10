@@ -32,9 +32,11 @@
   --color-white: #ffffff;                   /* Wit */
   --color-shadow-strong: #000000cc;         /* Zware schaduw (80% dekking) */
   --color-shadow-medium: #0000004d;         /* Medium schaduw (30% dekking) */
+  --color-blue: blue;              /* Medium schaduw */
   --color-light-blue: #007bff;              /* Medium schaduw */
   --color-green: green;
   --color-orange: orange;
+  --color-purple: purple;
 }
 
 *,
@@ -69,9 +71,12 @@ body {
 
 /* Override basis toast-container */
 .Toastify__toast {
+  width: 100% !important;
+  max-width: 600px !important; /* of breder indien gewenst */
+  margin: 0 auto !important;
+  padding: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  padding: 0 !important;
 }
 
 /* Verwijder extra styling van de body wrapper */
@@ -153,20 +158,6 @@ a:hover {
   max-width: 450px;
 }
 
-/*Lastig dit. Want ga ik dit straks bij meerdere componenten zetten....*/
-textarea{
-  width: 100%;
-  margin-bottom: 12px;
-  font-size: 16px;
-  border: 1px solid var(--color-border-light)!important;
-  border-radius: 6px;
-  background-color: var(--color-input-bg)!important;
-  box-sizing: border-box;
-  transition: border 0.2s ease;
-  padding: 12px 24px;
-  height: 48px;
-}
-
 select:focus{
   outline: none;
   border-color: var(--color-accent-red);
@@ -177,17 +168,7 @@ select:focus{
 /*verplaatst naar het button component*/
 /* --------------- 4.5 labels ------------------------ */
 
-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--color-background-dark);
-  text-align: left;
-}
-.job-loading-message {
-  color: var(--color-text-light)!important;
-  font-size: 16px;
-}
+/*Verplaatst naar het label component*/
 
 
 /* ------------------------------- 5. Animations ----------------------------------- */

@@ -1,0 +1,11 @@
+.input-button-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stepper-value {
+    width: 48px;
+    text-align: center;
+}
+

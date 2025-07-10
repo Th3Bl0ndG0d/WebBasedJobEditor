@@ -1,18 +1,41 @@
 import axios from "axios";
+import { parseApiError } from "./parseAPIError.js";
+import {createDebugger} from "../components/debugger/createDebugger.jsx";
 
+//Debugger: alleen errors en success als toast, zonder console
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: true,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: false,
+    }
+});
+
+
+/**
+ * Haalt alle jobs op via de backend API.
+ * @param {string} token - JWT token voor authenticatie
+ * @returns {Promise<Array|null>} Array van jobs of null bij fout
+ */
 export async function getJobs(token) {
-    console.log("🚀 getJobs() gestart");
+    debug.notify("debug", "getJobs() gestart");
 
     if (!token) {
-        console.warn("⚠️ Geen token meegegeven aan getJobs()");
+        debug.notify("error", "Geen geldig token. Kan jobs niet ophalen.");
         return null;
     }
 
     try {
-        console.log("📨 Verstuur GET-request naar jobs-endpoint...");
-        console.log("🔑 Headers:", {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+        debug.notify("debug", "Verstuur GET-request naar jobs-endpoint...");
+        debug.notify("debug", "Headers:", {
+            detail: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
         });
 
         const response = await axios.get(
@@ -25,24 +48,12 @@ export async function getJobs(token) {
             }
         );
 
-        console.log("✅ Response ontvangen (status:", response.status, ")");
-        console.log("📦 Response data:", response.data);
+        debug.notify("debug", `Response ontvangen (status: ${response.status})`);
+        debug.notify("debug", "Response data:", { detail: response.data });
 
         return response.data;
     } catch (error) {
-        console.error("❌ Fout bij ophalen van jobs:");
-
-        if (error.response) {
-            console.error("📡 Server response:", {
-                status: error.response.status,
-                data: error.response.data,
-            });
-        } else if (error.request) {
-            console.error("📭 Geen response ontvangen van server:", error.request);
-        } else {
-            console.error("🛠️ Fout bij opzetten van request:", error.message);
-        }
-
+        debug.notify("error", parseApiError(error));
         return null;
     }
 }

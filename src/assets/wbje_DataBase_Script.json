@@ -36,17 +36,20 @@
       "permissions": {
         "GET": [
           "anonymous",
-          "Operator",
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "POST": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "PUT": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "DELETE": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ]
       }
     },
@@ -72,17 +75,20 @@
       "permissions": {
         "GET": [
           "anonymous",
-          "Operator",
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "POST": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "PUT": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "DELETE": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ]
       }
     },
@@ -128,38 +134,39 @@
       "permissions": {
         "GET": [
           "anonymous",
-          "Operator",
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "POST": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "PUT": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ],
         "DELETE": [
-          "Beheerder"
+          "operator",
+          "beheerder"
         ]
       }
     }
   ],
   "users": [
     {
-      "id": 0,
+      "id": 1,
       "email": "admin@example.com",
-      "username": "admin",
       "password": "admin",
       "roles": [
-        "Beheerder"
+        "beheerder"
       ]
     },
     {
-      "id": 1,
+      "id": 2,
       "email": "operator@example.com",
-      "username": "operator",
       "password": "operator",
       "roles": [
-        "Operator"
+        "operator"
       ]
     }
   ],
@@ -168,7 +175,7 @@
       {
         "number": "JOB-001",
         "name": "TestJob",
-        "data": "Flexo Print",
+        "date": "2025-01-25",
         "info": "Klant: Verpakkingen BV",
         "repeat": 620,
         "id": 1
@@ -176,7 +183,7 @@
       {
         "number": "JOB-002",
         "name": "TestJob Twee",
-        "data": "Digital Print",
+        "date": "2025-01-25",
         "info": "Klant: Voorbeeldbedrijf",
         "repeat": 450,
         "id": 2

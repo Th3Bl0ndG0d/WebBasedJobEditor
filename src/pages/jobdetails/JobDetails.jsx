@@ -2,7 +2,6 @@ import './JobDetails.css';
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { toast } from 'react-toastify';
 import {getJobById} from "../../helpers/getJobByID.js";
 
 const JobDetail = () => {
@@ -12,7 +11,7 @@ const JobDetail = () => {
 
     useEffect(() => {
         const fetchJob = async () => {
-            const result = await getJobById(jobId, toast);
+            const result = await getJobById(jobId);
             setJob(result);
             setLoading(false);
         };

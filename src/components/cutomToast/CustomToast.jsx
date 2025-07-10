@@ -1,30 +1,44 @@
 import React from "react";
-import { FiCheckCircle, FiXCircle, FiInfo, FiAlertTriangle } from "react-icons/fi";
 import './CustomToast.css';
-import {toast} from "react-toastify"; // Styling volgt
+import {toast} from "react-toastify";
+import {iconMap} from "../../helpers/iconMap.jsx";
 
-const iconMap = {
-    success: <FiCheckCircle />,
-    error: <FiXCircle />,
-    warning: <FiAlertTriangle />,
-    info: <FiInfo />,
-};
+
+//Met behulp van google, zorg ervoor dat je straks de toast kan gebruiken om ook een link weer tegeven. Leuke test om straks terug te kunnen naar job overview
+/**
+ * Standaard inhoud voor een toast.
+ */
+// function ToastContent({ type, message }) {
+//     return (
+//         <div className={`custom-toast ${type}`}>
+//             <span className="toast-icon">{iconMap[type]?.jsx}</span>
+//             <span className="toast-message">{message}</span>
+//         </div>
+//     );
+// }
 
 function ToastContent({ type, message }) {
     return (
         <div className={`custom-toast ${type}`}>
-            <div className="icon-wrapper">{iconMap[type]}</div>
-            <div className="message">{message}</div>
+            <span className="toast-icon">{iconMap[type]?.jsx}</span>
+            {/* Als message een string is, stop hem in een <span>; anders render direct als JSX */}
+            {typeof message === 'string' ? (
+                <span className="toast-message">{message}</span>
+            ) : (
+                <div className="toast-message">{message}</div>
+            )}
         </div>
     );
 }
 
-// 🔔 Exporteer als object met helperfuncties
+
+
 const CustomToast = {
-    success: (msg) => toast(<ToastContent type="success" message={msg} />),
-    error: (msg) => toast(<ToastContent type="error" message={msg} />),
-    warning: (msg) => toast(<ToastContent type="warning" message={msg} />),
-    info: (msg) => toast(<ToastContent type="info" message={msg} />),
+    success: (msg, opts = {}) => toast(<ToastContent type="success" message={msg} />, opts),
+    error:   (msg, opts = {}) => toast(<ToastContent type="error" message={msg} />, opts),
+    warning: (msg, opts = {}) => toast(<ToastContent type="warning" message={msg} />, opts),
+    info:    (msg, opts = {}) => toast(<ToastContent type="info" message={msg} />, opts),
+    debug:   (msg, opts = {}) => toast(<ToastContent type="debug" message={msg} />, opts)
 };
 
 export default CustomToast;

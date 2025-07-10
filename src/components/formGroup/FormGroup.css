@@ -1,0 +1,40 @@
+.form-group {
+    display: flex;
+    flex-direction: column; /* standaard */
+    justify-content: flex-start;
+    gap: 4px;
+
+}
+
+.form-group--column {
+    width: 100%;
+    /*background-color: lightblue;*/
+}
+
+/* Laat groei toe binnen row-layout */
+.form-group--row.form-group--grow {
+    flex: 1 1 0;
+}
+
+/* Geen groei binnen row-layout */
+.form-group--row.form-group--nogrow {
+    flex: 0 0 auto;
+    align-items: center;
+}
+
+
+/* Thema's */
+.form-grid--light {
+    background-color: transparent;
+}
+
+.form-grid--dark {
+    background-color: transparent;
+}
+
+/*Mischien niet de meest mooie oplossing. Maar werkt goed voor het aantal platen en cylinders*/
+.form-group label {
+    max-width: 48px;       /* minimale ruimte voor uitlijning */
+    white-space: nowrap;   /* laat tekst niet afbreken */
+    overflow: visible;     /* laat tekst buiten label stromen */
+}

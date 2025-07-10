@@ -9,22 +9,24 @@ import FormGroup from "../../components/formGroup/formGroup.jsx";
 import InputField from "../../components/inputField/InputField.jsx";
 import ButtonGroup from "../../components/buttonGroup/ButtonGroup.jsx";
 import { getUsers } from "../../helpers/getUsers.js";
+import { addUser } from "../../helpers/addUser.js";
+import { deleteUser } from "../../helpers/deleteUser.js";
+import FormGrid from "../../components/formGrid/FromGrid.jsx";
+import {parseApiError } from "../../helpers/parseApiError.js";
+import {createDebugger} from "../../components/debugger/createDebugger.jsx";
 
-import {addUser} from "../../helpers/addUser.js";
-import CustomToast from "../../components/cutomToast/CustomToast.jsx";
-import {updateUser} from "../../helpers/updateUser.js";
-import {deleteUser} from "../../helpers/deleteUser.js";
+const debug = createDebugger();
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
     const { user, login } = useAuth();
     const navigate = useNavigate();
-    const isAdmin = user?.roles?.includes('Beheerder');
+    const isAdmin = user?.roles?.includes('beheerder');
 
     // Lokale toestand voor formulierwaarden
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userType, setUserType] = useState('Operator');
+    const [userType, setUserType] = useState('operator');
     const [error, setError] = useState('');
     const [userList, setUserList] = useState([]);
     const [selectedUser, setSelectedUser] = useState('');
@@ -35,7 +37,7 @@ function Profile({ mode = 'edit' }) {
      */
     useEffect(() => {
         if (!isEditMode && user) {
-            console.log('🔁 Redirect: ingelogde gebruiker probeert te registreren');
+            debug.notify("info", "Redirect: ingelogde gebruiker probeert te registreren");
             navigate("/JobOverview");
         }
     }, [isEditMode, user, navigate]);
@@ -54,9 +56,9 @@ function Profile({ mode = 'edit' }) {
         loadUsers();
 
         if (!isAdmin && isEditMode && user) {
-            console.log('📄 Profiel geladen vanuit context:', user.email);
+            debug.notify("debug", `Profiel geladen vanuit context: ${user.email}`);
             setEmail(user.email);
-            setUserType(user.roles?.[0] || 'Operator');
+            setUserType(user.roles?.[0] || 'operator');
         }
     }, [isEditMode, isAdmin, user]);
 
@@ -68,16 +70,17 @@ function Profile({ mode = 'edit' }) {
         if (selectedUser) {
             const userData = userList.find(u => u.email === selectedUser);
             if (userData) {
-                console.log('👤 Gebruiker geselecteerd:', userData.email);
+                debug.notify("debug", `Gebruiker geselecteerd: ${userData.email}`);
                 setEmail(userData.email);
                 setPassword('');
-                setUserType(userData.role);
+                setUserType(userData.roles?.[0].toLowerCase() || 'operator');
+
             }
         } else if (isAdmin && isEditMode) {
-            console.log('🆕 Nieuwe gebruiker toevoegen (geen selectie)');
+            debug.notify("debug", "Nieuwe gebruiker toevoegen (geen selectie)");
             setEmail('');
             setPassword('');
-            setUserType('Operator');
+            setUserType('operator');
         }
     }, [selectedUser, userList, isAdmin, isEditMode]);
 
@@ -98,22 +101,20 @@ function Profile({ mode = 'edit' }) {
                 const createdUser = await addUser(newUser);
                 if (createdUser) {
                     setUserList(prev => [...prev, createdUser]);
-                    CustomToast.success(`Gebruiker aangemaakt: ${createdUser.email}`);
+                    debug.notify("success", `Gebruiker aangemaakt: ${createdUser.email}`);
 
                     if (!isEditMode) {
-                        // Gebruik context login zoals in Login.jsx
                         const success = await login(email, password);
                         if (success) {
-                            navigate(userType === "Beheerder" ? "/profile/edit" : "/JobOverview");
+                            navigate(userType === "beheerder" ? "/profile/edit" : "/JobOverview");
                         } else {
-                            CustomToast.error("Automatisch inloggen mislukt.");
+                            debug.notify("error", "Automatisch inloggen mislukt.");
                             navigate("/login");
                         }
                     }
                 }
             } catch (err) {
-                console.error('❌ Gebruiker toevoegen mislukt:', err);
-                CustomToast.error("Gebruiker aanmaken mislukt.");
+                debug.notify("error", parseApiError(err));
             }
 
             return;
@@ -122,39 +123,22 @@ function Profile({ mode = 'edit' }) {
         // Bewerken bestaande gebruiker (admin met selectie)
         if (isEditMode && isAdmin && selectedUser) {
             const userData = userList.find(u => u.email === selectedUser);
-            if (!userData || !userData._id) {
-                CustomToast.error("Gebruiker-ID niet gevonden.");
+            if (!userData || !userData.email) {
+                debug.notify("error", "Gebruiker niet gevonden.");
                 return;
             }
 
             const updates = {};
             if (password) updates.password = password;
-            // rol updaten als array
             if (!userData.roles || userData.roles[0] !== userType) updates.roles = [userType];
 
             if (Object.keys(updates).length === 0) {
-                CustomToast.info("Geen wijzigingen om op te slaan.");
+                debug.notify("info", "Geen wijzigingen om op te slaan.");
                 return;
             }
-
-            try {
-                const success = await updateUser(userData._id, updates, user.token);
-                if (success) {
-                    CustomToast.success(`Gebruiker "${selectedUser}" is bijgewerkt.`);
-                    // Optioneel: userList verversen
-                    const refreshedUsers = await getUsers(user.token);
-                    setUserList(refreshedUsers);
-                    setPassword('');
-                } else {
-                    CustomToast.error("Bijwerken mislukt.");
-                }
-            } catch (err) {
-                console.error("❌ Fout bij bijwerken:", err);
-                CustomToast.error("Bijwerken mislukt.");
-            }
+            debug.notify("warning", "Functie niet geimplementeerd!");
         }
     };
-
 
     /**
      * Verwijder geselecteerde gebruiker (alleen beheerder)
@@ -163,33 +147,29 @@ function Profile({ mode = 'edit' }) {
         if (!selectedUser) return;
 
         const userData = userList.find(u => u.email === selectedUser);
-        if (!userData || !userData._id) {
-            CustomToast.error("Gebruiker-ID niet gevonden.");
+        if (!userData || !userData.email) {
+            debug.notify("error", "Gebruiker niet gevonden.");
             return;
         }
 
-        const confirmed = window.confirm(`Weet je zeker dat je gebruiker "${selectedUser}" wilt verwijderen?`);
-        if (!confirmed) return;
+
 
         try {
-            const success = await deleteUser(userData._id, user.token);
+            const success = await deleteUser(userData.email, user.token);
             if (success) {
-                CustomToast.success(`Gebruiker "${selectedUser}" is verwijderd.`);
-                setUserList(prev => prev.filter(u => u._id !== userData._id));
+                debug.notify("success", `Gebruiker "${selectedUser}" is verwijderd.`);
+                setUserList(prev => prev.filter(u => u.email !== userData.email));
                 setSelectedUser('');
                 setEmail('');
                 setPassword('');
                 setUserType('Operator');
             } else {
-                CustomToast.error("Verwijderen mislukt.");
+                debug.notify("error", "Verwijderen mislukt.");
             }
         } catch (err) {
-            console.error("❌ Fout bij verwijderen:", err);
-            CustomToast.error("Verwijderen mislukt.");
+            debug.notify("error", parseApiError(err));
         }
     };
-
-
 
     const handleCancel = () => {
         navigate("/");
@@ -207,95 +187,104 @@ function Profile({ mode = 'edit' }) {
                                 : 'Profiel Bewerken'}
                     </h1>
 
-                    {/* Dropdown voor beheerder om gebruiker te kiezen */}
-                    {isAdmin && isEditMode && (
-                        <FormGroup label="Selecteer gebruiker" htmlFor="userSelect">
+                    {/* Formulier met flexibele layout */}
+                    <FormGrid direction="column" theme="light" spacing="loose">
+                        {/* Dropdown voor beheerder om gebruiker te kiezen */}
+                        {isAdmin && isEditMode && (
+                            <FormGroup label="Selecteer gebruiker" htmlFor="userSelect">
+                                <SelectField
+                                    id="userSelect"
+                                    value={selectedUser}
+                                    handleChange={setSelectedUser}
+                                    options={[
+                                        { value: "", label: "-- Nieuwe gebruiker toevoegen --" },
+                                        ...userList.map((u) => ({
+                                            value: u.email,
+                                            label: u.email,
+                                        })),
+                                    ]}
+                                />
+                            </FormGroup>
+                        )}
+
+                        {/* Email */}
+                        <FormGroup label="Emailadres" htmlFor="email">
+                            <InputField
+                                id="email"
+                                type="email"
+                                inputValue={email}
+                                handleInputChange={setEmail}
+                                className="input-standard"
+                                required
+                            />
+                        </FormGroup>
+
+                        {/* Wachtwoord: altijd zichtbaar */}
+                        <FormGroup label="Wachtwoord" htmlFor="password">
+                            <InputField
+                                id="password"
+                                type="password"
+                                inputValue={password}
+                                handleInputChange={setPassword}
+                                className="input-standard"
+                                required={!isEditMode || (isAdmin && !selectedUser)}
+                                placeholder={
+                                    isEditMode && password === ''
+                                        ? 'Laat leeg om wachtwoord niet te wijzigen'
+                                        : 'Wachtwoord'
+                                }
+                            />
+                        </FormGroup>
+
+                        {/* Rol-selectie */}
+                        <FormGroup label="Gebruikerstype" htmlFor="userType">
                             <SelectField
-                                id="userSelect"
-                                value={selectedUser}
-                                handleChange={setSelectedUser}
+                                id="userType"
+                                value={userType}
+                                handleChange={setUserType}
+                                disabled={!isAdmin && isEditMode}
                                 options={[
-                                    { value: "", label: "-- Nieuwe gebruiker toevoegen --" },
-                                    ...userList.map((u) => ({
-                                        value: u.email,
-                                        label: u.email,
-                                    })),
+                                    { value: "operator", label: "Operator" },
+                                    { value: "beheerder", label: "Beheerder" },
+                                    { value: "programmer", label: "Programmer" },
                                 ]}
                             />
                         </FormGroup>
-                    )}
 
-                    {/* Email */}
-                    <FormGroup label="Emailadres" htmlFor="email">
-                        <InputField
-                            id="email"
-                            type="email"
-                            inputValue={email}
-                            handleInputChange={setEmail}
-                            className="input-standard"
-                            required
-                        />
-                    </FormGroup>
-
-                    {/* Wachtwoord: altijd zichtbaar */}
-                    <FormGroup label="Wachtwoord" htmlFor="password">
-                        <InputField
-                            id="password"
-                            type="password"
-                            inputValue={password}
-                            handleInputChange={setPassword}
-                            className="input-standard"
-                            required={!isEditMode || (isAdmin && !selectedUser)}
-                            placeholder={
-                                isEditMode && password === ''
-                                    ? 'Laat leeg om wachtwoord niet te wijzigen'
-                                    : 'Wachtwoord'
-                            }
-                        />
-                    </FormGroup>
-
-                    {/* Rol-selectie */}
-                    <FormGroup label="Gebruikerstype" htmlFor="userType">
-                        <SelectField
-                            id="userType"
-                            value={userType}
-                            handleChange={setUserType}
-                            disabled={!isAdmin && isEditMode}
-                            options={[
-                                { value: "Operator", label: "Operator" },
-                                { value: "Beheerder", label: "Beheerder" },
-                                { value: "Programmer", label: "Programmer" },
-                            ]}
-                        />
-                    </FormGroup>
-
-                    {/* Foutmelding */}
-                    {error && <p className="error-message">{error}</p>}
-
-                    {/* Actieknoppen */}
-                    <ButtonGroup>
-                        <Button
-                            type="submit"
-                            label={
-                                isEditMode
-                                    ? (isAdmin && !selectedUser ? 'Toevoegen' : 'Opslaan')
-                                    : 'Aanmaken'
-                            }
-                        />
-                        {(isEditMode && selectedUser && isAdmin) ? (
-                            <Button
-                                type="button"
-                                label="Verwijderen"
-                                onClick={handleDelete}
-                            />
-                        ) : (
-                            <Button
-                                type="button"
-                                label="Annuleren"
-                                onClick={handleCancel}
-                            />
+                        {/* Foutmelding */}
+                        {error && (
+                            <FormGroup label=" ">
+                                <p className="error-message">{error}</p>
+                            </FormGroup>
                         )}
-                    </ButtonGroup>
+
+                        {/* Actieknoppen */}
+                        <FormGroup label=" ">
+                            <ButtonGroup>
+                                <Button
+                                    type="submit"
+                                    label={
+                                        isEditMode
+                                            ? (isAdmin && !selectedUser ? 'Toevoegen' : 'Opslaan')
+                                            : 'Aanmaken'
+                                    }
+                                />
+                                {(isEditMode && selectedUser && isAdmin) ? (
+                                    <Button
+                                        type="button"
+                                        label="Verwijderen"
+                                        onClick={handleDelete}
+                                    />
+                                ) : (
+                                    <Button
+                                        type="button"
+                                        label="Annuleren"
+                                        onClick={handleCancel}
+                                    />
+                                )}
+                            </ButtonGroup>
+                        </FormGroup>
+                    </FormGrid>
                 </form>
             </div>
         </div>

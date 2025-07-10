@@ -1,0 +1,13 @@
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--color-background-dark);
+    text-align: left;
+}
+.job-loading-message,
+.job-empty-message
+{
+    color: var(--color-text-light)!important;
+    font-size: 20px;
+}

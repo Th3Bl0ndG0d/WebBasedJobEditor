@@ -5,15 +5,33 @@ import Plate from "../../constants/plate/plate";
 import Job from "../../constants/job/job";
 import Button from "../../components/button/Button.jsx";
 import { createFullJob } from "../../helpers/jobAPI.js";
-import { toast } from 'react-toastify';
-import InputField from "../../components/inputField/InputField.jsx";
 
+import InputField from "../../components/inputField/InputField.jsx";
+import FormGroup from "../../components/formGroup/formGroup.jsx";
+import FormGrid from "../../components/formGrid/FromGrid.jsx";
+import InputWithButtonControls from "../../components/inputWithButtonControls/InputWithButtonControls.jsx";
+import {Link} from "react-router-dom";
+import {createDebugger} from "../../components/debugger/createDebugger.jsx";
+import CustomToast from "../../components/cutomToast/CustomToast.jsx";
+// Debugger instellen
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: false,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: false,
+    }
+});
 /**
  * Component: JobCreator
  * Doel: Faciliteert het aanmaken van een Job-object inclusief bijbehorende cylinders en platen.
  * Gebruikt een gestandaardiseerde invoerstructuur en valideert de essentiële invoervelden alvorens het object te genereren.
  */
 const JobCreator = () => {
+
     // Interne status voor de algemene jobmetadata (nummer, naam, info)
     const [jobDetails, setJobDetails] = useState({
         number: "",
@@ -45,35 +63,20 @@ const JobCreator = () => {
     };
 
     /**
-     * Verhoogt een numerieke waarde met 1
-     * @param {function} setter - setState functie
-     * @param {number} value - huidige waarde
-     */
-    const increment = (setter, value) => setter(value + 1);
-
-    /**
-     * Verlaagt een numerieke waarde met 1, maar niet onder de grenswaarde 1.
-     * @param {function} setter - setState functie
-     * @param {number} value - huidige waarde
-     */
-    const decrement = (setter, value) => setter(Math.max(1, value - 1));
-
-    /**
      * Genereert een nieuw Job-object op basis van de huidige invoer.
      * Valideert verplichte velden en construeert het object inclusief cylinders en platen.
      */
     const generateJob = () => {
-        console.log("🚀 Genereer job gestart...");
-
+        debug.notify("debug", "Genereer job gestart...");
         // Minimale validatie: nummer en naam zijn verplicht
         if (!jobDetails.number || !jobDetails.name) {
-            alert("Vul ten minste 'Number' en 'Name' in voor de job.");
+            debug.notify("error", "Vul ten minste 'Number' en 'Name' in voor de job.");
             return;
         }
 
         // Validatie van het herhalingsgetal (mag niet leeg of NaN zijn)
         if (!repeatByCylinder || isNaN(repeatByCylinder)) {
-            alert("Vul een geldig getal in voor 'Repeat'.");
+            debug.notify("error", "Vul een geldig getal in voor 'Repeat'.");
             return;
         }
 
@@ -81,7 +84,7 @@ const JobCreator = () => {
         const requiredFields = ["width", "topHeight", "bottomHeight", "x", "y"];
         for (const field of requiredFields) {
             if (!templatePlate[field].trim()) {
-                alert(`Veld "${field}" van de plate mag niet leeg zijn.`);
+                debug.notify("error", `Veld "${field}" van de plate mag niet leeg zijn.`);
                 return;
             }
         }
@@ -119,8 +122,7 @@ const JobCreator = () => {
             repeatByCylinder,
             cylinders
         );
-
-        console.log("✅ Job gegenereerd:", newJob);
+        debug.notify("debug", "Job gegenereerd:", newJob);
         setJob(newJob);
     };
 
@@ -162,17 +164,33 @@ const JobCreator = () => {
      * Geeft feedback via toastmeldingen.
      */
     const submitJob = async () => {
-        console.log("📤 Start verzenden complete job...");
-        toast.info("🔄 Job wordt aangemaakt...", { autoClose: 2000 });
+            debug.notify("debug", "Job wordt aangemaakt...");
+            const response = await createFullJob(job);
 
-        const response = await createFullJob(job, toast);
+            if (response) {
 
-        if (response) {
-            toast.success("✅ Job succesvol aangemaakt!", { autoClose: 3000 });
-        } else {
-            toast.error("❌ Fout bij jobcreatie. Zie console.", { autoClose: false });
-        }
-    };
+                debug.notify("succes", "Job wordt aangemaakt...");
+                // Hier nog een xtje goed naar kijken.
+                CustomToast.success(
+                    <>
+                        Job <strong>{job.name}</strong> is aangemaakt.<br />
+                        <Link to={`/jobOverview`} className="link-button">
+                            ➤ Ga naar job overzicht
+                        </Link>
+                    </>,
+                    { autoClose: 6000 }
+                );
+
+
+
+                setJob(null); // reset formulier
+                setJobDetails({ number: "", name: "", info: "", repeat: 1250 });
+            } else {
+                debug.notify("succes", "Fout bij jobcreatie.");
+            }
+        };
+
+
 
     // Render de component
     return (
@@ -186,132 +204,235 @@ const JobCreator = () => {
                         {/* Algemene jobgegevens */}
                         <section className="boxed-section">
                             <h2 className="section-title boxed-section-title">JobData</h2>
-                            <div className="field-row">
-                                <label>Number<input type="text" value={jobDetails.number} onChange={e => updateJobDetails("number", e.target.value)} /></label>
-                                <label>Name<input type="text" value={jobDetails.name} onChange={e => updateJobDetails("name", e.target.value)} /></label>
-                                <label>Info<input type="text" value={jobDetails.info} onChange={e => updateJobDetails("info", e.target.value)} /></label>
-                            </div>
+                            <FormGrid direction="row" theme="dark">
+                                <FormGroup label="Number" htmlFor="job-number">
+                                    <InputField
+                                        id="job-number"
+                                        type="text"
+                                        inputValue={jobDetails.number}
+                                        handleInputChange={(val) => updateJobDetails("number", val)}
+                                    />
+                                </FormGroup>
+
+                                <FormGroup label="Name" htmlFor="job-name">
+                                    <InputField
+                                        id="job-name"
+                                        type="text"
+                                        inputValue={jobDetails.name}
+                                        handleInputChange={(val) => updateJobDetails("name", val)}
+                                    />
+                                </FormGroup>
+
+                                <FormGroup label="Info" htmlFor="job-info">
+                                    <InputField
+                                        id="job-info"
+                                        type="text"
+                                        inputValue={jobDetails.info}
+                                        handleInputChange={(val) => updateJobDetails("info", val)}
+                                    />
+                                </FormGroup>
+                            </FormGrid>
+
                         </section>
 
                         {/* Cylinderinstellingen incl. repeat */}
                         <section className="boxed-section">
                             <h2 className="section-title boxed-section-title">CylinderData</h2>
-                            <div className="field-row">
-                                <label>Repeat
-                                    <input
+                            <FormGrid direction="row" theme="dark">
+                                <FormGroup label="Repeat" htmlFor="repeat">
+                                    <InputField
+                                        id="repeat"
                                         type="number"
-                                        min="1"
-                                        value={repeatByCylinder}
-                                        onChange={e => {
-                                            const val = e.target.value;
-                                            const parsed = parseInt(val);
-                                            setRepeatByCylinder(Number.isNaN(parsed) ? "" : parsed);
-                                        }}
+                                        inputValue={repeatByCylinder}
+                                        handleInputChange={(val) => setRepeatByCylinder(parseInt(val) || "")}
+                                        variant="narrow"
                                     />
-                                </label>
-                            </div>
+                                </FormGroup>
+                            </FormGrid>
                         </section>
 
                         {/* Plate-sjablooninstellingen */}
                         <section className="boxed-section">
                             <h2 className="section-title boxed-section-title">PlaatData</h2>
-                            <div className="field-row">
-                                <label>Width<input type="text" value={templatePlate.width} onChange={e => setTemplatePlate({ ...templatePlate, width: e.target.value })} /></label>
-                                <label>Top Height<input type="text" value={templatePlate.topHeight} onChange={e => setTemplatePlate({ ...templatePlate, topHeight: e.target.value })} /></label>
-                                <label>Bottom Height<input type="text" value={templatePlate.bottomHeight} onChange={e => setTemplatePlate({ ...templatePlate, bottomHeight: e.target.value })} /></label>
-                                <label>X<input type="text" value={templatePlate.x} onChange={e => setTemplatePlate({ ...templatePlate, x: e.target.value })} /></label>
-                                <label>Y<input type="text" value={templatePlate.y} onChange={e => setTemplatePlate({ ...templatePlate, y: e.target.value })} /></label>
-                            </div>
-
-                            {/* Aantal cylinders en platen per cylinder */}
-                            <div className="field-row">
-                                <label className="-cylinder">
-                                    Aantal Cylinders
-                                    <div className="increment-field-cylinder">
-                                        <Button
-                                            type="button"
-                                            variant="square"
-                                            onClick={() => decrement(setNumCylinders, numCylinders)}
-                                            label="-"
-                                        />
+                            <FormGrid direction="row" theme="dark">
+                                {Object.entries(templatePlate).map(([key, val]) => (
+                                    <FormGroup key={key} label={key} htmlFor={`plate-${key}`}>
                                         <InputField
-                                            type="number"
-                                            inputValue={numCylinders}
-                                            handleInputChange={value => setNumCylinders(parseInt(value))}
-                                            className="amount"
+                                            id={`plate-${key}`}
+                                            type="text"
+                                            inputValue={val}
+                                            handleInputChange={(v) => setTemplatePlate({ ...templatePlate, [key]: v })}
+                                            variant="narrow"
                                         />
-                                        <Button
-                                            type="button"
-                                            variant="square"
-                                            onClick={() => increment(setNumCylinders, numCylinders)}
-                                            label="+"
-                                        />
-                                    </div>
-                                </label>
+                                    </FormGroup>
+                                ))}
+                            </FormGrid>
 
-                                <label className="-plate">
-                                    Aantal Platen/Cylinder
-                                    <div className="increment-field-plate">
-                                        <Button
-                                            type="button"
-                                            variant="square"
-                                            onClick={() => decrement(setPlatesPerCylinder, platesPerCylinder)}
-                                            label="-"
-                                        />
-                                        <InputField
-                                            type="number"
-                                            inputValue={platesPerCylinder}
-                                            handleInputChange={value => setPlatesPerCylinder(parseInt(value))}
-                                            className="amount"
-                                        />
-                                        <Button
-                                            type="button"
-                                            variant="square"
-                                            onClick={() => increment(setPlatesPerCylinder, platesPerCylinder)}
-                                            label="+"
-                                        />
-                                    </div>
-                                </label>
-                            </div>
-
-                            <div className="field-row">
-                                <Button type="button" onClick={generateJob} label="Genereer Job" />
-                            </div>
                         </section>
+
+                        <section className="boxed-section">
+                            <h2 className="section-title boxed-section-title">Aantal instellingen</h2>
+
+                            <FormGrid theme="dark" spacing="tight" direction="row" layout={"space-evenly"} >
+                                <InputWithButtonControls
+                                    id="cylinder-amount"
+                                    label="# Cylinders"
+                                    value={numCylinders}
+                                    onChange={setNumCylinders}
+                                />
+                                <InputWithButtonControls
+                                    id="plate-amount"
+                                    label="# Plates"
+                                    value={platesPerCylinder}
+                                    onChange={setPlatesPerCylinder}
+                                />
+                            </FormGrid>
+                        </section>
+
+
+                        <div className="field-row">
+                            <Button type="button" onClick={generateJob} label="Genereer Job" />
+                        </div>
                     </>
                 )}
 
-                {/* === Stap 2: Bewerking en verzenden van gegenereerde job === */}
+
                 {job && Array.isArray(job.cylinders) && (
                     <>
                         {/* Bewerkbare jobvelden */}
                         <section className="boxed-section">
                             <h2 className="section-title boxed-section-title">JobData</h2>
-                            <div className="field-row">
-                                <label>Number<input type="text" value={job.number} onChange={e => updateJobField("number", e.target.value)} /></label>
-                                <label>Name<input type="text" value={job.name} onChange={e => updateJobField("name", e.target.value)} /></label>
-                                <label>Info<input type="text" value={job.info} onChange={e => updateJobField("info", e.target.value)} /></label>
-                                <label>Date<input type="text" value={job.date} readOnly /></label>
-                                <label>Repeat<input type="number" value={job.repeat} onChange={e => updateJobField("repeat", parseInt(e.target.value))} /></label>
-                            </div>
+                            <FormGrid direction="row" theme="dark">
+                                <FormGroup label="Number" htmlFor="job-number-edit">
+                                    <InputField
+                                        id="job-number-edit"
+                                        type="text"
+                                        inputValue={job.number}
+                                        handleInputChange={(val) => updateJobField("number", val)}
+                                        variant="narrow"
+                                    />
+                                </FormGroup>
+                                <FormGroup label="Name" htmlFor="job-name-edit">
+                                    <InputField
+                                        id="job-name-edit"
+                                        type="text"
+                                        inputValue={job.name}
+                                        handleInputChange={(val) => updateJobField("name", val)}
+                                        variant="narrow"
+                                    />
+                                </FormGroup>
+                                <FormGroup label="Info" htmlFor="job-info-edit">
+                                    <InputField
+                                        id="job-info-edit"
+                                        type="text"
+                                        inputValue={job.info}
+                                        handleInputChange={(val) => updateJobField("info", val)}
+                                        variant="narrow"
+                                    />
+                                </FormGroup>
+                                <FormGroup label="Date" htmlFor="job-date-edit">
+                                    <InputField
+                                        id="job-date-edit"
+                                        type="text"
+                                        inputValue={job.date}
+                                        handleInputChange={() => {}}
+                                        variant="narrow"
+                                        disabled
+                                    />
+                                </FormGroup>
+                                <FormGroup label="Repeat" htmlFor="job-repeat-edit">
+                                    <InputField
+                                        id="job-repeat-edit"
+                                        type="number"
+                                        inputValue={job.repeat}
+                                        handleInputChange={(val) => updateJobField("repeat", parseInt(val))}
+                                        variant="narrow"
+                                    />
+                                </FormGroup>
+                            </FormGrid>
                         </section>
 
                         {/* Per cylinder: naam en platen */}
-                        {job.cylinders.map(c => (
-                            <section className="boxed-section" key={c.id}>
-                                <h2 className="section-title boxed-section-title">Cylinder {c.id}</h2>
-                                <div className="field-row">
-                                    <label>Naam<input type="text" value={c.name} onChange={e => updateCylinder(c.id, "name", e.target.value)} /></label>
-                                </div>
-                                {c.plates.map(p => (
-                                    <div key={p.id} className="field-row plate-row">
-                                        <span>Plate {p.id}</span>
-                                        <label>Width<input type="text" value={p.width} onChange={e => updatePlate(c.id, p.id, "width", e.target.value)} /></label>
-                                        <label>Top Height<input type="text" value={p.topHeight} onChange={e => updatePlate(c.id, p.id, "topHeight", e.target.value)} /></label>
-                                        <label>Bottom Height<input type="text" value={p.bottomHeight} onChange={e => updatePlate(c.id, p.id, "bottomHeight", e.target.value)} /></label>
-                                        <label>X<input type="text" value={p.x} onChange={e => updatePlate(c.id, p.id, "x", e.target.value)} /></label>
-                                        <label>Y<input type="text" value={p.y} onChange={e => updatePlate(c.id, p.id, "y", e.target.value)} /></label>
-                                    </div>
+                        {job.cylinders.map((cylinder) => (
+                            <section className="boxed-section" key={cylinder.id}>
+                                <h2 className="section-title boxed-section-title">Cylinder {cylinder.id}</h2>
+
+                                <FormGrid direction="row" theme="dark">
+                                    <FormGroup label="Naam" htmlFor={`cylinder-name-${cylinder.id}`}>
+                                        <InputField
+                                            id={`cylinder-name-${cylinder.id}`}
+                                            type="text"
+                                            inputValue={cylinder.name}
+                                            handleInputChange={(val) => updateCylinder(cylinder.id, "name", val)}
+                                            variant="narrow"
+                                        />
+                                    </FormGroup>
+                                </FormGrid>
+
+                                {cylinder.plates.map((plate) => (
+                                    <FormGrid direction="row" theme="dark" key={plate.id}>
+                                        <span>Plate {plate.id}</span>
+
+                                        <FormGroup label="Width" htmlFor={`plate-${plate.id}-width`}>
+                                            <InputField
+                                                id={`plate-${plate.id}-width`}
+                                                type="text"
+                                                inputValue={plate.width}
+                                                handleInputChange={(val) =>
+                                                    updatePlate(cylinder.id, plate.id, "width", val)
+                                                }
+                                                variant="narrow"
+                                            />
+                                        </FormGroup>
+
+                                        <FormGroup label="Top Height" htmlFor={`plate-${plate.id}-topHeight`}>
+                                            <InputField
+                                                id={`plate-${plate.id}-topHeight`}
+                                                type="text"
+                                                inputValue={plate.topHeight}
+                                                handleInputChange={(val) =>
+                                                    updatePlate(cylinder.id, plate.id, "topHeight", val)
+                                                }
+                                                variant="narrow"
+                                            />
+                                        </FormGroup>
+
+                                        <FormGroup label="Bottom Height" htmlFor={`plate-${plate.id}-bottomHeight`}>
+                                            <InputField
+                                                id={`plate-${plate.id}-bottomHeight`}
+                                                type="text"
+                                                inputValue={plate.bottomHeight}
+                                                handleInputChange={(val) =>
+                                                    updatePlate(cylinder.id, plate.id, "bottomHeight", val)
+                                                }
+                                                variant="narrow"
+                                            />
+                                        </FormGroup>
+
+                                        <FormGroup label="X" htmlFor={`plate-${plate.id}-x`}>
+                                            <InputField
+                                                id={`plate-${plate.id}-x`}
+                                                type="text"
+                                                inputValue={plate.x}
+                                                handleInputChange={(val) =>
+                                                    updatePlate(cylinder.id, plate.id, "x", val)
+                                                }
+                                                variant="narrow"
+                                            />
+                                        </FormGroup>
+
+                                        <FormGroup label="Y" htmlFor={`plate-${plate.id}-y`}>
+                                            <InputField
+                                                id={`plate-${plate.id}-y`}
+                                                type="text"
+                                                inputValue={plate.y}
+                                                handleInputChange={(val) =>
+                                                    updatePlate(cylinder.id, plate.id, "y", val)
+                                                }
+                                                variant="narrow"
+                                            />
+                                        </FormGroup>
+                                    </FormGrid>
                                 ))}
                             </section>
                         ))}
@@ -322,9 +443,11 @@ const JobCreator = () => {
                         </div>
                     </>
                 )}
+
             </div>
         </div>
     );
 };
 
 export default JobCreator;
+

@@ -6,7 +6,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
 const [user, setUser] = useState(() => {
     const current = getCurrentUser();
-    console.log("🧠 AuthProvider init met user:", current);
+    console.log("AuthProvider init met user:", current);
     return current;
 });
 
@@ -16,15 +16,15 @@ const [user, setUser] = useState(() => {
         if (success) {
             const newUser = getCurrentUser();
             setUser(newUser);
-            console.log('🔐 Ingelogd via API:', newUser);
+            console.log('Ingelogd via API:', newUser);
         } else {
-            console.error('❌ Inloggen via API mislukt');
+            console.error('Inloggen via API mislukt');
         }
         return success;
     };
 
     const logout = () => {
-        console.log('🚪 Uitloggen gebruiker:', user?.email);
+        console.log('Uitloggen gebruiker:', user?.email);
         logoutUser();
         setUser(null);
     };
