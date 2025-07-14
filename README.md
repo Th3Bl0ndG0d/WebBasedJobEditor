@@ -104,6 +104,8 @@ De pagina vormt het centrale startpunt voor operators om snel toegang te krijgen
 en platen.
 ![JobOverzicht.png](/src/assets/screenshots/JobOverzicht.png)
 
+## Job aanmaken
+
 De New Job-pagina biedt de mogelijkheid om een compleet nieuwe job aan te maken.
 Deze functie is beschikbaar voor zowel operators als beheerders.
 
@@ -113,10 +115,24 @@ cylinder opgegeven.
 ![NewJob.png](/src/assets/screenshots/NewJob.png)
 
 Velden die worden ingevoerd:
-- Jobnummer, naam, datum, extra info
-- Cylinder-template: naam
-- Plate-template: afmetingen en positie
-- Aantal cylinders en platen
+
+**Jobgegevens**
+Jobnummer: Unieke identificatiecode voor de job (bijv. JOB-001).
+Naam: _De interne of klantgerichte benaming van de job._
+Info: _Vrij tekstveld voor aanvullende opmerkingen of instructies m.b.t. de job._
+
+**Cylindergegevens**
+Repeat: _De afwikkeling van de cylinder in millimeters. Dit geeft aan hoe lang het te bedrukken oppervlak is per omwenteling._
+
+**Plategegevens**
+Width: _De breedte van de plaat in millimeters._
+TopHeight: _Hoogte van de plaat aan de bovenzijde, gemeten vanaf het middelpunt van de cylinder._
+BottomHeight: _Hoogte aan de onderzijde, eveneens gemeten vanaf het middelpunt._
+x: _Horizontale positie van de plaat op de cylinder (offset in mm)._
+y: _Verticale positie van de plaat op de cylinder (offset in mm)._
+
+
+**bepaal aantal cylinders en platen.**
 
 Na het klikken op Genereer Job wordt een overzicht getoond waarin alle gegenereerde cylinders en platen nog bewerkt 
 kunnen worden voordat de job wordt opgeslagen.
@@ -129,3 +145,4 @@ Een toast melding zal een melding sturen dat het gelukt is.
 
 Via de link in de toast kom je direct terug naar de job overzicht. Hierin zie je nu de nieuwe job die is toegevoegd.
 ![BanaanJobInOverzicht.png](/src/assets/screenshots/BanaanJobInOverzicht.png)
+
