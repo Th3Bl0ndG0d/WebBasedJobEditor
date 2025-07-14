@@ -53,6 +53,18 @@ Druk vervolgens op de Upload API configuratie knop. Nu is de juiste database gel
 - `npm fund`  
   Toont welke open source projecten financiering ontvangen of nodig hebben. Informatief, heeft geen invloed op je project.
 
+## Visuele feedback mbv toast
+Voor visuele feedback maakt de applicatie gebruik van `react-icons/fi` (Feather icons). 
+Intern worden deze gemapt naar emoji-symbolen voor consistent gebruik in meldingen:
+
+| Type     | Feather Icon     | Emoji |
+|----------|------------------|-------|
+| success  | `FiCheckCircle`  | ✅    |
+| error    | `FiXCircle`      | ❌    |
+| warning  | `FiAlertTriangle`| ⚠️    |
+| info     | `FiInfo`         | ℹ️    |
+| debug    | `FiTerminal`     | 🐞    |
+
 
 ## Applicatie starten:
 Voer het volgende commando uit om de ontwikkelserver te starten:
@@ -104,6 +116,18 @@ De pagina vormt het centrale startpunt voor operators om snel toegang te krijgen
 en platen.
 ![JobOverzicht.png](/src/assets/screenshots/JobOverzicht.png)
 
+In de Job Overview-pagina worden bij het selecteren van een job drie actie-iconen weergegeven:
+
+**Edit**  _Opent de geselecteerde job om gegevens te bewerken._ (niet uitgewerkt)
+**Copy**  _Maakt een exacte kopie van de job._ (niet uitgewerkt)
+**Delete**  _Verwijdert de job definitief uit het systeem._ (beschikbaar)
+
+Deze iconen reageren onafhankelijk van het klikken op de rij zelf.
+![JobSelecteren.png](/src/assets/screenshots/JobSelecteren.png)
+
+De iconen zijn afkomstig uit react-icons/fi (Feather Icons) en worden gestyled via de klassen 
+edit-icon, copy-icon en delete-icon.
+
 ## Job aanmaken
 
 De New Job-pagina biedt de mogelijkheid om een compleet nieuwe job aan te maken.
@@ -117,7 +141,7 @@ cylinder opgegeven.
 Velden die worden ingevoerd:
 
 **Jobgegevens**
-Jobnummer: Unieke identificatiecode voor de job (bijv. JOB-001).
+Jobnummer: _Unieke identificatiecode voor de job (bijv. JOB-001)._
 Naam: _De interne of klantgerichte benaming van de job._
 Info: _Vrij tekstveld voor aanvullende opmerkingen of instructies m.b.t. de job._
 
@@ -131,15 +155,14 @@ BottomHeight: _Hoogte aan de onderzijde, eveneens gemeten vanaf het middelpunt._
 x: _Horizontale positie van de plaat op de cylinder (offset in mm)._
 y: _Verticale positie van de plaat op de cylinder (offset in mm)._
 
-
 **bepaal aantal cylinders en platen.**
 
-Na het klikken op Genereer Job wordt een overzicht getoond waarin alle gegenereerde cylinders en platen nog bewerkt 
-kunnen worden voordat de job wordt opgeslagen.
+Klok nu op **Genereer Job** Er wordt nu een overzicht getoond waarin alle gegenereerde cylinders en platen nog bewerkt 
+kunnen worden voordat de job wordt opgeslagen. 
 
 ![NewJobOverzicht.png](/src/assets/screenshots/NewJobOverzicht.png)
 
-Na het klikken op Creer Job wordt de job daadwerkelijk naar de API gestuurd en dus opgeslagen. 
+Druk op **Creer Job** om de job daadwerkelijk naar de API te sturen voor opslag. 
 Een toast melding zal een melding sturen dat het gelukt is.
 ![ToastJobIsAangemaakt.png](/src/assets/screenshots/ToastJobIsAangemaakt.png)
 
