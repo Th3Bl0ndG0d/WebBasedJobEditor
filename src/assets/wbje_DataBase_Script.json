@@ -3,287 +3,77 @@
     {
       "name": "jobs",
       "fields": [
-        {
-          "name": "id",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "number",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "date",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "info",
-          "type": "string"
-        },
-        {
-          "name": "repeat",
-          "type": "number",
-          "required": true
-        }
+        { "name": "id", "type": "number", "required": true },
+        { "name": "number", "type": "string", "required": true },
+        { "name": "name", "type": "string", "required": true },
+        { "name": "date", "type": "string", "required": true },
+        { "name": "info", "type": "string" },
+        { "name": "repeat", "type": "number", "required": true }
       ],
       "permissions": {
-        "GET": [
-          "anonymous",
-          "operator",
-          "beheerder"
-        ],
-        "POST": [
-          "operator",
-          "beheerder"
-        ],
-        "PUT": [
-          "operator",
-          "beheerder"
-        ],
-        "DELETE": [
-          "operator",
-          "beheerder"
-        ]
+        "GET": ["anonymous", "operator", "beheerder"],
+        "POST": ["operator", "beheerder"],
+        "PUT": ["operator", "beheerder"],
+        "DELETE": ["operator", "beheerder"]
       }
     },
     {
       "name": "cylinders",
       "fields": [
-        {
-          "name": "id",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "jobId",
-          "type": "reference:jobs",
-          "required": true
-        }
+        { "name": "id", "type": "number", "required": true },
+        { "name": "name", "type": "string", "required": true },
+        { "name": "jobId", "type": "reference:jobs", "required": true }
       ],
       "permissions": {
-        "GET": [
-          "anonymous",
-          "operator",
-          "beheerder"
-        ],
-        "POST": [
-          "operator",
-          "beheerder"
-        ],
-        "PUT": [
-          "operator",
-          "beheerder"
-        ],
-        "DELETE": [
-          "operator",
-          "beheerder"
-        ]
+        "GET": ["anonymous", "operator", "beheerder"],
+        "POST": ["operator", "beheerder"],
+        "PUT": ["operator", "beheerder"],
+        "DELETE": ["operator", "beheerder"]
       }
     },
     {
       "name": "plates",
       "fields": [
-        {
-          "name": "id",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "width",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "topHeight",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "bottomHeight",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "x",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "y",
-          "type": "number",
-          "required": true
-        },
-        {
-          "name": "cylinderId",
-          "type": "reference:cylinders",
-          "required": true
-        }
+        { "name": "id", "type": "number", "required": true },
+        { "name": "width", "type": "number", "required": true },
+        { "name": "topHeight", "type": "number", "required": true },
+        { "name": "bottomHeight", "type": "number", "required": true },
+        { "name": "x", "type": "number", "required": true },
+        { "name": "y", "type": "number", "required": true },
+        { "name": "cylinderId", "type": "reference:cylinders", "required": true }
       ],
       "permissions": {
-        "GET": [
-          "anonymous",
-          "operator",
-          "beheerder"
-        ],
-        "POST": [
-          "operator",
-          "beheerder"
-        ],
-        "PUT": [
-          "operator",
-          "beheerder"
-        ],
-        "DELETE": [
-          "operator",
-          "beheerder"
-        ]
+        "GET": ["anonymous", "operator", "beheerder"],
+        "POST": ["operator", "beheerder"],
+        "PUT": ["beheerder"],
+        "DELETE": ["beheerder"]
       }
     }
   ],
   "users": [
-    {
-      "id": 1,
-      "email": "admin@example.com",
-      "password": "admin",
-      "roles": [
-        "beheerder"
-      ]
-    },
-    {
-      "id": 2,
-      "email": "operator@example.com",
-      "password": "operator",
-      "roles": [
-        "operator"
-      ]
-    }
+    { "id": 1, "email": "admin@example.com", "password": "admin", "roles": ["beheerder"] },
+    { "id": 2, "email": "operator@example.com", "password": "operator", "roles": ["operator"] }
   ],
   "data": {
     "jobs": [
-      {
-        "number": "JOB-001",
-        "name": "TestJob",
-        "date": "2025-01-25",
-        "info": "Klant: Verpakkingen BV",
-        "repeat": 620,
-        "id": 1
-      },
-      {
-        "number": "JOB-002",
-        "name": "TestJob Twee",
-        "date": "2025-01-25",
-        "info": "Klant: Voorbeeldbedrijf",
-        "repeat": 450,
-        "id": 2
-      }
+      { "id": 1, "number": "JOB-001", "name": "TestJob", "date": "2025-01-25", "info": "Klant: Verpakkingen BV", "repeat": 620 },
+      { "id": 2, "number": "JOB-002", "name": "TestJob Twee", "date": "2025-01-25", "info": "Klant: Voorbeeldbedrijf", "repeat": 450 }
     ],
     "cylinders": [
-      {
-        "name": "Cylinder A1",
-        "jobId": 1,
-        "id": 101
-      },
-      {
-        "name": "Cylinder A2",
-        "jobId": 1,
-        "id": 102
-      },
-      {
-        "name": "Cylinder B1",
-        "jobId": 2,
-        "id": 201
-      },
-      {
-        "name": "Cylinder B2",
-        "jobId": 2,
-        "id": 202
-      }
+      { "id": 101, "name": "Cylinder A1", "jobId": 1 },
+      { "id": 102, "name": "Cylinder A2", "jobId": 1 },
+      { "id": 201, "name": "Cylinder B1", "jobId": 2 },
+      { "id": 202, "name": "Cylinder B2", "jobId": 2 }
     ],
     "plates": [
-      {
-        "id": 1001,
-        "width": 300,
-        "topHeight": 400,
-        "bottomHeight": 380,
-        "x": 10,
-        "y": 10,
-        "cylinderId": 101
-      },
-      {
-        "id": 1002,
-        "width": 300,
-        "topHeight": 400,
-        "bottomHeight": 380,
-        "x": 20,
-        "y": 10,
-        "cylinderId": 101
-      },
-      {
-        "id": 1003,
-        "width": 300,
-        "topHeight": 400,
-        "bottomHeight": 380,
-        "x": 10,
-        "y": 20,
-        "cylinderId": 102
-      },
-      {
-        "id": 1004,
-        "width": 300,
-        "topHeight": 400,
-        "bottomHeight": 380,
-        "x": 20,
-        "y": 20,
-        "cylinderId": 102
-      },
-      {
-        "id": 2001,
-        "width": 310,
-        "topHeight": 410,
-        "bottomHeight": 390,
-        "x": 15,
-        "y": 10,
-        "cylinderId": 201
-      },
-      {
-        "id": 2002,
-        "width": 310,
-        "topHeight": 410,
-        "bottomHeight": 390,
-        "x": 25,
-        "y": 10,
-        "cylinderId": 201
-      },
-      {
-        "id": 2003,
-        "width": 310,
-        "topHeight": 410,
-        "bottomHeight": 390,
-        "x": 15,
-        "y": 20,
-        "cylinderId": 202
-      },
-      {
-        "id": 2004,
-        "width": 310,
-        "topHeight": 410,
-        "bottomHeight": 390,
-        "x": 25,
-        "y": 20,
-        "cylinderId": 202
-      }
+      { "id": 1001, "width": 300, "topHeight": 400, "bottomHeight": 380, "x": 10, "y": 10, "cylinderId": 101 },
+      { "id": 1002, "width": 300, "topHeight": 400, "bottomHeight": 380, "x": 20, "y": 10, "cylinderId": 101 },
+      { "id": 1003, "width": 300, "topHeight": 400, "bottomHeight": 380, "x": 10, "y": 20, "cylinderId": 102 },
+      { "id": 1004, "width": 300, "topHeight": 400, "bottomHeight": 380, "x": 20, "y": 20, "cylinderId": 102 },
+      { "id": 2001, "width": 310, "topHeight": 410, "bottomHeight": 390, "x": 15, "y": 10, "cylinderId": 201 },
+      { "id": 2002, "width": 310, "topHeight": 410, "bottomHeight": 390, "x": 25, "y": 10, "cylinderId": 201 },
+      { "id": 2003, "width": 310, "topHeight": 410, "bottomHeight": 390, "x": 15, "y": 20, "cylinderId": 202 },
+      { "id": 2004, "width": 310, "topHeight": 410, "bottomHeight": 390, "x": 25, "y": 20, "cylinderId": 202 }
     ]
   }
 }
