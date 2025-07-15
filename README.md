@@ -4,6 +4,7 @@ De applicatie stelt gebruikers in staat om visueel jobs samen te stellen, cylind
 Inclusief ondersteuning voor gebruikersauthenticatie, rol beheer en een gebruiksvriendelijke interface.
 
 Hieronder is de belangrijkste pagina te zien van de WBJE, de job overzichts pagina:
+
 ![JobOverzicht.png](/src/assets/screenshots/JobOverzicht.png)
 
 
@@ -71,11 +72,11 @@ Voer het volgende commando uit om de ontwikkelserver te starten:
 - `npm run dev`
 
 De applicatie draait standaard op:
+
 http://localhost:5173
 
-Inloggen in de WJBE
-Bij het starten van de Web Based Job Editor (WBJE) word je automatisch doorgestuurd naar de loginpagina. 
-Hier kun je inloggen met één van de twee standaard gebruikersaccounts: een operator of een beheerder (admin).
+Bij het starten van de Web Based Job Editor **(WBJE)** word je automatisch doorgestuurd naar de **loginpagina**. 
+Hier kun je inloggen met één van de twee standaard gebruikersaccounts: een **operator** of een **beheerder** (admin).
 
 
 ## Inloggen Operator
@@ -85,6 +86,7 @@ Hier kun je inloggen met één van de twee standaard gebruikersaccounts: een ope
 
 Na succesvolle login wordt de operator automatisch doorgestuurd naar de Job Overview-pagina.
 Operators hebben beperkte rechten en kunnen bijvoorbeeld geen gebruikersrollen wijzigen.
+
 ![LoginOperator.png](/src/assets/screenshots/LoginOperator.png)
 
 
@@ -95,7 +97,8 @@ Operators hebben beperkte rechten en kunnen bijvoorbeeld geen gebruikersrollen w
 
 Beheerders hebben uitgebreide rechten en worden na het inloggen direct doorgestuurd naar de Profielpagina. 
 Zij kunnen o.a. gebruikersrollen aanpassen en volledige bewerkingen uitvoeren binnen het systeem.
-![LoginAdministrator.png](/src/assets/screenshots/LoginAdministrator.png)
+
+![LoginAdmin.png](/src/assets/screenshots/LoginAdmin.png)
 
 ## JobOverzicht
 
@@ -114,24 +117,56 @@ Jobnummer
 Vanuit deze pagina kun je jobs selecteren, bekijken of (afhankelijk van je rol) bewerken en verwijderen.
 De pagina vormt het centrale startpunt voor operators om snel toegang te krijgen tot jobs en bijbehorende cylinders 
 en platen.
+
 ![JobOverzicht.png](/src/assets/screenshots/JobOverzicht.png)
 
 In de Job Overview-pagina worden bij het selecteren van een job drie actie-iconen weergegeven:
 
-**Edit**  _Opent de geselecteerde job om gegevens te bewerken._ (niet uitgewerkt)
-**Copy**  _Maakt een exacte kopie van de job._ (niet uitgewerkt)
-**Delete**  _Verwijdert de job definitief uit het systeem._ (beschikbaar)
+- **Edit**  _Opent de geselecteerde job om gegevens te bewerken. (niet compleet uitgewerkt)_
+- **Copy**  _Maakt een exacte kopie van de job. (niet uitgewerkt)_
+- **Delete**  _Verwijdert de job definitief uit het systeem. (beschikbaar)_
 
 Deze iconen reageren onafhankelijk van het klikken op de rij zelf.
+
 ![JobSelecteren.png](/src/assets/screenshots/JobSelecteren.png)
 
-De iconen zijn afkomstig uit react-icons/fi (Feather Icons) en worden gestyled via de klassen 
+De iconen zijn afkomstig uit react-icons/fi (Feather Icons) en worden gestyled via de klassen
 edit-icon, copy-icon en delete-icon.
+
+## Job bewerken
+
+De job overzicht pagina bied een functie waarbij je de job kan **bewerken** Hiervoor selecteer je de gewenste job, en 
+druk je op het **edit** icoon.
+
+![Edit.png](/src/assets/screenshots/Edit.png)
+
+Nu wordt er een nieuwe pagina geladen waarin de complete job weergegeven wordt in een .json formaat. 
+
+![jsonOverzichtBanaanJob.png](/src/assets/screenshots/jsonOverzichtBanaanJob.png)
+
+Dit is in hoever deze functie is uitgewerkt. Selecteer job overzicht in de navigatie balk om terug te gaan.
+
+## Job verwijderen
+
+De job overzicht pagina bied een functie waarbij je de job kan **verwijderen** Hiervoor selecteer je de gewenste job, en
+druk je op het **delete** icoon.
+
+![DeleteJob.png](/src/assets/screenshots/DeleteJob.png)
+
+Vervolgens wordt er middels een toast weergegeven dat de job verwijdert wordt uit de database. Afhankelijk welke debug
+instellingen aanstaan in het project worden er evt meerdere toast messages weergegeven.
+
+![ToastVerzoekTotVerwijderenJob.png](/src/assets/screenshots/ToastVerzoekTotVerwijderenJob.png)
+
+Nadat de complete job verwijdert is wordt het job overzicht opnieuw geladen. Je zult nu zien dat de job ook echt is
+verwijderd.
+
+![JobOverZichtZonderBanaanJob.png](/src/assets/screenshots/JobOverZichtZonderBanaanJob.png)
 
 ## Job aanmaken
 
-De New Job-pagina biedt de mogelijkheid om een compleet nieuwe job aan te maken.
-Deze functie is beschikbaar voor zowel operators als beheerders.
+De New Job-pagina biedt de mogelijkheid om een compleet nieuwe job aan te maken. Deze functie is beschikbaar voor zowel 
+operators als beheerders.
 
 De gebruiker voert eerst de benodigde gegevens in. Daarna wordt het aantal cylinders en het aantal platen per 
 cylinder opgegeven.
@@ -141,31 +176,92 @@ cylinder opgegeven.
 Velden die worden ingevoerd:
 
 **Jobgegevens**
-Jobnummer: _Unieke identificatiecode voor de job (bijv. JOB-001)._
-Naam: _De interne of klantgerichte benaming van de job._
-Info: _Vrij tekstveld voor aanvullende opmerkingen of instructies m.b.t. de job._
+- Jobnummer: _Unieke identificatiecode voor de job (bijv. JOB-001)._
+- Naam: _De interne of klantgerichte benaming van de job._
+- Info: _Vrij tekstveld voor aanvullende opmerkingen of instructies m.b.t. de job._
 
 **Cylindergegevens**
-Repeat: _De afwikkeling van de cylinder in millimeters. Dit geeft aan hoe lang het te bedrukken oppervlak is per omwenteling._
+- Repeat: _De afwikkeling van de cylinder in millimeters. Dit geeft aan hoe lang het te bedrukken oppervlak is per omwenteling._
 
 **Plategegevens**
-Width: _De breedte van de plaat in millimeters._
-TopHeight: _Hoogte van de plaat aan de bovenzijde, gemeten vanaf het middelpunt van de cylinder._
-BottomHeight: _Hoogte aan de onderzijde, eveneens gemeten vanaf het middelpunt._
-x: _Horizontale positie van de plaat op de cylinder (offset in mm)._
-y: _Verticale positie van de plaat op de cylinder (offset in mm)._
+- Width: _De breedte van de plaat in millimeters._
+- TopHeight: _Hoogte van de plaat aan de bovenzijde, gemeten vanaf het middelpunt van de cylinder._
+- BottomHeight: _Hoogte aan de onderzijde, eveneens gemeten vanaf het middelpunt._
+- x: _Horizontale positie van de plaat op de cylinder (offset in mm)._
+- y: _Verticale positie van de plaat op de cylinder (offset in mm)._
 
 **bepaal aantal cylinders en platen.**
 
 Klok nu op **Genereer Job** Er wordt nu een overzicht getoond waarin alle gegenereerde cylinders en platen nog bewerkt 
 kunnen worden voordat de job wordt opgeslagen. 
 
-![NewJobOverzicht.png](/src/assets/screenshots/NewJobOverzicht.png)
+![NewJobOverZicht.png](/src/assets/screenshots/NewJobOverZicht.png)
 
 Druk op **Creer Job** om de job daadwerkelijk naar de API te sturen voor opslag. 
 Een toast melding zal een melding sturen dat het gelukt is.
+
 ![ToastJobIsAangemaakt.png](/src/assets/screenshots/ToastJobIsAangemaakt.png)
 
 Via de link in de toast kom je direct terug naar de job overzicht. Hierin zie je nu de nieuwe job die is toegevoegd.
+
 ![BanaanJobInOverzicht.png](/src/assets/screenshots/BanaanJobInOverzicht.png)
 
+## Nieuwe gebruiker toevoegen vanuit login scherm
+Wanneer nog geen gebruikers bestaan in het systeem, biedt het login scherm de mogelijkheid om de eerste gebruiker aan 
+te maken. Deze eerste gebruiker krijgt automatisch de rol van operator. Dit zorgt ervoor dat het systeem veilig en 
+beheersbaar kan worden opgestart.
+
+Zorg ervoor dat je niet ingelogt bent. Of de applicatie voor het eerst opstart. Druk nu op **Nieuwe gebruiker aanmaken** 
+op de login pagina.
+
+![LoginOperator.png](/src/assets/screenshots/LoginOperator.png)
+
+Vervolgens wordt je doorgestuurd naar de registratie pagina van de WBJE
+
+![GebruikerRegisterenVanuitLoginForm.png](/src/assets/screenshots/GebruikerRegisterenVanuitLoginForm.png)
+
+Voer nu een **email** adres in en een **wachtwoord** naar keuze. Druk vervolgens op **aanmaken** om een gebruiker te
+registreren. Er zit hier geen verdere controlle op de gegevens die ingevoerd worden. Dubbele gebruikers worden niet
+afgevangen. Druk op **anuleren** om terug te gaan naar het inlog scherm. Na het succesvol registeren van een nieuwe 
+gebruiker, word je automatisch ingelogd en doorgestuurd naar de job overzicht pagina.
+
+## Nieuwe gebruiker toevoegen vanuit de profiel pagina (alleen beschikbaar voor beheerders)
+
+Beheerders kunnen op hun profielpagina extra gebruikers toevoegen. Hierbij kunnen zij een gebruikersnaam, wachtwoord 
+en rol (operator, beheerder of programmeur) instellen. Deze functionaliteit is enkel zichtbaar en toegankelijk voor 
+gebruikers met de rol beheerder, zodat rechten en toegang zorgvuldig beheerd kunnen worden. 
+
+Log in als admin@example.com hiermee word je direct doorgestuurd naar de profiel pagina.
+
+![GebruikerRegisterenVanuitProfileForm.png](/src/assets/screenshots/GebruikerRegisterenVanuitProfileForm.png)
+
+Selecteer **--Nieuwe gebruiker toevoegen** in de dropdown. Voer nu een **email** adres in en een **wachtwoord** naar 
+keuze, selecteer vervolgend de **Rol** die je wilt toekenen aan deze nieuwe gebruiker. Druk vervolgens op **aanmaken** o
+m een gebruiker te registreren. Ook hier zit geen verdere controlle op de gegevens die ingevoerd worden. Dubbele 
+gebruikers worden niet afgevangen. Druk op **anuleren** om terug te gaan naar het inlog scherm. Na het succesvol 
+registeren van een nieuwe gebruiker, wordt deze automatisch toegevoegd in de gebruikers overzicht dropdown lijst.
+
+## Gebruiker profiel bewerken vanuit de profiel pagina (operator)
+
+Als default (operator) gebruiker kan je alleen je eigen **Email** en **Wachtwoord** wijzigen. Ga hiervoor naar de velden
+die je wilt wijzigen. Breng de wijzigingen aan en druk op **opslaan**
+
+![ProfielBewerkenOperator.png](/src/assets/screenshots/ProfielBewerkenOperator.png)
+
+Je zult zien dat er niets gebeurt. Deze functie is niet geimplementeerd. Druk op **anuleren** om terug te gaan naar het 
+job overzichts scherm.
+
+
+## Gebruiker profiel bewerken vanuit de profiel pagina (administrator)
+
+Selecteer een gebruiker vanuit de dropdown. 
+
+![GebruikerSelecterenViaDropDown.png](/src/assets/screenshots/GebruikerSelecterenViaDropDown.png)
+
+Nu kan je de **email** en **wachtwoord** wijzigen samen met de **rol**. indien gewenst. Voor de **rol** dien je de 
+dropdown te gebruiken
+
+![RolVeranderenGebruiker.png](/src/assets/screenshots/RolVeranderenGebruiker.png)
+
+Je hebt nu de mogelijkheid om de **wijzignen** te opslaan of om de gebruiker te **verwijderen**. Druk hiervoor op de 
+gewenste knop. Echter zijn beide functies niet geimplementeerd. Dus hiervoor wordt een melding weergegeven.
