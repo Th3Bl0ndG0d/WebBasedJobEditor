@@ -242,7 +242,7 @@ function Profile({ mode = 'edit' }) {
                                 id="userType"
                                 value={userType}
                                 handleChange={setUserType}
-                                disabled={!isAdmin && isEditMode}
+                                disabled={!isAdmin}
                                 options={[
                                     { value: "operator", label: "Operator" },
                                     { value: "beheerder", label: "Beheerder" },
