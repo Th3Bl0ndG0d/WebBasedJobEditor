@@ -75,9 +75,8 @@ De applicatie draait standaard op:
 
 http://localhost:5173
 
-Inloggen in de WJBE
-Bij het starten van de Web Based Job Editor (WBJE) word je automatisch doorgestuurd naar de loginpagina. 
-Hier kun je inloggen met één van de twee standaard gebruikersaccounts: een operator of een beheerder (admin).
+Bij het starten van de Web Based Job Editor **(WBJE)** word je automatisch doorgestuurd naar de **loginpagina**. 
+Hier kun je inloggen met één van de twee standaard gebruikersaccounts: een **operator** of een **beheerder** (admin).
 
 
 ## Inloggen Operator
@@ -123,9 +122,9 @@ en platen.
 
 In de Job Overview-pagina worden bij het selecteren van een job drie actie-iconen weergegeven:
 
-**Edit**  _Opent de geselecteerde job om gegevens te bewerken._ (niet compleet uitgewerkt)
-**Copy**  _Maakt een exacte kopie van de job._ (niet uitgewerkt)
-**Delete**  _Verwijdert de job definitief uit het systeem._ (beschikbaar)
+- **Edit**  _Opent de geselecteerde job om gegevens te bewerken. (niet compleet uitgewerkt)_
+- **Copy**  _Maakt een exacte kopie van de job. (niet uitgewerkt)_
+- **Delete**  _Verwijdert de job definitief uit het systeem. (beschikbaar)_
 
 Deze iconen reageren onafhankelijk van het klikken op de rij zelf.
 
@@ -177,19 +176,19 @@ cylinder opgegeven.
 Velden die worden ingevoerd:
 
 **Jobgegevens**
-Jobnummer: _Unieke identificatiecode voor de job (bijv. JOB-001)._
-Naam: _De interne of klantgerichte benaming van de job._
-Info: _Vrij tekstveld voor aanvullende opmerkingen of instructies m.b.t. de job._
+- Jobnummer: _Unieke identificatiecode voor de job (bijv. JOB-001)._
+- Naam: _De interne of klantgerichte benaming van de job._
+- Info: _Vrij tekstveld voor aanvullende opmerkingen of instructies m.b.t. de job._
 
 **Cylindergegevens**
-Repeat: _De afwikkeling van de cylinder in millimeters. Dit geeft aan hoe lang het te bedrukken oppervlak is per omwenteling._
+- Repeat: _De afwikkeling van de cylinder in millimeters. Dit geeft aan hoe lang het te bedrukken oppervlak is per omwenteling._
 
 **Plategegevens**
-Width: _De breedte van de plaat in millimeters._
-TopHeight: _Hoogte van de plaat aan de bovenzijde, gemeten vanaf het middelpunt van de cylinder._
-BottomHeight: _Hoogte aan de onderzijde, eveneens gemeten vanaf het middelpunt._
-x: _Horizontale positie van de plaat op de cylinder (offset in mm)._
-y: _Verticale positie van de plaat op de cylinder (offset in mm)._
+- Width: _De breedte van de plaat in millimeters._
+- TopHeight: _Hoogte van de plaat aan de bovenzijde, gemeten vanaf het middelpunt van de cylinder._
+- BottomHeight: _Hoogte aan de onderzijde, eveneens gemeten vanaf het middelpunt._
+- x: _Horizontale positie van de plaat op de cylinder (offset in mm)._
+- y: _Verticale positie van de plaat op de cylinder (offset in mm)._
 
 **bepaal aantal cylinders en platen.**
 
