@@ -30,11 +30,10 @@ function isTokenValid() {
 
         // 4. De "exp" geeft aan wanneer de token verloopt (in seconden sinds 1970) Jeeej goggle
         const expirationTime = decodedToken.exp;
-
         // 5. Haal de huidige tijd op in seconden
         const currentTime = Date.now() / 1000;
-
         // 6. Als de huidige tijd kleiner is dan de exp, is de token nog geldig
+        if(!(currentTime < expirationTime)) console.log('TimeOut tokkie verlopen');
         return currentTime < expirationTime;
 
     } catch (error) {

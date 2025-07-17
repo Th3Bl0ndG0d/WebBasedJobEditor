@@ -24,12 +24,6 @@ const debug = createDebugger({
  * @returns {Promise<string|null>} Het ID van de aangemaakte plaat of null bij fout
  */
 export async function createPlate(plate,token) {
-
-    if (!token) {
-        debug.notify("debug", "Geen geldige gebruiker.");
-        return null;
-    }
-
     try {
         const headers = getHeaders(token);
         debug.notify("debug", "Endpoint: /api/plates");
@@ -58,12 +52,6 @@ export async function createPlate(plate,token) {
  * @returns {Promise<string|null>} Het ID van de aangemaakte cylinder of null bij fout
  */
 export async function createCylinder(cylinder,token) {
-
-    if (!token) {
-        debug.notify("warning", "Geen geldige gebruiker.");
-        return null;
-    }
-
     try {
         const headers = getHeaders(token);
         debug.notify("debug", "Endpoint: /api/cylinders");
@@ -92,12 +80,6 @@ export async function createCylinder(cylinder,token) {
  * @returns {Promise<Object|null>} De aangemaakte job of null bij fout
  */
 export async function createFullJob(jobObject,token) {
-
-    if (!token) {
-        debug.notify("error", "Niet ingelogd.");
-        return null;
-    }
-
     try {
         debug.notify("info", "Start volledige jobcreatie met input:", { detail: jobObject });
 

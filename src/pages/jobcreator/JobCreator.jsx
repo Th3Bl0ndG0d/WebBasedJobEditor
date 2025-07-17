@@ -14,6 +14,7 @@ import {Link} from "react-router-dom";
 import {createDebugger} from "../../components/debugger/createDebugger.jsx";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import {AuthContext} from "../../context/AuthProvider.jsx";
+import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
 // Debugger instellen
 const debug = createDebugger({
     enableConsole: true,
@@ -32,7 +33,7 @@ const debug = createDebugger({
  * Gebruikt een gestandaardiseerde invoerstructuur en valideert de essentiële invoervelden alvorens het object te genereren.
  */
 const JobCreator = () => {
-    const { user } = useContext(AuthContext);
+    const { logout } = useContext(AuthContext);
     // Interne status voor de algemene jobmetadata (nummer, naam, info)
     const [jobDetails, setJobDetails] = useState({
         number: "",
@@ -165,33 +166,34 @@ const JobCreator = () => {
      * Geeft feedback via toastmeldingen.
      */
     const submitJob = async () => {
-        const token = localStorage.getItem('token');
+        const token = getValidTokenOrLogout(logout); // Tokencontrole vóór verzenden
+        if (!token) return; // User is uitgelogd bij ongeldige sessie
+
         debug.notify("debug", "Job wordt aangemaakt...");
 
-            const response = await createFullJob(job,token);
+        const response = await createFullJob(job, token);
 
-            if (response) {
+        if (response) {
+            debug.notify("succes", "Job wordt aangemaakt...");
+            CustomToast.success(
+                <>
+                    Job <strong>{job.name}</strong> is aangemaakt.<br />
+                    <Link to={`/jobOverview`} className="link-button">
+                        ➤ Ga naar job overzicht
+                    </Link>
+                </>,
+                { autoClose: 6000 }
+            );
 
-                debug.notify("succes", "Job wordt aangemaakt...");
-                // Hier nog een xtje goed naar kijken.
-                CustomToast.success(
-                    <>
-                        Job <strong>{job.name}</strong> is aangemaakt.<br />
-                        <Link to={`/jobOverview`} className="link-button">
-                            ➤ Ga naar job overzicht
-                        </Link>
-                    </>,
-                    { autoClose: 6000 }
-                );
+            // Reset formulier
+            setJob(null);
+            setJobDetails({ number: "", name: "", info: "", repeat: 1250 });
+        } else {
+            debug.notify("error", "Fout bij jobcreatie.");
+        }
+    };
 
 
-
-                setJob(null); // reset formulier
-                setJobDetails({ number: "", name: "", info: "", repeat: 1250 });
-            } else {
-                debug.notify("succes", "Fout bij jobcreatie.");
-            }
-        };
 
 
 

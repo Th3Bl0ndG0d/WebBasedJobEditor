@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import './Login.css';
 import Button from "../../components/button/Button.jsx";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import InputField from "../../components/inputField/InputField.jsx";
 import FormGroup from "../../components/formGroup/formGroup.jsx";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
@@ -26,19 +26,20 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const {logout,login, user } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const {logout,login} = useContext(AuthContext);
 
-    // useEffect(() => {
-    //     if (user) {
-    //         console.log(`Ingelogd als: ${user.email}${user.roles ? ` (${user.roles.join(', ')})` : ''}`);
-    //         if (user.roles?.includes('beheerder')) {
-    //             navigate("/profile/edit");
-    //         } else {
-    //             navigate("/JobOverview");
-    //         }
-    //     }
-    // }, [user, navigate]);
+// Bij binnenkomst op de loginpagina checken we of er een logoutReden is opgeslagen
+    useEffect(() => {
+        const reason = sessionStorage.getItem('logoutReason');
+
+        // We tonen alleen een melding als de reden "Session timed out" is
+        if (reason === 'Session timed out') {
+            debug.notify('info', reason); // Toon info-melding via debug-helper
+        }
+
+        // In alle gevallen ruimen we de reden direct op
+        sessionStorage.removeItem('logoutReason');
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();

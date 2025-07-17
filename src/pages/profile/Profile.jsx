@@ -14,12 +14,23 @@ import { deleteUser } from "../../helpers/deleteUser.js";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
 import {parseApiError } from "../../helpers/parseApiError.js";
 import {createDebugger} from "../../components/debugger/createDebugger.jsx";
+import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
 
-const debug = createDebugger();
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: true,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: false,
+    }
+});
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
-    const { user, login } = useContext(AuthContext);
+    const { user, login,logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const isAdmin = user?.roles?.includes('beheerder');
 
@@ -30,7 +41,6 @@ function Profile({ mode = 'edit' }) {
     const [error, setError] = useState('');
     const [userList, setUserList] = useState([]);
     const [selectedUser, setSelectedUser] = useState('');
-    const { isAuth } = useContext(AuthContext);
     /**
      * Redirect indien een ingelogde gebruiker op de register-pagina komt.
      * Enkel ongeauthenticeerde gebruikers mogen registreren.
@@ -48,7 +58,9 @@ function Profile({ mode = 'edit' }) {
      */
     useEffect(() => {
         async function loadUsers() {
-            if (!isAuth) return;
+            const token = getValidTokenOrLogout(logout);
+            if (!token) return;
+
             const users = await getUsers();
             setUserList(users);
         }

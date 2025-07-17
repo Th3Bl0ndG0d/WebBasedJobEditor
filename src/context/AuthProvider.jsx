@@ -18,6 +18,7 @@ function AuthContextProvider({ children }) {
     useEffect(() => {
         console.log('[AuthProvider] Auth state gewijzigd:', auth);
     }, [auth]);
+
     // We hebben nodig: useEffect in de mount-cycle (want checken op refresh)
     useEffect(() => {
         console.log('Context wordt gerefresht!');
@@ -25,44 +26,36 @@ function AuthContextProvider({ children }) {
         // Eerst kijken we of er nog een token aanwezig is, in de local storage
         const token = localStorage.getItem('token');
 
-        // Als er een token is...
-        if (isTokenValid()) {
-            // dan moeten we de token decoderen om bij de gebruikers-informatie te komen
+        // Als er een token is én die nog geldig is...
+        if (token && isTokenValid()) {
+            // ...dan decoderen we de token om bij de gebruikers-informatie te komen
             const decodedToken = jwtDecode(token);
             console.log('Decoded token bij refresh:', decodedToken);
 
-            // dan moeten we ook checken of de token nog geldig is (AKA: is de expiration date nog niet verstreken?)
-            if (isTokenValid()) {
-                // Als de token nog geldig is, halen we gebruikersgegevens opnieuw op via API
+            // vervolgens halen we gebruikersgegevens op via de API
+            const userId = decodedToken.userId;
 
-                const userId = decodedToken.userId;
-
-                getUserData(userId, token)
-                    .then((userData) => {
-                        setAuth({
-                            isAuth: true,
-                            user: {
-                                id: userData.id,
-                                email: userData.email,
-                                roles: userData.roles,
-                            },
-                            status: 'done',
-                        });
-                    })
-                    .catch((err) => {
-                        console.error('Fout bij ophalen gebruikersdata tijdens refresh:', err);
-                        logout(); // Token ongeldig of gebruiker bestaat niet meer? Uitloggen.
+            getUserData(userId, token)
+                .then((userData) => {
+                    setAuth({
+                        isAuth: true,
+                        user: {
+                            id: userData.id,
+                            email: userData.email,
+                            roles: userData.roles,
+                        },
+                        status: 'done',
                     });
-            }
-            else {
-                // token niet valide? Log dan uit!
-                logout();
-            }
-
-            // uberhaupt geen token aanwezig? Dan zal er wel niemand ingelogd zijn en zetten we de status op "done"
+                })
+                .catch((err) => {
+                    console.error('Fout bij ophalen gebruikersdata tijdens refresh:', err);
+                    logout(); // Token ongeldig of gebruiker bestaat niet meer? Uitloggen.
+                });
         } else {
+            // Geen token aanwezig of niet (meer) geldig? Dan zal er wel niemand ingelogd zijn
             setAuth({
-                ...auth,
+                isAuth: false,
+                user: null,
                 status: 'done',
             });
         }
@@ -109,11 +102,18 @@ function AuthContextProvider({ children }) {
         }
     }
 
-    function logout() {
+    function logout(reason = null) {
         // 1. De token moet verwijderd worden
         localStorage.removeItem('token');
 
-        // 2. We maken de state weer leeg
+        // 2. Indien reden meegegeven (zoals "Session timed out"), tijdelijk opslaan in sessionStorage
+        if (reason) {
+            sessionStorage.setItem('logoutReason', reason);
+        } else {
+            sessionStorage.removeItem('logoutReason'); // anders expliciet wissen
+        }
+
+        // 3. We maken de state weer leeg
         setAuth({
             isAuth: false,
             user: null,
@@ -121,8 +121,9 @@ function AuthContextProvider({ children }) {
         });
 
         console.log('Gebruiker is uitgelogd!');
-        navigate('/');
+        navigate('/login'); // 4. Doorsturen naar loginpagina
     }
+
 
     const contextData = {
         isAuth: auth.isAuth,
