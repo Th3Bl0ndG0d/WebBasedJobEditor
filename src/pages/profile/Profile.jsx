@@ -58,6 +58,7 @@ function Profile({ mode = 'edit' }) {
      */
     useEffect(() => {
         async function loadUsers() {
+            if (!isEditMode) return; // ➤ Bij registratie: niets doen
             const token = getValidTokenOrLogout(logout);
             if (!token) return;
 
