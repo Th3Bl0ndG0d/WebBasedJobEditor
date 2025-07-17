@@ -23,12 +23,6 @@ const debug = createDebugger({
  */
 export async function getJobs(token) {
     debug.notify("debug", "getJobs() gestart");
-
-    if (!token) {
-        debug.notify("error", "Geen geldig token. Kan jobs niet ophalen.");
-        return null;
-    }
-
     try {
         debug.notify("debug", "Verstuur GET-request naar jobs-endpoint...");
         debug.notify("debug", "Headers:", {

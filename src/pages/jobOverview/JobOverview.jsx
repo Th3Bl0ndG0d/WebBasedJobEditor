@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import JobTable from "../../components/jobTable/JobTable.jsx";
-import { useAuth } from "../../context/AuthProvider.jsx";
 import { getJobs } from "../../helpers/getJobs.js";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import { deleteJob } from "../../helpers/deleteJob.js";
 import { createDebugger } from "../../components/debugger/createDebugger.jsx";
+import {AuthContext} from "../../context/AuthProvider.jsx";
+import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
 
 // Debugger instellen
 const debug = createDebugger({
@@ -24,40 +25,37 @@ const JobOverview = () => {
     const [selectedJobId, setSelectedJobId] = useState(null);
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { user } = useAuth();
+    const { user,logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        debug.notify("debug", "useEffect triggered. Gebruiker:", user);
         async function fetchJobs() {
-            if (!user?.token) {
-                debug.notify("warning", "Geen token gevonden. Ophalen jobs wordt overgeslagen.");
-                return;
-            }
+            const token = getValidTokenOrLogout(logout); // Controleer token pas hier
+            if (!token) return; // Verlopen? Dan wordt user al uitgelogd
 
             debug.notify("debug", "Start ophalen van jobs...");
             setLoading(true);
 
             try {
-                const data = await getJobs(user.token);
-                debug.notify("warning", "Ontvangen jobs:", data);
+                const data = await getJobs(token);
+                debug.notify("debug", "Ontvangen jobs:", data);
 
                 if (data) {
                     setJobs(data);
                     debug.notify("success", `Er zijn ${data.length} jobs geladen.`);
                 } else {
                     debug.notify("warning", "Geen jobs ontvangen van server.");
-
                 }
             } catch (error) {
-                debug.notify("error", "Fout bij ophalen van jobs. Zie console.",error);
+                debug.notify("error", "Fout bij ophalen van jobs. Zie console.", error);
             } finally {
                 setLoading(false);
             }
         }
 
-        fetchJobs();
-    }, [user?.token]);
+        debug.notify("debug", "useEffect triggered. Gebruiker:", user);
+        fetchJobs(); // Opstart
+    }, [user?.id]);
 
     const handleRowClick = (id) => {
         const newSelected = id === selectedJobId ? null : id;
@@ -66,6 +64,8 @@ const JobOverview = () => {
     };
 
     const handleDelete = async (id) => {
+        const token = getValidTokenOrLogout(logout);
+        if (!token) return;
         debug.notify("info", `Verzoek tot verwijderen van job ID: ${id}`);
 
         // const confirmed = window.confirm("Weet je zeker dat je deze job wilt verwijderen?");
@@ -74,7 +74,7 @@ const JobOverview = () => {
         //     return;
         // }
 
-        const success = await deleteJob(id);
+        const success = await deleteJob(id,token);
         if (success) {
             debug.notify("success", `Job ID ${id} succesvol verwijderd.`);
             CustomToast.success("Job succesvol verwijderd.");

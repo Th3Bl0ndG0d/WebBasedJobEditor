@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import './Profile.css';
 import Button from "../../components/button/Button.jsx";
 
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthProvider.jsx";
+import {AuthContext} from "../../context/AuthProvider.jsx";
 import SelectField from "../../components/selectField/SelectField.jsx";
 import FormGroup from "../../components/formGroup/formGroup.jsx";
 import InputField from "../../components/inputField/InputField.jsx";
@@ -14,12 +14,23 @@ import { deleteUser } from "../../helpers/deleteUser.js";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
 import {parseApiError } from "../../helpers/parseApiError.js";
 import {createDebugger} from "../../components/debugger/createDebugger.jsx";
+import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
 
-const debug = createDebugger();
+const debug = createDebugger({
+    enableConsole: true,
+    enableToast: true,
+    toastTypes: {
+        success: true,
+        error: true,
+        info: true,
+        warning: true,
+        debug: false,
+    }
+});
 
 function Profile({ mode = 'edit' }) {
     const isEditMode = mode === 'edit';
-    const { user, login } = useAuth();
+    const { user, login,logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const isAdmin = user?.roles?.includes('beheerder');
 
@@ -30,7 +41,6 @@ function Profile({ mode = 'edit' }) {
     const [error, setError] = useState('');
     const [userList, setUserList] = useState([]);
     const [selectedUser, setSelectedUser] = useState('');
-
     /**
      * Redirect indien een ingelogde gebruiker op de register-pagina komt.
      * Enkel ongeauthenticeerde gebruikers mogen registreren.
@@ -48,8 +58,11 @@ function Profile({ mode = 'edit' }) {
      */
     useEffect(() => {
         async function loadUsers() {
-            if (!user?.token) return;
-            const users = await getUsers(user.token);
+            if (!isEditMode) return; // ➤ Bij registratie: niets doen
+            const token = getValidTokenOrLogout(logout);
+            if (!token) return;
+
+            const users = await getUsers();
             setUserList(users);
         }
 

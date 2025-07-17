@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { getCurrentUser } from './login.js';
 import { getHeaders } from "./getHeaders.js";
-
 import { parseApiError } from './parseApiError.js';
 import {createDebugger} from "../components/debugger/createDebugger.jsx";
+
 
 //Debugger: alleen errors en success als toast, zonder console
 const debug = createDebugger({
@@ -24,15 +23,9 @@ const debug = createDebugger({
  * @param {Object} plate - De plaatgegevens (width, topHeight, bottomHeight, x, y, cylinderId)
  * @returns {Promise<string|null>} Het ID van de aangemaakte plaat of null bij fout
  */
-export async function createPlate(plate) {
-    const currentUser = getCurrentUser();
-    if (!currentUser || !currentUser.token) {
-        debug.notify("debug", "Geen geldige gebruiker.");
-        return null;
-    }
-
+export async function createPlate(plate,token) {
     try {
-        const headers = getHeaders(currentUser.token);
+        const headers = getHeaders(token);
         debug.notify("debug", "Endpoint: /api/plates");
         debug.notify("debug", "Headers:", { detail: headers });
         debug.notify("debug", "Payload:", { detail: plate });
@@ -58,15 +51,9 @@ export async function createPlate(plate) {
  * @param {Object} cylinder - Cylindergegevens (name, jobId)
  * @returns {Promise<string|null>} Het ID van de aangemaakte cylinder of null bij fout
  */
-export async function createCylinder(cylinder) {
-    const currentUser = getCurrentUser();
-    if (!currentUser || !currentUser.token) {
-        debug.notify("warning", "Geen geldige gebruiker.");
-        return null;
-    }
-
+export async function createCylinder(cylinder,token) {
     try {
-        const headers = getHeaders(currentUser.token);
+        const headers = getHeaders(token);
         debug.notify("debug", "Endpoint: /api/cylinders");
         debug.notify("debug", "Headers:", { detail: headers });
         debug.notify("debug", "Payload:", { detail: cylinder });
@@ -92,13 +79,7 @@ export async function createCylinder(cylinder) {
  * @param {Object} jobObject - Structuur met jobdetails + bijhorende cylinders en plates
  * @returns {Promise<Object|null>} De aangemaakte job of null bij fout
  */
-export async function createFullJob(jobObject) {
-    const currentUser = getCurrentUser();
-    if (!currentUser || !currentUser.token) {
-        debug.notify("error", "Niet ingelogd.");
-        return null;
-    }
-
+export async function createFullJob(jobObject,token) {
     try {
         debug.notify("info", "Start volledige jobcreatie met input:", { detail: jobObject });
 
@@ -111,7 +92,7 @@ export async function createFullJob(jobObject) {
             repeat: jobObject.repeat
         };
 
-        const headers = getHeaders(currentUser.token);
+        const headers = getHeaders(token);
         debug.notify("info", "📤 Endpoint: /api/jobs");
         debug.notify("info", "📤 Headers:", { detail: headers });
         debug.notify("info", "📤 Payload:", { detail: jobPayload });
@@ -132,7 +113,7 @@ export async function createFullJob(jobObject) {
                 jobId: jobId
             };
 
-            const cylinderId = await createCylinder(cylinderPayload);
+            const cylinderId = await createCylinder(cylinderPayload,token);
             if (!cylinderId) continue;
 
             // 3. Plates aanmaken per stuk, met cylinderId
@@ -146,7 +127,7 @@ export async function createFullJob(jobObject) {
                     cylinderId: cylinderId
                 };
 
-                await createPlate(platePayload);
+                await createPlate(platePayload,token);
             }
         }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import "./JobCreator.css";
 import Cylinder from "../../constants/cylinder/cylinder";
 import Plate from "../../constants/plate/plate";
@@ -13,6 +13,8 @@ import InputWithButtonControls from "../../components/inputWithButtonControls/In
 import {Link} from "react-router-dom";
 import {createDebugger} from "../../components/debugger/createDebugger.jsx";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
+import {AuthContext} from "../../context/AuthProvider.jsx";
+import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
 // Debugger instellen
 const debug = createDebugger({
     enableConsole: true,
@@ -31,7 +33,7 @@ const debug = createDebugger({
  * Gebruikt een gestandaardiseerde invoerstructuur en valideert de essentiële invoervelden alvorens het object te genereren.
  */
 const JobCreator = () => {
-
+    const { logout } = useContext(AuthContext);
     // Interne status voor de algemene jobmetadata (nummer, naam, info)
     const [jobDetails, setJobDetails] = useState({
         number: "",
@@ -164,31 +166,34 @@ const JobCreator = () => {
      * Geeft feedback via toastmeldingen.
      */
     const submitJob = async () => {
-            debug.notify("debug", "Job wordt aangemaakt...");
-            const response = await createFullJob(job);
+        const token = getValidTokenOrLogout(logout); // Tokencontrole vóór verzenden
+        if (!token) return; // User is uitgelogd bij ongeldige sessie
 
-            if (response) {
+        debug.notify("debug", "Job wordt aangemaakt...");
 
-                debug.notify("succes", "Job wordt aangemaakt...");
-                // Hier nog een xtje goed naar kijken.
-                CustomToast.success(
-                    <>
-                        Job <strong>{job.name}</strong> is aangemaakt.<br />
-                        <Link to={`/jobOverview`} className="link-button">
-                            ➤ Ga naar job overzicht
-                        </Link>
-                    </>,
-                    { autoClose: 6000 }
-                );
+        const response = await createFullJob(job, token);
+
+        if (response) {
+            debug.notify("succes", "Job wordt aangemaakt...");
+            CustomToast.success(
+                <>
+                    Job <strong>{job.name}</strong> is aangemaakt.<br />
+                    <Link to={`/jobOverview`} className="link-button">
+                        ➤ Ga naar job overzicht
+                    </Link>
+                </>,
+                { autoClose: 6000 }
+            );
+
+            // Reset formulier
+            setJob(null);
+            setJobDetails({ number: "", name: "", info: "", repeat: 1250 });
+        } else {
+            debug.notify("error", "Fout bij jobcreatie.");
+        }
+    };
 
 
-
-                setJob(null); // reset formulier
-                setJobDetails({ number: "", name: "", info: "", repeat: 1250 });
-            } else {
-                debug.notify("succes", "Fout bij jobcreatie.");
-            }
-        };
 
 
 

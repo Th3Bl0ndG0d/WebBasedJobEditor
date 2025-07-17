@@ -7,26 +7,38 @@ import JobOverview from "./pages/jobOverview/JobOverview.jsx";
 import JobEditor from "./pages/jobcreator/JobCreator.jsx";
 import JobDetail from "./pages/jobdetails/JobDetails.jsx";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { useAuth } from "./context/AuthProvider.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {AuthContext} from "./context/AuthProvider.jsx";
+import {useContext} from "react";
+import isTokenValid from "./helpers/isTokenValid.js";
 
 // ProtectedRoute zorgt dat alleen ingelogde gebruikers toegang krijgen
-function ProtectedRoute({ children, roles }) {
-    const { user } = useAuth();
+function ProtectedRoute({ children }) {
+    const { isAuth, logout } = useContext(AuthContext); // Haal logout op uit context
 
-    // Niet ingelogd → redirect naar login
-    if (!user) return <Navigate to="/login" replace />;
+    // Stap 1: Controleer of token geldig is (exp is nog niet verstreken)
+    const tokenIsValid = isTokenValid();
 
-    // Ingelogd, maar geen toegestane rol → redirect naar JobOverview
-    if (roles && !roles.includes(user.role)) return <Navigate to="/JobOverview" replace />;
+    // Stap 2: Als gebruiker wel ingelogd is, maar token is verlopen → forceer logout met reden
+    if (isAuth && !tokenIsValid) {
+        logout("Session timed out");
+        return <Navigate to="/login" replace />;
+    }
 
+    // Stap 3: Als gebruiker helemaal niet ingelogd is → redirect zonder melding
+    if (!isAuth) {
+        return <Navigate to="/login" replace />;
+    }
+
+
+    // Stap 4: Alles in orde → geef toegang tot beveiligde component
     return children;
 }
 
 // App bevat alle routes en nav
 function App() {
-    const { user } = useAuth();
+    const { user } = useContext(AuthContext);
 
     return (
         <>
@@ -76,16 +88,4 @@ function App() {
     );
 }
 
-// Hoofdfunctie met AuthProvider
-// Na de laatste les wat duidelijker, ipv alle gegoogl.
-// Dit moet je op het hoogste niveau zetten.
-//
-// function App() {
-//     return (
-//         <AuthProvider>
-//             <AppContent />
-//         </AuthProvider>
-//     );
-// }
-//
 export default App;

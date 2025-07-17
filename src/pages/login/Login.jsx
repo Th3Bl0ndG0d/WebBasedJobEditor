@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './Login.css';
 import Button from "../../components/button/Button.jsx";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthProvider.jsx";
+import { Link } from "react-router-dom";
 import InputField from "../../components/inputField/InputField.jsx";
 import FormGroup from "../../components/formGroup/formGroup.jsx";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
 import { createDebugger } from "../../components/debugger/createDebugger.jsx";
+import {AuthContext} from "../../context/AuthProvider.jsx";
+import loginUser from "../../helpers/loginUser.js";
 
 // Debugger configureren zoals in login.js
 const debug = createDebugger({
@@ -17,7 +18,7 @@ const debug = createDebugger({
         error: true,
         info: true,
         warning: true,
-        debug: false,
+        debug: true,
     }
 });
 
@@ -25,29 +26,36 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { login, user } = useAuth();
-    const navigate = useNavigate();
+    const {logout,login} = useContext(AuthContext);
 
+// Bij binnenkomst op de loginpagina checken we of er een logoutReden is opgeslagen
     useEffect(() => {
-        if (user) {
-            console.log(`Ingelogd als: ${user.email}${user.roles ? ` (${user.roles.join(', ')})` : ''}`);
-            if (user.roles?.includes('beheerder')) {
-                navigate("/profile/edit");
-            } else {
-                navigate("/JobOverview");
-            }
+        const reason = sessionStorage.getItem('logoutReason');
+
+        // We tonen alleen een melding als de reden "Session timed out" is
+        if (reason === 'Session timed out') {
+            debug.notify('info', reason); // Toon info-melding via debug-helper
         }
-    }, [user, navigate]);
+
+        // In alle gevallen ruimen we de reden direct op
+        sessionStorage.removeItem('logoutReason');
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
-        const success = await login(email, password);
-        if (!success) {
-            const msg = 'Inloggen mislukt. Controleer je e-mailadres en wachtwoord.';
-            debug.notify('error', msg); // toast errormelding
-            setError(msg); // visuele foutmelding
-        }
+        // Eerst huidige sessie wissen (indien aanwezig)
+        logout();
+
+        const responseData = await loginUser(email, password);
+        console.log('Login response:', responseData);
+        login(responseData);
+        // const success = await loginUser(email, password);
+        // if (!success) {
+        //     const msg = 'Inloggen mislukt. Controleer je e-mailadres en wachtwoord.';
+        //     debug.notify('error', msg); // toast errormelding
+        //     setError(msg); // visuele foutmelding
+        // }
     };
 
     return (

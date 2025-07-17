@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { parseApiError } from "./parseAPIError.js";
 import {createDebugger} from "../components/debugger/createDebugger.jsx";
+import {parseApiError} from "./parseAPIError.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const PROJECT_ID = import.meta.env.VITE_PROJECT_ID;
@@ -14,7 +14,7 @@ const debug = createDebugger({
         error: true,
         info: true,
         warning: true,
-        debug: false,
+        debug: true,
     }
 });
 
@@ -24,7 +24,7 @@ const debug = createDebugger({
  * @param {string} password
  * @returns {Promise<boolean>} True indien succesvol ingelogd
  */
-export async function login(email, password) {
+export async function loginUser(email, password) {
     try {
         debug.notify('debug', 'Login gestart');
 
@@ -37,40 +37,12 @@ export async function login(email, password) {
                 }
             }
         );
-
-        const { token, user } = response.data;
-        const userWithToken = { ...user, token };
-
-        localStorage.setItem('authUser', JSON.stringify(userWithToken));
-
         debug.notify('success', 'Login succesvol');
-        return true;
+        return response.data;
     } catch (error) {
         const errorMsg = parseApiError(error);
         debug.notify('debug', `Login mislukt: ${errorMsg}`);
-        return false;
+        throw error;
     }
 }
-
-/**
- * Verwijdert de ingelogde gebruiker uit localStorage.
- */
-export function logout() {
-    localStorage.removeItem('authUser');
-    debug.notify('success', 'Uitgelogd');
-}
-
-/**
- * Haalt de huidige gebruiker op uit localStorage.
- * @returns {object|null} Gebruiker met token, of null indien niet gevonden
- */
-export function getCurrentUser() {
-    const user = localStorage.getItem('authUser');
-    if (user) {
-        const parsed = JSON.parse(user);
-        debug.notify('debug', 'Gebruiker geladen uit localStorage');
-        return parsed;
-    }
-    debug.notify('debug', 'Geen gebruiker in localStorage');
-    return null;
-}
+export default loginUser;
