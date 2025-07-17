@@ -10,8 +10,9 @@ const JobDetail = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
         const fetchJob = async () => {
-            const result = await getJobById(jobId);
+            const result = await getJobById(jobId,token);
             setJob(result);
             setLoading(false);
         };

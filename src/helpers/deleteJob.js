@@ -1,7 +1,6 @@
 // src/helpers/deleteJob.js
 import axios from 'axios';
 import { getHeaders } from './getHeaders.js';
-import { getCurrentUser } from './login.js';
 import { getJobById } from './getJobByID.js';
 import { parseApiError } from './parseApiError.js';
 import {createDebugger} from "../components/debugger/createDebugger.jsx";
@@ -71,12 +70,11 @@ async function deleteJobRecord(jobId, token) {
  * @param {string} jobId - ID van de te verwijderen job
  * @returns {Promise<boolean>} True indien succesvol verwijderd, anders false
  */
-export async function deleteJob(jobId) {
+export async function deleteJob(jobId,token) {
     try {
         debug.notify("debug", `Verzoek tot verwijderen van job: ${jobId}`);
 
-        const currentUser = getCurrentUser();
-        if (!currentUser || !currentUser.token) {
+        if (token) {
             debug.notify("error", "Geen geldige gebruiker/token gevonden.");
             return false;
         }
@@ -89,12 +87,12 @@ export async function deleteJob(jobId) {
 
         for (const cylinder of job.cylinders) {
             for (const plate of cylinder.plates) {
-                await deletePlate(plate.id, currentUser.token);
+                await deletePlate(plate.id, token);
             }
-            await deleteCylinder(cylinder.id, currentUser.token);
+            await deleteCylinder(cylinder.id, token);
         }
 
-        await deleteJobRecord(jobId, currentUser.token);
+        await deleteJobRecord(jobId, token);
 
         debug.notify("success", "Verwijderen van job succesvol afgerond.");
         return true;

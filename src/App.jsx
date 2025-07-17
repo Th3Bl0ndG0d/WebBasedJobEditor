@@ -7,26 +7,27 @@ import JobOverview from "./pages/jobOverview/JobOverview.jsx";
 import JobEditor from "./pages/jobcreator/JobCreator.jsx";
 import JobDetail from "./pages/jobdetails/JobDetails.jsx";
 import { Route, Routes, Navigate } from "react-router-dom";
-import { useAuth } from "./context/AuthProvider.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {AuthContext} from "./context/AuthProvider.jsx";
+import {useContext} from "react";
 
 // ProtectedRoute zorgt dat alleen ingelogde gebruikers toegang krijgen
 function ProtectedRoute({ children, roles }) {
-    const { user } = useAuth();
+    const { isAuth } = useContext(AuthContext);
 
     // Niet ingelogd → redirect naar login
-    if (!user) return <Navigate to="/login" replace />;
+    if (!isAuth) return <Navigate to="/login" replace />;
 
     // Ingelogd, maar geen toegestane rol → redirect naar JobOverview
-    if (roles && !roles.includes(user.role)) return <Navigate to="/JobOverview" replace />;
+    // if (roles && !roles.includes(user.role)) return <Navigate to="/JobOverview" replace />;
 
     return children;
 }
 
 // App bevat alle routes en nav
 function App() {
-    const { user } = useAuth();
+    const { user } = useContext(AuthContext);
 
     return (
         <>
@@ -76,16 +77,4 @@ function App() {
     );
 }
 
-// Hoofdfunctie met AuthProvider
-// Na de laatste les wat duidelijker, ipv alle gegoogl.
-// Dit moet je op het hoogste niveau zetten.
-//
-// function App() {
-//     return (
-//         <AuthProvider>
-//             <AppContent />
-//         </AuthProvider>
-//     );
-// }
-//
 export default App;

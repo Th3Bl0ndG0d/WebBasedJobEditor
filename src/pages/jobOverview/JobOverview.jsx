@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import JobTable from "../../components/jobTable/JobTable.jsx";
-import { useAuth } from "../../context/AuthProvider.jsx";
 import { getJobs } from "../../helpers/getJobs.js";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import { deleteJob } from "../../helpers/deleteJob.js";
 import { createDebugger } from "../../components/debugger/createDebugger.jsx";
+import {AuthContext} from "../../context/AuthProvider.jsx";
 
 // Debugger instellen
 const debug = createDebugger({
@@ -24,13 +24,14 @@ const JobOverview = () => {
     const [selectedJobId, setSelectedJobId] = useState(null);
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(false);
-    const { user } = useAuth();
+    const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
         debug.notify("debug", "useEffect triggered. Gebruiker:", user);
         async function fetchJobs() {
-            if (!user?.token) {
+            if (!token) {
                 debug.notify("warning", "Geen token gevonden. Ophalen jobs wordt overgeslagen.");
                 return;
             }
@@ -39,7 +40,7 @@ const JobOverview = () => {
             setLoading(true);
 
             try {
-                const data = await getJobs(user.token);
+                const data = await getJobs(token);
                 debug.notify("warning", "Ontvangen jobs:", data);
 
                 if (data) {
@@ -57,7 +58,7 @@ const JobOverview = () => {
         }
 
         fetchJobs();
-    }, [user?.token]);
+    }, [user?.id]);
 
     const handleRowClick = (id) => {
         const newSelected = id === selectedJobId ? null : id;
@@ -66,6 +67,7 @@ const JobOverview = () => {
     };
 
     const handleDelete = async (id) => {
+        const token = localStorage.getItem('token');
         debug.notify("info", `Verzoek tot verwijderen van job ID: ${id}`);
 
         // const confirmed = window.confirm("Weet je zeker dat je deze job wilt verwijderen?");
@@ -74,7 +76,7 @@ const JobOverview = () => {
         //     return;
         // }
 
-        const success = await deleteJob(id);
+        const success = await deleteJob(id,token);
         if (success) {
             debug.notify("success", `Job ID ${id} succesvol verwijderd.`);
             CustomToast.success("Job succesvol verwijderd.");

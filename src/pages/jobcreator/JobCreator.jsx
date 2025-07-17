@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import "./JobCreator.css";
 import Cylinder from "../../constants/cylinder/cylinder";
 import Plate from "../../constants/plate/plate";
@@ -13,6 +13,7 @@ import InputWithButtonControls from "../../components/inputWithButtonControls/In
 import {Link} from "react-router-dom";
 import {createDebugger} from "../../components/debugger/createDebugger.jsx";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
+import {AuthContext} from "../../context/AuthProvider.jsx";
 // Debugger instellen
 const debug = createDebugger({
     enableConsole: true,
@@ -31,7 +32,7 @@ const debug = createDebugger({
  * Gebruikt een gestandaardiseerde invoerstructuur en valideert de essentiële invoervelden alvorens het object te genereren.
  */
 const JobCreator = () => {
-
+    const { user } = useContext(AuthContext);
     // Interne status voor de algemene jobmetadata (nummer, naam, info)
     const [jobDetails, setJobDetails] = useState({
         number: "",
@@ -164,8 +165,10 @@ const JobCreator = () => {
      * Geeft feedback via toastmeldingen.
      */
     const submitJob = async () => {
-            debug.notify("debug", "Job wordt aangemaakt...");
-            const response = await createFullJob(job);
+        const token = localStorage.getItem('token');
+        debug.notify("debug", "Job wordt aangemaakt...");
+
+            const response = await createFullJob(job,token);
 
             if (response) {
 

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getCurrentUser } from './login.js';
 import { getHeaders } from './getHeaders.js';
 import {createDebugger} from "../components/debugger/createDebugger.jsx";
 import {parseApiError} from "./parseAPIError.js";
@@ -22,14 +21,7 @@ const debug = createDebugger({
  * @param {string} jobId - Het ID van de job die opgehaald moet worden
  * @returns {Promise<Object|null>} De job inclusief geneste structuur of null bij fout
  */
-export async function getJobById(jobId) {
-    const currentUser = getCurrentUser();
-
-    if (!currentUser || !currentUser.token) {
-        debug.notify("error", "Geen geldige gebruiker.");
-        return null;
-    }
-
+export async function getJobById(jobId,token) {
     try {
         debug.notify("debug", `Start ophalen van job met ID: ${jobId}`);
 
@@ -37,7 +29,7 @@ export async function getJobById(jobId) {
         const jobRes = await axios.get(
             `https://novi-backend-api-wgsgz.ondigitalocean.app/api/jobs/${jobId}`,
             {
-                headers: getHeaders(currentUser.token)
+                headers: getHeaders(token)
             }
         );
 
@@ -48,7 +40,7 @@ export async function getJobById(jobId) {
         const cylRes = await axios.get(
             `https://novi-backend-api-wgsgz.ondigitalocean.app/api/jobs/${job.id}/cylinders`,
             {
-                headers: getHeaders(currentUser.token)
+                headers: getHeaders(token)
             }
         );
 
@@ -62,7 +54,7 @@ export async function getJobById(jobId) {
             const platesRes = await axios.get(
                 `https://novi-backend-api-wgsgz.ondigitalocean.app/api/cylinders/${cylinder.id}/plates`,
                 {
-                    headers: getHeaders(currentUser.token)
+                    headers: getHeaders(token)
                 }
             );
 

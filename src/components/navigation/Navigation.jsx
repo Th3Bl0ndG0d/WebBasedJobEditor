@@ -1,15 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import './Navigation.css';
 
 import { NavLink, useNavigate } from 'react-router-dom';
 import { FiUser } from 'react-icons/fi';
 import Button from "../button/Button.jsx";
-import { useAuth } from "../../context/AuthProvider.jsx";
+import {AuthContext} from "../../context/AuthProvider.jsx";
 
 function Navigation() {
-    const { logout, user } = useAuth();
-    const navigate = useNavigate();
 
+    const navigate = useNavigate();
+    const { user, logout } = useContext(AuthContext);
     const handleLogout = () => {
         logout();
         navigate("/login");
