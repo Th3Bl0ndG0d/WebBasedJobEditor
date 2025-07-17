@@ -227,8 +227,8 @@ gebruiker, word je automatisch ingelogd en doorgestuurd naar de job overzicht pa
 
 ## Nieuwe gebruiker toevoegen vanuit de profiel pagina (alleen beschikbaar voor beheerders)
 
-Beheerders kunnen op hun profielpagina extra gebruikers toevoegen. Hierbij kunnen zij een gebruikersnaam, wachtwoord 
-en rol (operator, beheerder of programmeur) instellen. Deze functionaliteit is enkel zichtbaar en toegankelijk voor 
+Beheerders kunnen op hun profielpagina extra gebruikers toevoegen. Hierbij kunnen zij een email adres, wachtwoord 
+en rol _(operator, beheerder of programmeur)_ instellen. Deze functionaliteit is enkel zichtbaar en toegankelijk voor 
 gebruikers met de rol beheerder, zodat rechten en toegang zorgvuldig beheerd kunnen worden. 
 
 Log in als admin@example.com hiermee word je direct doorgestuurd naar de profiel pagina.
