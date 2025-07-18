@@ -19,7 +19,8 @@
 /* Geen groei binnen row-layout */
 .form-group--row.form-group--nogrow {
     flex: 0 0 auto;
-    align-items: center;
+    /*align-items: center;*/
+    align-items: flex-start; /* <-- dit voorkomt springen bij foutmeldingen */
 }
 
 

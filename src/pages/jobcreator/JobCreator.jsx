@@ -15,10 +15,11 @@ import {createDebugger} from "../../components/debugger/createDebugger.jsx";
 import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import {AuthContext} from "../../context/AuthProvider.jsx";
 import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
+import {fieldValidators} from "../../helpers/fieldValidators.js";
 // Debugger instellen
 const debug = createDebugger({
     enableConsole: true,
-    enableToast: false,
+    enableToast: true,
     toastTypes: {
         success: true,
         error: true,
@@ -30,124 +31,44 @@ const debug = createDebugger({
 /**
  * Component: JobCreator
  * Doel: Faciliteert het aanmaken van een Job-object inclusief bijbehorende cylinders en platen.
- * Gebruikt een gestandaardiseerde invoerstructuur en valideert de essentiële invoervelden alvorens het object te genereren.
+ * Valideert enkel bij klik op Genereer Job of Creeer Job. Geen veld-per-veld validatie.
  */
 const JobCreator = () => {
+    // Auth-context voor logout-functie bij token-verval
     const { logout } = useContext(AuthContext);
-    // Interne status voor de algemene jobmetadata (nummer, naam, info)
-    const [jobDetails, setJobDetails] = useState({
-        number: "",
-        name: "",
-        info: "",
-        repeat: 1250
-    });
 
-    // Interne status voor repeat van de job (default 1)
+    // === State Hooks ===
+    // jobDetails: algemene metadata (number, name, info, repeat)
+    const [jobDetails, setJobDetails] = useState({ number: "", name: "", info: "", repeat: 1250 });
+    // Herhalingswaarde per cylinder
     const [repeatByCylinder, setRepeatByCylinder] = useState(1250);
-
-    // Sjabloonplaat (wordt gekopieerd naar alle platen binnen cylinders)
+    // Template voor plaatwaarden (breedte, hoogtes, posities)
     const [templatePlate, setTemplatePlate] = useState({ width: "", topHeight: "", bottomHeight: "", x: "", y: "" });
-
-    // Instellingen voor het aantal cylinders en platen per cylinder
+    // Aantallen
     const [numCylinders, setNumCylinders] = useState(1);
     const [platesPerCylinder, setPlatesPerCylinder] = useState(1);
-
-    // Bevat het volledig gegenereerde jobobject (voor bewerking/verzending)
+    // Het volledig gegenereerde jobobject
     const [job, setJob] = useState(null);
+    // Opslag voor foutmeldingen per veld
+    const [, setErrors] = useState({});
 
-    /**
-     * Wijzigt één veld binnen de algemene jobmetadata.
-     * @param {string} field - veldnaam binnen jobDetails
-     * @param {string} value - nieuwe waarde voor dat veld
-     */
+    // === Update Functies ===
+    // Wijzigt een veld in jobDetails state
     const updateJobDetails = (field, value) => {
         setJobDetails({ ...jobDetails, [field]: value });
     };
-
-    /**
-     * Genereert een nieuw Job-object op basis van de huidige invoer.
-     * Valideert verplichte velden en construeert het object inclusief cylinders en platen.
-     */
-    const generateJob = () => {
-        debug.notify("debug", "Genereer job gestart...");
-        // Minimale validatie: nummer en naam zijn verplicht
-        if (!jobDetails.number || !jobDetails.name) {
-            debug.notify("error", "Vul ten minste 'Number' en 'Name' in voor de job.");
-            return;
-        }
-
-        // Validatie van het herhalingsgetal (mag niet leeg of NaN zijn)
-        if (!repeatByCylinder || isNaN(repeatByCylinder)) {
-            debug.notify("error", "Vul een geldig getal in voor 'Repeat'.");
-            return;
-        }
-
-        // Validatie van sjabloonplaat-velden
-        const requiredFields = ["width", "topHeight", "bottomHeight", "x", "y"];
-        for (const field of requiredFields) {
-            if (!templatePlate[field].trim()) {
-                debug.notify("error", `Veld "${field}" van de plate mag niet leeg zijn.`);
-                return;
-            }
-        }
-
-        // Unieke ID op basis van timestamp
-        const generatedId = Date.now();
-        const dataValue = new Date().toISOString();
-        let plateId = 1;
-        const cylinders = [];
-
-        // Opbouw van alle cylinders en bijbehorende platen
-        for (let c = 1; c <= numCylinders; c++) {
-            const plates = [];
-            for (let p = 0; p < platesPerCylinder; p++) {
-                plates.push(Plate(
-                    plateId++,
-                    templatePlate.width,
-                    templatePlate.topHeight,
-                    templatePlate.bottomHeight,
-                    templatePlate.x,
-                    templatePlate.y
-                ));
-            }
-            const cylinderName = `Cylinder ${c}`;
-            cylinders.push(Cylinder(c + 100, cylinderName, plates));
-        }
-
-        // Constructie van het uiteindelijke Job-object met correcte parameterpositie
-        const newJob = Job(
-            generatedId,
-            jobDetails.number,
-            jobDetails.name,
-            dataValue,
-            jobDetails.info,
-            repeatByCylinder,
-            cylinders
-        );
-        debug.notify("debug", "Job gegenereerd:", newJob);
-        setJob(newJob);
-    };
-
-    /**
-     * Wijzigt een veld van het hoofdniveau van de job (zoals naam, repeat)
-     */
+    // Wijzigt een veld van het huidige jobobject (na Genereren)
     const updateJobField = (field, value) => {
         setJob({ ...job, [field]: value });
     };
-
-    /**
-     * Wijzigt een veld van een specifieke cylinder binnen het jobobject
-     */
+    // Wijzigt naam/eigenschap van een cylinder binnen job
     const updateCylinder = (id, field, value) => {
         const updated = job.cylinders.map(c =>
             c.id === id ? { ...c, [field]: value } : c
         );
         setJob({ ...job, cylinders: updated });
     };
-
-    /**
-     * Wijzigt een veld van een specifieke plate binnen een specifieke cylinder
-     */
+    // Wijzigt een veld van een plate binnen een specifieke cylinder
     const updatePlate = (cylinderId, plateId, field, value) => {
         const updatedCylinders = job.cylinders.map(c => {
             if (c.id === cylinderId) {
@@ -162,41 +83,144 @@ const JobCreator = () => {
     };
 
     /**
-     * Verstuurt het gegenereerde jobobject naar de backend via de API.
-     * Geeft feedback via toastmeldingen.
+     * generateJob()
+     * -----------------------
+     * Doel:
+     * - Valideer jobDetails, repeatByCylinder en templatePlate.
+     * - Toon specifieke foutmeldingen via debug.notify.
+     * - Genereer en sla nieuw jobobject op.
+     */
+    const generateJob = () => {
+        debug.notify("debug", "Genereer job gestart...");
+
+        // 1) Valideer verplichte jobvelden
+        const jobFieldErrors = {
+            number: fieldValidators.job.number(jobDetails.number),
+            name: fieldValidators.job.name(jobDetails.name),
+        };
+        setErrors(prev => ({ ...prev, ...jobFieldErrors }));
+
+        // Verzamel fouten voor jobvelden
+        const invalidJobFields = Object.entries(jobFieldErrors).filter(([, msg]) => msg);
+        if (invalidJobFields.length) {
+            const melding = invalidJobFields.map(([key, msg]) => `${key}: ${msg}`).join("\n");
+            debug.notify("error", `Jobvelden ongeldig:\n${melding}`);
+            return;
+        }
+
+        // 2) Valideer repeatByCylinder
+        if (!repeatByCylinder || isNaN(repeatByCylinder)) {
+            debug.notify("error", "Repeat moet een geldig getal zijn.");
+            return;
+        }
+
+        // 3) Valideer templatePlate velden
+        const plateErrors = Object.entries(templatePlate)
+            .map(([key, val]) => [key, fieldValidators.plate[key]?.(val)])
+            .filter(([, msg]) => msg);
+        if (plateErrors.length) {
+            const melding = plateErrors.map(([key, msg]) => `plate.${key}: ${msg}`).join("\n");
+            debug.notify("error", `Plaatvelden ongeldig:\n${melding}`);
+            return;
+        }
+
+        // 4) Bouw cylinders en plates
+        const generatedId = Date.now();
+        const dataValue = new Date().toISOString();
+        let plateId = 1;
+        const cylinders = [];
+        for (let c = 1; c <= numCylinders; c++) {
+            const plates = [];
+            for (let p = 0; p < platesPerCylinder; p++) {
+                plates.push(Plate(
+                    plateId++,
+                    templatePlate.width,
+                    templatePlate.topHeight,
+                    templatePlate.bottomHeight,
+                    templatePlate.x,
+                    templatePlate.y
+                ));
+            }
+            cylinders.push(Cylinder(c + 100, `Cylinder ${c}`, plates));
+        }
+
+        // 5) Stel jobobject samen
+        const newJob = Job(
+            generatedId,
+            jobDetails.number,
+            jobDetails.name,
+            dataValue,
+            jobDetails.info,
+            repeatByCylinder,
+            cylinders
+        );
+
+        debug.notify("debug", "Job gegenereerd:", newJob);
+        setJob(newJob);
+    };
+
+    /**
+     * submitJob()
+     * -----------------------
+     * Doel:
+     * - Valideer compleet jobobject incl. cylinders/plates.
+     * - Toon alle validatiefouten in debug.notify.
+     * - Verstuur via createFullJob naar backend.
      */
     const submitJob = async () => {
-        const token = getValidTokenOrLogout(logout); // Tokencontrole vóór verzenden
-        if (!token) return; // User is uitgelogd bij ongeldige sessie
+        const token = getValidTokenOrLogout(logout);
+        if (!token) return;
 
-        debug.notify("debug", "Job wordt aangemaakt...");
+        // Controleer of jobobject geldig is
+        if (!job || !Array.isArray(job.cylinders) || job.cylinders.length === 0) {
+            debug.notify("error", "Geen geldig jobobject om te versturen.");
+            return;
+        }
 
+        // Verzamel alle validatiefouten
+        const fouten = [];
+        if (!job.number?.trim()) fouten.push("job.number ontbreekt");
+        if (!job.name?.trim()) fouten.push("job.name ontbreekt");
+        if (!job.date?.trim()) fouten.push("job.date ontbreekt");
+
+        job.cylinders.forEach((c, ci) => {
+            const errNaam = fieldValidators.cylinder.name?.(c.name);
+            if (errNaam) fouten.push(`cylinder[${ci}].name: ${errNaam}`);
+            c.plates.forEach((p, pi) => {
+                Object.entries(p).forEach(([key, val]) => {
+                    const validate = fieldValidators.plate[key];
+                    if (validate) {
+                        const err = validate(val);
+                        if (err) fouten.push(`cylinder[${ci}].plate[${pi}].${key}: ${err}`);
+                    }
+                });
+            });
+        });
+
+        if (fouten.length) {
+            const melding = fouten.join("\n");
+            debug.notify("error", `Validatiefouten gevonden:\n${melding}`);
+            return;
+        }
+
+        // Verstuur job als alles ok is
+        debug.notify("debug", "Verstuur job naar backend...");
         const response = await createFullJob(job, token);
-
         if (response) {
-            debug.notify("succes", "Job wordt aangemaakt...");
+            debug.notify("succes", "Job succesvol aangemaakt!");
             CustomToast.success(
                 <>
                     Job <strong>{job.name}</strong> is aangemaakt.<br />
-                    <Link to={`/jobOverview`} className="link-button">
-                        ➤ Ga naar job overzicht
-                    </Link>
+                    <Link to="/jobOverview" className="link-button">➤ Ga naar job overzicht</Link>
                 </>,
                 { autoClose: 6000 }
             );
-
-            // Reset formulier
             setJob(null);
             setJobDetails({ number: "", name: "", info: "", repeat: 1250 });
         } else {
-            debug.notify("error", "Fout bij jobcreatie.");
+            debug.notify("error", "Fout bij het aanmaken van de job.");
         }
     };
-
-
-
-
-
     // Render de component
     return (
         <div className="outer-container job-editor-wrapper">

@@ -5,8 +5,8 @@ export const fieldValidators = {
             !value || value.trim() === "" ? "Jobnummer is verplicht" : null,
         name: (value) =>
             !value || value.trim() === "" ? "Naam is verplicht" : null,
-        date: (value) =>
-            !value || value.trim() === "" ? "Datum is verplicht" : null,
+        info: (value) =>
+            !value || value.trim() === "" ? "Info is verplicht" : null,
     },
 
     cylinder: {
