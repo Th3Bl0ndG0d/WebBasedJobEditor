@@ -15,6 +15,7 @@ import FormGrid from "../../components/formGrid/FromGrid.jsx";
 import {parseApiError } from "../../helpers/parseApiError.js";
 import {createDebugger} from "../../components/debugger/createDebugger.jsx";
 import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
+import loginUser from "../../helpers/loginUser.js";
 
 const debug = createDebugger({
     enableConsole: true,
@@ -24,7 +25,7 @@ const debug = createDebugger({
         error: true,
         info: true,
         warning: true,
-        debug: false,
+        debug: true,
     }
 });
 
@@ -116,14 +117,19 @@ function Profile({ mode = 'edit' }) {
                     setUserList(prev => [...prev, createdUser]);
                     debug.notify("success", `Gebruiker aangemaakt: ${createdUser.email}`);
 
+                    // Enkel automatisch inloggen bij registratiepagina
                     if (!isEditMode) {
-                        const success = await login(email, password);
-                        if (success) {
-                            navigate(userType === "beheerder" ? "/profile/edit" : "/JobOverview");
-                        } else {
-                            debug.notify("error", "Automatisch inloggen mislukt.");
+                        try {
+                            const responseData = await loginUser(email, password);
+                            await login(responseData);
+                        } catch  {
+                            debug.notify("error", "Automatisch inloggen mislukt. Inloggen handmatig vereist.");
                             navigate("/login");
+                            return;
                         }
+
+                        // Redirect op basis van rol
+                        navigate(userType === "beheerder" ? "/profile/edit" : "/JobOverview");
                     }
                 }
             } catch (err) {
@@ -132,6 +138,7 @@ function Profile({ mode = 'edit' }) {
 
             return;
         }
+
 
         // Bewerken bestaande gebruiker (admin met selectie)
         if (isEditMode && isAdmin && selectedUser) {
