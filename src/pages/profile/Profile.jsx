@@ -74,7 +74,7 @@ function Profile({ mode = 'edit' }) {
             setEmail(user.email);
             setUserType(user.roles?.[0] || 'operator');
         }
-    }, [isEditMode, isAdmin, user]);
+    }, [isEditMode, isAdmin, user,logout]);
 
     /**
      * Wanneer een beheerder een gebruiker selecteert, laad die gegevens in het formulier.

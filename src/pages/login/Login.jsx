@@ -50,12 +50,6 @@ function Login() {
         const responseData = await loginUser(email, password);
         console.log('Login response:', responseData);
         login(responseData);
-        // const success = await loginUser(email, password);
-        // if (!success) {
-        //     const msg = 'Inloggen mislukt. Controleer je e-mailadres en wachtwoord.';
-        //     debug.notify('error', msg); // toast errormelding
-        //     setError(msg); // visuele foutmelding
-        // }
     };
 
     return (

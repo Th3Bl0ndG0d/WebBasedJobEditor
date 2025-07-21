@@ -65,3 +65,38 @@
     align-items: center;
 }
 
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px;
+    }
+
+    .navbar div {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .navbar li {
+        justify-content: flex-start;
+    }
+
+    .nav-user {
+        flex-direction: row;
+        gap: 8px;
+    }
+
+    .navbar a {
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+    }
+}
+

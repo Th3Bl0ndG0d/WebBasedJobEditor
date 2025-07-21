@@ -11,7 +11,7 @@ import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
 // Debugger instellen
 const debug = createDebugger({
     enableConsole: true,
-    enableToast: false,
+    enableToast: true,
     toastTypes: {
         success: true,
         error: true,
@@ -29,9 +29,11 @@ const JobOverview = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        async function fetchJobs() {
-            const token = getValidTokenOrLogout(logout); // Controleer token pas hier
-            if (!token) return; // Verlopen? Dan wordt user al uitgelogd
+        debug.notify("debug", "useEffect triggered. Gebruiker:", user);
+
+        (async () => {
+            const token = getValidTokenOrLogout(logout);
+            if (!token) return;
 
             debug.notify("debug", "Start ophalen van jobs...");
             setLoading(true);
@@ -51,11 +53,9 @@ const JobOverview = () => {
             } finally {
                 setLoading(false);
             }
-        }
+        })();
+    }, [user,logout]);
 
-        debug.notify("debug", "useEffect triggered. Gebruiker:", user);
-        fetchJobs(); // Opstart
-    }, [user?.id]);
 
     const handleRowClick = (id) => {
         const newSelected = id === selectedJobId ? null : id;
@@ -67,13 +67,6 @@ const JobOverview = () => {
         const token = getValidTokenOrLogout(logout);
         if (!token) return;
         debug.notify("info", `Verzoek tot verwijderen van job ID: ${id}`);
-
-        // const confirmed = window.confirm("Weet je zeker dat je deze job wilt verwijderen?");
-        // if (!confirmed) {
-        //     debug.notify("info", "Verwijderen geannuleerd door gebruiker.");
-        //     return;
-        // }
-
         const success = await deleteJob(id,token);
         if (success) {
             debug.notify("success", `Job ID ${id} succesvol verwijderd.`);
@@ -87,7 +80,7 @@ const JobOverview = () => {
     };
 
     const handleCopy = (id) => {
-        debug.notify("info", `Job ID ${id} kopiëren (nog niet geïmplementeerd).`);
+        debug.notify("info", `Job ID ${id} kopiëren (deze functie is nog niet geïmplementeerd).`);
     };
 
     const handleEdit = (id) => {

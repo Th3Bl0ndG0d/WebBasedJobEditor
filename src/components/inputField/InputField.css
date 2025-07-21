@@ -9,6 +9,7 @@
     padding: 12px 24px;
     height: 48px;
     width: 100%;                /* vaste breedte, niet max-width */
+    min-width: 300px;
     max-width: 800px;
 
 }
@@ -20,14 +21,16 @@
 }
 
 .input-narrow {
-    min-width: 50px;
-    max-width: 150px;
+    min-width: 100px;
+    max-width: 200px;
 }
 
 .input-number {
     height: 48px;               /* zelfde als .button-square */
     width: 60px;                /* vaste breedte, niet max-width */
     padding: 0 12px;            /* verticale padding = 0 */
+    min-width: 50px;
+    max-width: 50px;
     text-align: center;
     font-size: 16px;
     border-radius: 6px;
