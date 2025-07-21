@@ -1,6 +1,6 @@
 # Web Based Job Editor (WBJE)
 De Web Based Job Editor (WBJE) is een moderne React-applicatie gebouwd met Vite. 
-De applicatie stelt gebruikers in staat om visueel jobs samen te stellen, cilinders en platen te creeeren. 
+De applicatie stelt gebruikers in staat om visueel jobs samen te stellen, cilinders en platen te creëren. 
 Inclusief ondersteuning voor gebruikersauthenticatie, rol beheer en een gebruiksvriendelijke interface.
 
 Hieronder is de belangrijkste pagina te zien van de WBJE, de job overzichts pagina:
@@ -138,7 +138,7 @@ edit-icon, copy-icon en delete-icon.
 
 ## Job bewerken
 
-De job overzicht pagina bied een functie waarbij je de job kan **bewerken** Hiervoor selecteer je de gewenste job, en 
+De job overzicht pagina biedt een functie waarbij je de job kan **bewerken** Hiervoor selecteer je de gewenste job, en 
 druk je op het **edit** icoon.
 
 ![Edit.png](/src/assets/screenshots/Edit.png)
@@ -151,13 +151,13 @@ Dit is in hoever deze functie is uitgewerkt. Selecteer job overzicht in de navig
 
 ## Job verwijderen
 
-De job overzicht pagina bied een functie waarbij je de job kan **verwijderen** Hiervoor selecteer je de gewenste job, en
+De job overzicht pagina biedt een functie waarbij je de job kan **verwijderen** Hiervoor selecteer je de gewenste job, en
 druk je op het **delete** icoon.
 
 ![DeleteJob.png](/src/assets/screenshots/DeleteJob.png)
 
 Vervolgens wordt er middels een toast weergegeven dat de job verwijdert wordt uit de database. Afhankelijk welke debug
-instellingen aanstaan in het project worden er evt meerdere toast messages weergegeven.
+instellingen aanstaan in het project worden er evt. meerdere toast messages weergegeven.
 
 ![ToastVerzoekTotVerwijderenJob.png](/src/assets/screenshots/ToastVerzoekTotVerwijderenJob.png)
 
@@ -251,9 +251,8 @@ die je wilt wijzigen. Breng de wijzigingen aan en druk op **opslaan**
 
 ![ProfielBewerkenOperator.png](/src/assets/screenshots/ProfielBewerkenOperator.png)
 
-Je zult zien dat er niets gebeurt. Deze functie is niet geimplementeerd. Druk op **anuleren** om terug te gaan naar het 
+Je zult zien dat er niets gebeurt. Deze functie is niet geïmplementeerd. Druk op **annuleren** om terug te gaan naar het 
 job overzichts scherm.
-
 
 ## Gebruiker profiel bewerken vanuit de profiel pagina (administrator)
 
@@ -266,5 +265,5 @@ dropdown te gebruiken
 
 ![RolVeranderenGebruiker.png](/src/assets/screenshots/RolVeranderenGebruiker.png)
 
-Je hebt nu de mogelijkheid om de **wijzignen** te opslaan of om de gebruiker te **verwijderen**. Druk hiervoor op de 
-gewenste knop. Echter zijn beide functies niet geimplementeerd. Dus hiervoor wordt een melding weergegeven.
+Je hebt nu de mogelijkheid om de **wijzingen** te opslaan of om de gebruiker te **verwijderen**. Druk hiervoor op de 
+gewenste knop. Echter zijn beide functies niet geïmplementeerd. Dus hiervoor wordt een melding weergegeven.
