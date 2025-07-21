@@ -116,3 +116,22 @@
     align-items: center;
     justify-content: flex-start;
 }
+
+/*Wat meer responsive*/
+@media (max-width: 1024px) {
+    /* Verberg 'Info' kolom (4e kolom) op tablet en kleiner */
+    .job-overview-table th:nth-child(4),
+    .job-overview-table td:nth-child(4) {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Verberg 'ID' (1e) en '# Cylinders' (6e kolom) op mobiel */
+    .job-overview-table th:nth-child(1),
+    .job-overview-table td:nth-child(1),
+    .job-overview-table th:nth-child(6),
+    .job-overview-table td:nth-child(6) {
+        display: none;
+    }
+}

@@ -31,18 +31,32 @@ const createNumberValidator = (
     return null;
 };
 
-// Simple validator voor verplichte tekstvelden
-// Parameter:
+// Validator voor verplichte tekstvelden met controle op toegestane karakters
+// Parameters:
 // - field: veldnaam voor foutmelding
-const createStringValidator = field =>
-    value => (!value?.trim() ? `${field} is verplicht` : null);
+// Controleert:
+// - veld mag niet leeg zijn
+// - veld mag alleen letters, cijfers, spaties, underscores en koppeltekens bevatten
+const createStringValidator = field => {
+    const pattern = /^[a-zA-Z0-9 _-]+$/; // vast patroon
+    return value => {
+        if (!value?.trim()) {
+            return `${field} is verplicht`;
+        }
+        if (!pattern.test(value)) {
+            return `${field} bevat ongeldige tekens (alleen letters, cijfers, spatie, - en _)`;
+        }
+        return null;
+    };
+};
+
 
 // Object met alle veldvalidators per sectie
 export const fieldValidators = {
     // Validatie voor job-gegevens
     job: {
         number: createStringValidator('Jobnummer'),  // verplicht veld
-        name:   createStringValidator('Naam'),       // verplicht veld
+        name:   createStringValidator('Naam'),// verplicht veld
         info:   () => null                           // optioneel veld, mag leeg zijn
     },
 
