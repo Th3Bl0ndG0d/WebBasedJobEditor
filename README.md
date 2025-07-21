@@ -3,18 +3,18 @@ De Web Based Job Editor (WBJE) is een moderne React-applicatie gebouwd met Vite.
 De applicatie stelt gebruikers in staat om visueel jobs samen te stellen, cilinders en platen te creëren. 
 Inclusief ondersteuning voor gebruikersauthenticatie, rol beheer en een gebruiksvriendelijke interface.
 
-Hieronder is de belangrijkste pagina te zien van de WBJE, de job overzichts pagina:
+Hieronder is de belangrijkste pagina te zien van de WBJE, de job overzicht pagina:
 
 ![JobOverzicht.png](/src/assets/screenshots/JobOverzicht.png)
 
 
 ## Required .env data:
-Copieer de bijgeleverde .env en plaats deze in de root. 
+Kopieer de bijgeleverde .env _file_ en plaats deze in de root. Zoals de volgende afbeelding.
 
 ![envLocation.png](/src/assets/screenshots/envLocation.png)
 
 Hierin staan de belangrijke gegevens die nodig zijn om deze site te kunnen draaien. 
-De API url en de bijbehordende Project_ID
+De API url en de bijbehorende  Project_ID
 
 - VITE_API_URL
 - VITE_PROJECT_ID
@@ -151,17 +151,17 @@ Dit is in hoever deze functie is uitgewerkt. Selecteer job overzicht in de navig
 
 ## Job verwijderen
 
-De job overzicht pagina biedt een functie waarbij je de job kan **verwijderen** Hiervoor selecteer je de gewenste job, en
-druk je op het **delete** icoon.
+De job overzicht pagina biedt een functie waarbij je de job kan **verwijderen** Hiervoor selecteer je de gewenste job, 
+en druk je op het **delete** icoon.
 
 ![DeleteJob.png](/src/assets/screenshots/DeleteJob.png)
 
-Vervolgens wordt er middels een toast weergegeven dat de job verwijdert wordt uit de database. Afhankelijk welke debug
-instellingen aanstaan in het project worden er evt. meerdere toast messages weergegeven.
+Vervolgens wordt er middels een toast weergegeven dat de job verwijderd wordt uit de database. Afhankelijk van welke 
+debug instellingen aanstaan in het project worden er evt. meerdere toast berichten weergegeven.
 
 ![ToastVerzoekTotVerwijderenJob.png](/src/assets/screenshots/ToastVerzoekTotVerwijderenJob.png)
 
-Nadat de complete job verwijdert is wordt het job overzicht opnieuw geladen. Je zult nu zien dat de job ook echt is
+Nadat de complete job verwijderd is wordt de job overzicht opnieuw geladen. Je zult nu zien dat de job ook echt is
 verwijderd.
 
 ![JobOverZichtZonderBanaanJob.png](/src/assets/screenshots/JobOverZichtZonderBanaanJob.png)
@@ -171,8 +171,8 @@ verwijderd.
 De New Job-pagina biedt de mogelijkheid om een compleet nieuwe job aan te maken. Deze functie is beschikbaar voor zowel 
 operators als beheerders.
 
-De gebruiker voert eerst de benodigde gegevens in. Daarna wordt het aantal cylinders en het aantal platen per 
-cylinder opgegeven.
+De gebruiker voert eerst de benodigde gegevens in. Daarna wordt het aantal cilinders en het aantal platen per 
+cilinder opgegeven.
 
 ![NewJob.png](/src/assets/screenshots/NewJob.png)
 
@@ -183,24 +183,24 @@ Velden die worden ingevoerd:
 - Naam: _De interne of klantgerichte benaming van de job._
 - Info: _Vrij tekstveld voor aanvullende opmerkingen of instructies m.b.t. de job._
 
-**Cylindergegevens**
-- Repeat: _De afwikkeling van de cylinder in millimeters. Dit geeft aan hoe lang het te bedrukken oppervlak is per omwenteling._
+**Cilindergegevens**
+- Repeat: _De afwikkeling van de cilinder in millimeters._ 
 
 **Plategegevens**
 - Width: _De breedte van de plaat in millimeters._
-- TopHeight: _Hoogte van de plaat aan de bovenzijde, gemeten vanaf het middelpunt van de cylinder._
+- TopHeight: _Hoogte van de plaat aan de bovenzijde, gemeten vanaf het middelpunt van de cilinder._
 - BottomHeight: _Hoogte aan de onderzijde, eveneens gemeten vanaf het middelpunt._
-- x: _Horizontale positie van de plaat op de cylinder (offset in mm)._
-- y: _Verticale positie van de plaat op de cylinder (offset in mm)._
+- x: _Horizontale positie van de plaat op de cilinder (offset in mm)._
+- y: _Verticale positie van de plaat op de cilinder (offset in mm)._
 
 **bepaal aantal cylinders en platen.**
 
-Klok nu op **Genereer Job** Er wordt nu een overzicht getoond waarin alle gegenereerde cylinders en platen nog bewerkt 
+Klok nu op **Genereer Job** Er wordt nu een overzicht getoond waarin alle gegenereerde cilinders en platen nog bewerkt 
 kunnen worden voordat de job wordt opgeslagen. 
 
 ![NewJobOverZicht.png](/src/assets/screenshots/NewJobOverZicht.png)
 
-Druk op **Creer Job** om de job daadwerkelijk naar de API te sturen voor opslag. 
+Druk op **Creëer Job** om de job daadwerkelijk naar de API te sturen voor opslag. 
 Een toast melding zal een melding sturen dat het gelukt is.
 
 ![ToastJobIsAangemaakt.png](/src/assets/screenshots/ToastJobIsAangemaakt.png)
@@ -214,18 +214,18 @@ Wanneer nog geen gebruikers bestaan in het systeem, biedt het login scherm de mo
 te maken. Deze eerste gebruiker krijgt automatisch de rol van operator. Dit zorgt ervoor dat het systeem veilig en 
 beheersbaar kan worden opgestart.
 
-Zorg ervoor dat je niet ingelogt bent. Of de applicatie voor het eerst opstart. Druk nu op **Nieuwe gebruiker aanmaken** 
+Zorg ervoor dat je niet ingelogd bent. Of de applicatie voor het eerst opstart. Druk nu op **Nieuwe gebruiker aanmaken** 
 op de login pagina.
 
 ![LoginOperator.png](/src/assets/screenshots/LoginOperator.png)
 
-Vervolgens wordt je doorgestuurd naar de registratie pagina van de WBJE
+Vervolgens word je doorgestuurd naar de registratie pagina van de WBJE
 
 ![GebruikerRegisterenVanuitLoginForm.png](/src/assets/screenshots/GebruikerRegisterenVanuitLoginForm.png)
 
 Voer nu een **email** adres in en een **wachtwoord** naar keuze. Druk vervolgens op **aanmaken** om een gebruiker te
-registreren. Er zit hier geen verdere controlle op de gegevens die ingevoerd worden. Dubbele gebruikers worden niet
-afgevangen. Druk op **anuleren** om terug te gaan naar het inlog scherm. Na het succesvol registeren van een nieuwe 
+registreren. Er zit hier geen verdere controle op de gegevens die ingevoerd worden. Dubbele gebruikers worden niet
+afgevangen. Druk op **annuleren** om terug te gaan naar het inlog scherm. Na het succesvol registeren van een nieuwe 
 gebruiker, word je automatisch ingelogd en doorgestuurd naar de job overzicht pagina.
 
 ## Nieuwe gebruiker toevoegen vanuit de profiel pagina (alleen beschikbaar voor beheerders)
@@ -239,9 +239,9 @@ Log in als admin@example.com hiermee word je direct doorgestuurd naar de profiel
 ![GebruikerRegisterenVanuitProfileForm.png](/src/assets/screenshots/GebruikerRegisterenVanuitProfileForm.png)
 
 Selecteer **--Nieuwe gebruiker toevoegen** in de dropdown. Voer nu een **email** adres in en een **wachtwoord** naar 
-keuze, selecteer vervolgend de **Rol** die je wilt toekenen aan deze nieuwe gebruiker. Druk vervolgens op **aanmaken** o
-m een gebruiker te registreren. Ook hier zit geen verdere controlle op de gegevens die ingevoerd worden. Dubbele 
-gebruikers worden niet afgevangen. Druk op **anuleren** om terug te gaan naar het inlog scherm. Na het succesvol 
+keuze, selecteer vervolgend de **Rol** die je wilt toekennen aan deze nieuwe gebruiker. Druk vervolgens op **aanmaken** 
+om een gebruiker te registreren. Ook hier zit geen verdere controle op de gegevens die ingevoerd worden. Dubbele 
+gebruikers worden niet afgevangen. Druk op **annuleren** om terug te gaan naar het inlog scherm. Na het succesvol 
 registeren van een nieuwe gebruiker, wordt deze automatisch toegevoegd in de gebruikers overzicht dropdown lijst.
 
 ## Gebruiker profiel bewerken vanuit de profiel pagina (operator)
@@ -252,7 +252,7 @@ die je wilt wijzigen. Breng de wijzigingen aan en druk op **opslaan**
 ![ProfielBewerkenOperator.png](/src/assets/screenshots/ProfielBewerkenOperator.png)
 
 Je zult zien dat er niets gebeurt. Deze functie is niet geïmplementeerd. Druk op **annuleren** om terug te gaan naar het 
-job overzichts scherm.
+job overzicht scherm.
 
 ## Gebruiker profiel bewerken vanuit de profiel pagina (administrator)
 
