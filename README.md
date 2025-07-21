@@ -1,6 +1,6 @@
 # Web Based Job Editor (WBJE)
 De Web Based Job Editor (WBJE) is een moderne React-applicatie gebouwd met Vite. 
-De applicatie stelt gebruikers in staat om visueel jobs samen te stellen, cylinders en plates te creeeren. 
+De applicatie stelt gebruikers in staat om visueel jobs samen te stellen, cilinders en platen te creeeren. 
 Inclusief ondersteuning voor gebruikersauthenticatie, rol beheer en een gebruiksvriendelijke interface.
 
 Hieronder is de belangrijkste pagina te zien van de WBJE, de job overzichts pagina:
@@ -10,6 +10,9 @@ Hieronder is de belangrijkste pagina te zien van de WBJE, de job overzichts pagi
 
 ## Required .env data:
 Copieer de bijgeleverde .env en plaats deze in de root. 
+
+![envLocation.png](/src/assets/screenshots/envLocation.png)
+
 Hierin staan de belangrijke gegevens die nodig zijn om deze site te kunnen draaien. 
 De API url en de bijbehordende Project_ID
 
@@ -32,7 +35,7 @@ Druk vervolgens op de Upload API configuratie knop. Nu is de juiste database gel
 
 - `npm install`  
   Initialiseert of actualiseert de `node_modules` map op basis van `package.json`. Installeert alle gedefinieerde dependencies.
-- 
+
 - `npm install react-router-dom`  
   Routerpakket voor React. Maakt navigatie tussen pagina’s mogelijk via routes zonder volledige pagina-herlaad.
 
