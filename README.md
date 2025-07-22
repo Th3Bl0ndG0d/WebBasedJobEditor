@@ -1,7 +1,11 @@
 # Web Based Job Editor (WBJE)
-De Web Based Job Editor (WBJE) is een moderne React-applicatie gebouwd met Vite. 
-De applicatie stelt gebruikers in staat om visueel jobs samen te stellen, cilinders en platen te creëren. 
-Inclusief ondersteuning voor gebruikersauthenticatie, rol beheer en een gebruiksvriendelijke interface.
+De Web Based Job Editor (WBJE) is een moderne React-applicatie. De applicatie stelt gebruikers in staat om visueel jobs 
+samen te stellen, cilinders en platen te creëren. Inclusief ondersteuning voor gebruikersauthenticatie, rol beheer en 
+een gebruiksvriendelijke interface.
+
+De Github repository is terug te vinden via de volgende link:
+
+https://github.com/Th3Bl0ndG0d/WebBasedJobEditor
 
 Hieronder is de belangrijkste pagina te zien van de WBJE, de job overzicht pagina:
 
