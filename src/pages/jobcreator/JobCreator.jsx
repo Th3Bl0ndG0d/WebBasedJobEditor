@@ -17,6 +17,7 @@ import {AuthContext} from "../../context/AuthProvider.jsx";
 import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
 import {fieldValidators} from "../../helpers/fieldValidators.js";
 import {clearFieldError} from "../../helpers/clearFieldError.js";
+import JobPreview from "../../components/jobPreview/JobPreview.jsx";
 // Debugger instellen
 const debug = createDebugger({
     enableConsole: true,
@@ -59,22 +60,22 @@ const JobCreator = () => {
         setJobDetails({ ...jobDetails, [field]: value });
         clearFieldError(setErrors, field, fieldValidators.job[field], value);
     };
-    // Wijzigt een veld van het huidige jobobject (na Genereren)
-    const updateJobField = (field, value) => {
-        setJob({ ...job, [field]: value });
-        clearFieldError(setErrors, field, fieldValidators.job[field], value);
-    };
-    // Wijzigt naam/eigenschap van een cylinder binnen job
-    const updateCylinder = (id, field, value) => {
-        const updated = job.cylinders.map(c =>
-            c.id === id ? { ...c, [field]: value } : c
-        );
-        setJob({ ...job, cylinders: updated });
-        if (field === "name") {
-            const key = `cylinder[${id}].${field}`;
-            clearFieldError(setErrors, key, fieldValidators.cylinder[field], value);
-        }
-    };
+    // // Wijzigt een veld van het huidige jobobject (na Genereren)
+    // const updateJobField = (field, value) => {
+    //     setJob({ ...job, [field]: value });
+    //     clearFieldError(setErrors, field, fieldValidators.job[field], value);
+    // };
+    // // Wijzigt naam/eigenschap van een cylinder binnen job
+    // const updateCylinder = (id, field, value) => {
+    //     const updated = job.cylinders.map(c =>
+    //         c.id === id ? { ...c, [field]: value } : c
+    //     );
+    //     setJob({ ...job, cylinders: updated });
+    //     if (field === "name") {
+    //         const key = `cylinder[${id}].${field}`;
+    //         clearFieldError(setErrors, key, fieldValidators.cylinder[field], value);
+    //     }
+    // };
     // Wijzigt een veld van een plate binnen een specifieke cylinder
     const updatePlate = (cylinderId, plateId, field, value) => {
         const updatedCylinders = job.cylinders.map(c => {
@@ -371,164 +372,13 @@ const JobCreator = () => {
                         </div>
                     </>
                 )}
-
-
-                {job && Array.isArray(job.cylinders) && (
-                    <>
-                        {/* Bewerkbare jobvelden */}
-                        <section className="boxed-section">
-                            <h2 className="section-title boxed-section-title">JobData</h2>
-                            <FormGrid direction="row" theme="dark">
-                                <FormGroup label="Number" htmlFor="job-number-edit">
-                                    <InputField
-                                        id="job-number-edit"
-                                        type="text"
-                                        inputValue={job.number}
-                                        // handleInputChange={(val) => updateJobField("number", val)}
-                                        variant="narrow"
-                                        disabled={true}
-
-                                    />
-                                </FormGroup>
-                                <FormGroup label="Name" htmlFor="job-name-edit">
-                                    <InputField
-                                        id="job-name-edit"
-                                        type="text"
-                                        inputValue={job.name}
-                                        // handleInputChange={(val) => updateJobField("name", val)}
-                                        variant="narrow"
-                                        disabled={true}
-                                    />
-                                </FormGroup>
-                                <FormGroup label="Info" htmlFor="job-info-edit">
-                                    <InputField
-                                        id="job-info-edit"
-                                        type="text"
-                                        inputValue={job.info}
-                                        // handleInputChange={(val) => updateJobField("info", val)}
-                                        variant="narrow"
-                                        disabled={true}
-                                    />
-                                </FormGroup>
-                                <FormGroup label="Date" htmlFor="job-date-edit">
-                                    <InputField
-                                        id="job-date-edit"
-                                        type="text"
-                                        inputValue={job.date}
-                                        handleInputChange={() => {}}
-                                        variant="narrow"
-                                        disabled={true}
-                                    />
-                                </FormGroup>
-                                <FormGroup label="Repeat" htmlFor="job-repeat-edit">
-                                    <InputField
-                                        id="job-repeat-edit"
-                                        type="number"
-                                        inputValue={job.repeat}
-                                        handleInputChange={() => {}}// handleInputChange={(val) => updateJobField("repeat", parseInt(val))}
-                                        variant="narrow"
-                                        error={errors["job.repeat"]}
-                                        disabled={true}
-                                    />
-                                </FormGroup>
-                            </FormGrid>
-                        </section>
-
-                        {/* Per cylinder: naam en platen */}
-                        {job.cylinders.map((cylinder) => (
-                            <section className="boxed-section" key={cylinder.id}>
-                                <h2 className="section-title boxed-section-title">Cylinder {cylinder.id}</h2>
-
-                                {/*<FormGrid direction="row" theme="dark">*/}
-                                {/*    <FormGroup label="Naam" htmlFor={`cylinder-name-${cylinder.id}`}>*/}
-                                {/*        <InputField*/}
-                                {/*            id={`cylinder-name-${cylinder.id}`}*/}
-                                {/*            type="text"*/}
-                                {/*            inputValue={cylinder.name}*/}
-                                {/*            handleInputChange={(val) => updateCylinder(cylinder.id, "name", val)}*/}
-                                {/*            variant="narrow"*/}
-                                {/*            disabled*/}
-                                {/*        />*/}
-                                {/*    </FormGroup>*/}
-                                {/*</FormGrid>*/}
-
-                                {cylinder.plates.map((plate) => (
-                                    <FormGrid direction="row" theme="dark" key={plate.id}>
-                                        <h3 className="section-title boxed-section-title">Plate {plate.id}</h3>
-                                        <FormGroup label="Width" htmlFor={`plate-${plate.id}-width`}>
-                                            <InputField
-                                                id={`plate-${plate.id}-width`}
-                                                type="text"
-                                                inputValue={plate.width}
-                                                handleInputChange={(val) =>
-                                                    updatePlate(cylinder.id, plate.id, "width", val)
-                                                }
-                                                variant="narrow"
-                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].width`]}
-                                            />
-                                        </FormGroup>
-
-                                        <FormGroup label="Top Height" htmlFor={`plate-${plate.id}-topHeight`}>
-                                            <InputField
-                                                id={`plate-${plate.id}-topHeight`}
-                                                type="text"
-                                                inputValue={plate.topHeight}
-                                                handleInputChange={(val) =>
-                                                    updatePlate(cylinder.id, plate.id, "topHeight", val)
-                                                }
-                                                variant="narrow"
-                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].topHeight`]}
-                                            />
-                                        </FormGroup>
-
-                                        <FormGroup label="Bottom Height" htmlFor={`plate-${plate.id}-bottomHeight`}>
-                                            <InputField
-                                                id={`plate-${plate.id}-bottomHeight`}
-                                                type="text"
-                                                inputValue={plate.bottomHeight}
-                                                handleInputChange={(val) =>
-                                                    updatePlate(cylinder.id, plate.id, "bottomHeight", val)
-                                                }
-                                                variant="narrow"
-                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].bottomHeight`]}
-                                            />
-                                        </FormGroup>
-
-                                        <FormGroup label="X" htmlFor={`plate-${plate.id}-x`}>
-                                            <InputField
-                                                id={`plate-${plate.id}-x`}
-                                                type="text"
-                                                inputValue={plate.x}
-                                                handleInputChange={(val) =>
-                                                    updatePlate(cylinder.id, plate.id, "x", val)
-                                                }
-                                                variant="narrow"
-                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].x`]}
-                                            />
-                                        </FormGroup>
-
-                                        <FormGroup label="Y" htmlFor={`plate-${plate.id}-y`}>
-                                            <InputField
-                                                id={`plate-${plate.id}-y`}
-                                                type="text"
-                                                inputValue={plate.y}
-                                                handleInputChange={(val) =>
-                                                    updatePlate(cylinder.id, plate.id, "y", val)
-                                                }
-                                                variant="narrow"
-                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].y`]}
-                                            />
-                                        </FormGroup>
-                                    </FormGrid>
-                                ))}
-                            </section>
-                        ))}
-
-                        {/* Actieknop: verstuur job */}
-                        <div>
-                            <Button type="button" onClick={submitJob} label="Creeer Job" />
-                        </div>
-                    </>
+                {job && (
+                    <JobPreview
+                        job={job}
+                        errors={errors}
+                        updatePlate={updatePlate}
+                        submitJob={submitJob}
+                    />
                 )}
 
             </div>
