@@ -5,6 +5,8 @@
     padding: 16px 0;
     width: 100%;
 }
+
+
 /*voor het InputWithButtonControls component*/
 .form-grid--space-evenly{
     justify-content: space-evenly;

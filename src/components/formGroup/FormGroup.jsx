@@ -7,13 +7,15 @@ function FormGroup({
                        children,
                        direction = "column",
                        theme = "light",
-                       grow = true
+                       grow = true,
+                       className ="",
                    }) {
     const groupClass = [
         "form-group",
         `form-group--${direction}`,
         `form-group--${theme}`,
-        grow ? "form-group--grow" : "form-group--nogrow"
+        grow ? "form-group--grow" : "form-group--nogrow",
+        className.trim()
     ].join(" ");
 
     return (

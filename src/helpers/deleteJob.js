@@ -68,18 +68,13 @@ async function deleteJobRecord(jobId, token) {
  * Verwijdert een volledige job inclusief alle onderliggende cylinders en plates.
  * Haalt de volledige structuur op via getJobById().
  * @param {string} jobId - ID van de te verwijderen job
+ * @param token
  * @returns {Promise<boolean>} True indien succesvol verwijderd, anders false
  */
 export async function deleteJob(jobId,token) {
     try {
         debug.notify("debug", `Verzoek tot verwijderen van job: ${jobId}`);
-
-        if (token) {
-            debug.notify("error", "Geen geldige gebruiker/token gevonden.");
-            return false;
-        }
-
-        const job = await getJobById(jobId);
+        const job = await getJobById(jobId,token);
         if (!job) {
             debug.notify("error", "Job kon niet worden opgehaald.");
             return false;

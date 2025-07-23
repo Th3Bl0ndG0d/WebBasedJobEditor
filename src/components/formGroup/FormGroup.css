@@ -6,6 +6,10 @@
 
 }
 
+.form-group.centered {
+    align-items: center;
+}
+
 .form-group--column {
     width: 100%;
     /*background-color: lightblue;*/

@@ -89,7 +89,7 @@ function Login() {
                             </FormGroup>
                         )}
 
-                        <FormGroup label=" ">
+                        <FormGroup label=" " className="centered">
                             <Button type="submit" label="Inloggen" />
                         </FormGroup>
 

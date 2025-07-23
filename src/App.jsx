@@ -10,7 +10,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {AuthContext} from "./context/AuthProvider.jsx";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import isTokenValid from "./helpers/isTokenValid.js";
 
 // ProtectedRoute zorgt dat alleen ingelogde gebruikers toegang krijgen
@@ -20,17 +20,23 @@ function ProtectedRoute({ children }) {
     // Stap 1: Controleer of token geldig is (exp is nog niet verstreken)
     const tokenIsValid = isTokenValid();
 
-    // Stap 2: Als gebruiker wel ingelogd is, maar token is verlopen → forceer logout met reden
+    // 🔄 Stap 2: Als gebruiker wel ingelogd is, maar token is verlopen → forceer logout met reden
+    // Let op: deze stap is verplaatst naar useEffect om React-fout te vermijden
+    useEffect(() => {
+        if (isAuth && !tokenIsValid) {
+            logout("Session timed out");
+        }
+    }, [isAuth, tokenIsValid, logout]);
+
+    // Als gebruiker wel ingelogd is, maar token is ongeldig, dan wachten we tot logout() is afgerond
     if (isAuth && !tokenIsValid) {
-        logout("Session timed out");
-        return <Navigate to="/login" replace />;
+        return null; // voorkomt rendering terwijl logout nog bezig is
     }
 
     // Stap 3: Als gebruiker helemaal niet ingelogd is → redirect zonder melding
     if (!isAuth) {
         return <Navigate to="/login" replace />;
     }
-
 
     // Stap 4: Alles in orde → geef toegang tot beveiligde component
     return children;
