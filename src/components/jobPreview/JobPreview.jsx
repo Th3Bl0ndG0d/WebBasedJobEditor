@@ -3,12 +3,14 @@ import FormGroup from "../../components/formGroup/formGroup.jsx";
 import FormGrid from "../../components/formGrid/FromGrid.jsx";
 import InputField from "../../components/inputField/InputField.jsx";
 import Button from "../../components/button/Button.jsx";
+import ButtonGroup from "../buttonGroup/ButtonGroup.jsx";
 
 /**
  * Component: JobPreview
  * Doel: Toont gegenereerde jobobject in read-only jobdetails en bewerkbare platevelden
  */
-const JobPreview = ({ job, errors, updatePlate, submitJob }) => {
+const JobPreview = ({ job, errors, updatePlate, submitJob, resetJob }) => {
+
     // Als job niet geldig is, render niets
     if (!job || !Array.isArray(job.cylinders)) return null;
 
@@ -53,7 +55,7 @@ const JobPreview = ({ job, errors, updatePlate, submitJob }) => {
 
                             {/*<h3 className="section-title boxed-section-title">Plate {plate.id}</h3>*/}
 
-                            <FormGroup label="Plate" >
+                            <FormGroup label="Plate name" >
                                 <InputField
                                     id="Plate name"
                                     type="text"
@@ -89,9 +91,21 @@ const JobPreview = ({ job, errors, updatePlate, submitJob }) => {
             ))}
 
             {/* === Actieknop om job te versturen === */}
-            <div>
-                <Button type="button" onClick={submitJob} label="Creeer Job" />
-            </div>
+                <FormGroup label=" " className="centered">
+                    <ButtonGroup>
+                        <Button
+                            type="button"
+                            onClick={resetJob}
+                            label="Terug"
+                        />
+                        <Button
+                            type="button"
+                            onClick={submitJob}
+                            label="Creeer Job"
+                        />
+                    </ButtonGroup>
+
+                </FormGroup>
         </>
     );
 };

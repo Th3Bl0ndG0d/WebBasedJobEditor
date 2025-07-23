@@ -1,14 +1,14 @@
 /*.job-overview-container {*/
-/*    background-color: var(--color-background-dark);*/
-/*    color: var(--color-text-light);*/
-/*    !*padding: 48px 32px;*!*/
-/*    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-/*    min-height: 100vh;*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    align-items: flex-start;*/
-/*    width: 100%;*/
-/*    margin: 0 auto;*/
+/*    !*background-color: var(--color-background-dark);*!*/
+/*    !*color: var(--color-text-light);*!*/
+/*    !*!*padding: 48px 32px;*!*!*/
+/*    !*font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;*!*/
+/*    !*min-height: 100vh;*!*/
+/*    !*display: flex;*!*/
+/*    !*justify-content: center;*!*/
+/*    align-items: flex-start;!important;*/
+/*    !*width: 100%;*!*/
+/*    !*margin: 0 auto;*!*/
 /*}*/
 
 .job-overview-title{

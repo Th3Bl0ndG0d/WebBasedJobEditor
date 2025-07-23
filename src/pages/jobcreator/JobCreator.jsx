@@ -45,7 +45,7 @@ const JobCreator = () => {
     // Herhalingswaarde per cylinder
     const [repeatByCylinder, setRepeatByCylinder] = useState(1250);
     // Template voor plaatwaarden (breedte, hoogtes, posities)
-    const [templatePlate, setTemplatePlate] = useState({ width: "", topHeight: "", bottomHeight: "", x: "", y: "" });
+    const [templatePlate, setTemplatePlate] = useState({ width: "100", topHeight: "250", bottomHeight: "250", x: "0", y: "0" });
     // Aantallen
     const [numCylinders, setNumCylinders] = useState(1);
     const [platesPerCylinder, setPlatesPerCylinder] = useState(1);
@@ -118,11 +118,14 @@ const JobCreator = () => {
             return;
         }
 
-        // 2) Valideer repeatByCylinder
-        if (!repeatByCylinder || isNaN(repeatByCylinder)) {
-            debug.notify("error", "Repeat moet een geldig getal zijn.");
+        // 2) Valideer repeatByCylinder via veldvalidator
+        const repeatError = fieldValidators.cylinder.repeat?.(repeatByCylinder);
+        if (repeatError) {
+            setErrors(prev => ({ ...prev, repeat: repeatError }));
+            debug.notify("error", `Repeat ongeldig: ${repeatError}`);
             return;
         }
+
 
         // 3) Valideer templatePlate velden
         const plateErrors = Object.entries(templatePlate)
@@ -142,7 +145,9 @@ const JobCreator = () => {
 
         // 4) Bouw cylinders en plates
         const generatedId = Date.now();
-        const dataValue = new Date().toISOString();
+        const d = new Date();
+        const dataValue = `${d.getDate().toString().padStart(2, "0")}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getFullYear()}`;
+
         let plateId = 1;
         const cylinders = [];
         for (let c = 1; c <= numCylinders; c++) {
@@ -174,6 +179,12 @@ const JobCreator = () => {
         debug.notify("debug", "Job gegenereerd:", newJob);
         setJob(newJob);
     };
+
+    const resetJob = () => {
+        setJob(null);
+        setErrors({});
+    };
+
 
     /**
      * submitJob()
@@ -316,7 +327,11 @@ const JobCreator = () => {
                                         id="repeat"
                                         type="number"
                                         inputValue={repeatByCylinder}
-                                        handleInputChange={(val) => setRepeatByCylinder(parseInt(val) || "")}
+                                        handleInputChange={(val) => {
+                                            const parsed = parseInt(val) || "";
+                                            setRepeatByCylinder(parsed);
+                                            clearFieldError(setErrors, "repeat", fieldValidators.cylinder.repeat, parsed);
+                                        }}
                                         variant="narrow"
                                         error={errors.repeat}
                                     />
@@ -368,7 +383,10 @@ const JobCreator = () => {
 
 
                         <div className="field-row">
-                            <Button type="button" onClick={generateJob} label="Genereer Job" />
+                            <FormGroup label=" " className="centered">
+                                <Button type="button" onClick={generateJob} label="Genereer Job" />
+                            </FormGroup>
+                            {/*<Button type="button" onClick={generateJob} label="Genereer Job" />*/}
                         </div>
                     </>
                 )}
@@ -378,7 +396,9 @@ const JobCreator = () => {
                         errors={errors}
                         updatePlate={updatePlate}
                         submitJob={submitJob}
+                        resetJob={resetJob}
                     />
+
                 )}
 
             </div>

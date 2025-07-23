@@ -25,11 +25,11 @@
 
 /* Thema: label en invoer op donkere of lichte achtergrond */
 .form-grid--dark label {
-    color: white;
+    color: var(  --color-text-light);
 }
 
 .form-grid--light label {
-    color: black;
+    color: var( --color-background-dark);
 }
 
 
@@ -40,4 +40,11 @@
 
 .form-grid--tight {
     gap: 5px;
+}
+
+/* Automatisch naar kolomlayout op kleine schermen */
+@media (max-width: 768px) {
+    .form-grid--row {
+        flex-direction: column;
+    }
 }
