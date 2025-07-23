@@ -200,7 +200,7 @@ Velden die worden ingevoerd:
 **bepaal aantal cylinders en platen.**
 
 Klok nu op **Genereer Job** Er wordt nu een overzicht getoond waarin alle gegenereerde cilinders en platen nog bewerkt 
-kunnen worden voordat de job wordt opgeslagen. 
+kunnen worden voordat de job wordt opgeslagen.
 
 ![NewJobOverZicht.png](/src/assets/screenshots/NewJobOverZicht.png)
 
