@@ -16,6 +16,7 @@ import CustomToast from "../../components/cutomToast/CustomToast.jsx";
 import {AuthContext} from "../../context/AuthProvider.jsx";
 import getValidTokenOrLogout from "../../helpers/getValidTokenOrLogout.js";
 import {fieldValidators} from "../../helpers/fieldValidators.js";
+import {clearFieldError} from "../../helpers/clearFieldError.js";
 // Debugger instellen
 const debug = createDebugger({
     enableConsole: true,
@@ -50,16 +51,18 @@ const JobCreator = () => {
     // Het volledig gegenereerde jobobject
     const [job, setJob] = useState(null);
     // Opslag voor foutmeldingen per veld
-    const [, setErrors] = useState({});
+    const [errors, setErrors] = useState({});
 
     // === Update Functies ===
     // Wijzigt een veld in jobDetails state
     const updateJobDetails = (field, value) => {
         setJobDetails({ ...jobDetails, [field]: value });
+        clearFieldError(setErrors, field, fieldValidators.job[field], value);
     };
     // Wijzigt een veld van het huidige jobobject (na Genereren)
     const updateJobField = (field, value) => {
         setJob({ ...job, [field]: value });
+        clearFieldError(setErrors, field, fieldValidators.job[field], value);
     };
     // Wijzigt naam/eigenschap van een cylinder binnen job
     const updateCylinder = (id, field, value) => {
@@ -67,6 +70,10 @@ const JobCreator = () => {
             c.id === id ? { ...c, [field]: value } : c
         );
         setJob({ ...job, cylinders: updated });
+        if (field === "name") {
+            const key = `cylinder[${id}].${field}`;
+            clearFieldError(setErrors, key, fieldValidators.cylinder[field], value);
+        }
     };
     // Wijzigt een veld van een plate binnen een specifieke cylinder
     const updatePlate = (cylinderId, plateId, field, value) => {
@@ -80,6 +87,8 @@ const JobCreator = () => {
             return c;
         });
         setJob({ ...job, cylinders: updatedCylinders });
+        const key = `cylinder[${cylinderId}].plate[${plateId}].${field}`;
+        clearFieldError(setErrors, key, fieldValidators.plate[field], value);
     };
 
     /**
@@ -118,6 +127,12 @@ const JobCreator = () => {
         const plateErrors = Object.entries(templatePlate)
             .map(([key, val]) => [key, fieldValidators.plate[key]?.(val)])
             .filter(([, msg]) => msg);
+        // 🛠 Voeg errors toe aan state
+        const errorObj = {};
+        plateErrors.forEach(([key, msg]) => {
+            errorObj[`plate.${key}`] = msg;
+        });
+        setErrors(prev => ({ ...prev, ...errorObj }));
         if (plateErrors.length) {
             const melding = plateErrors.map(([key, msg]) => `plate.${key}: ${msg}`).join("\n");
             debug.notify("error", `Plaatvelden ongeldig:\n${melding}`);
@@ -177,21 +192,33 @@ const JobCreator = () => {
             return;
         }
 
-        // Verzamel alle validatiefouten
+// Verzamel alle validatiefouten
         const fouten = [];
-        if (!job.number?.trim()) fouten.push("job.number ontbreekt");
-        if (!job.name?.trim()) fouten.push("job.name ontbreekt");
-        if (!job.date?.trim()) fouten.push("job.date ontbreekt");
 
-        job.cylinders.forEach((c, ci) => {
-            const errNaam = fieldValidators.cylinder.name?.(c.name);
-            if (errNaam) fouten.push(`cylinder[${ci}].name: ${errNaam}`);
-            c.plates.forEach((p, pi) => {
-                Object.entries(p).forEach(([key, val]) => {
+// Valideer job-velden via fieldValidators
+        const jobFieldValidaties = {
+            number: fieldValidators.job.number?.(job.number),
+            name: fieldValidators.job.name?.(job.name),
+            date: job.date?.trim() ? null : "Ontbreekt"
+        };
+
+        Object.entries(jobFieldValidaties).forEach(([key, msg]) => {
+            if (msg) fouten.push(`job.${key}: ${msg}`);
+        });
+
+        // Valideer cylinders en plates
+        job.cylinders.forEach((cylinder) => {
+            // Cylindernaam
+            const errNaam = fieldValidators.cylinder.name?.(cylinder.name);
+            if (errNaam) fouten.push(`cylinder[${cylinder.id}].name: ${errNaam}`);
+
+            // Plates
+            cylinder.plates.forEach((plate) => {
+                Object.entries(plate).forEach(([key, val]) => {
                     const validate = fieldValidators.plate[key];
                     if (validate) {
                         const err = validate(val);
-                        if (err) fouten.push(`cylinder[${ci}].plate[${pi}].${key}: ${err}`);
+                        if (err) fouten.push(`cylinder[${cylinder.id}].plate[${plate.id}].${key}: ${err}`);
                     }
                 });
             });
@@ -199,9 +226,21 @@ const JobCreator = () => {
 
         if (fouten.length) {
             const melding = fouten.join("\n");
+
+            // Zet fouten in errors state
+            const errorObj = {};
+            fouten.forEach((regel) => {
+                const [key, ...rest] = regel.split(":");
+                if (rest.length) {
+                    errorObj[key.trim()] = rest.join(":").trim();
+                }
+            });
+            setErrors(prev => ({ ...prev, ...errorObj }));
+
             debug.notify("error", `Validatiefouten gevonden:\n${melding}`);
             return;
         }
+
 
         // Verstuur job als alles ok is
         debug.notify("debug", "Verstuur job naar backend...");
@@ -240,6 +279,7 @@ const JobCreator = () => {
                                         type="text"
                                         inputValue={jobDetails.number}
                                         handleInputChange={(val) => updateJobDetails("number", val)}
+                                        error={errors.number}
                                     />
                                 </FormGroup>
 
@@ -249,6 +289,7 @@ const JobCreator = () => {
                                         type="text"
                                         inputValue={jobDetails.name}
                                         handleInputChange={(val) => updateJobDetails("name", val)}
+                                        error={errors.name}
                                     />
                                 </FormGroup>
 
@@ -258,6 +299,7 @@ const JobCreator = () => {
                                         type="text"
                                         inputValue={jobDetails.info}
                                         handleInputChange={(val) => updateJobDetails("info", val)}
+                                        error={errors.info}
                                     />
                                 </FormGroup>
                             </FormGrid>
@@ -275,6 +317,7 @@ const JobCreator = () => {
                                         inputValue={repeatByCylinder}
                                         handleInputChange={(val) => setRepeatByCylinder(parseInt(val) || "")}
                                         variant="narrow"
+                                        error={errors.repeat}
                                     />
                                 </FormGroup>
                             </FormGrid>
@@ -290,8 +333,12 @@ const JobCreator = () => {
                                             id={`plate-${key}`}
                                             type="text"
                                             inputValue={val}
-                                            handleInputChange={(v) => setTemplatePlate({ ...templatePlate, [key]: v })}
+                                            handleInputChange={(v) => {
+                                                setTemplatePlate({ ...templatePlate, [key]: v });
+                                                clearFieldError(setErrors, `plate.${key}`, fieldValidators.plate[key], v);
+                                            }}
                                             variant="narrow"
+                                            error={errors[`plate.${key}`]}
                                         />
                                     </FormGroup>
                                 ))}
@@ -337,8 +384,10 @@ const JobCreator = () => {
                                         id="job-number-edit"
                                         type="text"
                                         inputValue={job.number}
-                                        handleInputChange={(val) => updateJobField("number", val)}
+                                        // handleInputChange={(val) => updateJobField("number", val)}
                                         variant="narrow"
+                                        disabled={true}
+
                                     />
                                 </FormGroup>
                                 <FormGroup label="Name" htmlFor="job-name-edit">
@@ -346,8 +395,9 @@ const JobCreator = () => {
                                         id="job-name-edit"
                                         type="text"
                                         inputValue={job.name}
-                                        handleInputChange={(val) => updateJobField("name", val)}
+                                        // handleInputChange={(val) => updateJobField("name", val)}
                                         variant="narrow"
+                                        disabled={true}
                                     />
                                 </FormGroup>
                                 <FormGroup label="Info" htmlFor="job-info-edit">
@@ -355,8 +405,9 @@ const JobCreator = () => {
                                         id="job-info-edit"
                                         type="text"
                                         inputValue={job.info}
-                                        handleInputChange={(val) => updateJobField("info", val)}
+                                        // handleInputChange={(val) => updateJobField("info", val)}
                                         variant="narrow"
+                                        disabled={true}
                                     />
                                 </FormGroup>
                                 <FormGroup label="Date" htmlFor="job-date-edit">
@@ -366,7 +417,7 @@ const JobCreator = () => {
                                         inputValue={job.date}
                                         handleInputChange={() => {}}
                                         variant="narrow"
-                                        disabled
+                                        disabled={true}
                                     />
                                 </FormGroup>
                                 <FormGroup label="Repeat" htmlFor="job-repeat-edit">
@@ -374,8 +425,10 @@ const JobCreator = () => {
                                         id="job-repeat-edit"
                                         type="number"
                                         inputValue={job.repeat}
-                                        handleInputChange={(val) => updateJobField("repeat", parseInt(val))}
+                                        handleInputChange={() => {}}// handleInputChange={(val) => updateJobField("repeat", parseInt(val))}
                                         variant="narrow"
+                                        error={errors["job.repeat"]}
+                                        disabled={true}
                                     />
                                 </FormGroup>
                             </FormGrid>
@@ -386,22 +439,22 @@ const JobCreator = () => {
                             <section className="boxed-section" key={cylinder.id}>
                                 <h2 className="section-title boxed-section-title">Cylinder {cylinder.id}</h2>
 
-                                <FormGrid direction="row" theme="dark">
-                                    <FormGroup label="Naam" htmlFor={`cylinder-name-${cylinder.id}`}>
-                                        <InputField
-                                            id={`cylinder-name-${cylinder.id}`}
-                                            type="text"
-                                            inputValue={cylinder.name}
-                                            handleInputChange={(val) => updateCylinder(cylinder.id, "name", val)}
-                                            variant="narrow"
-                                        />
-                                    </FormGroup>
-                                </FormGrid>
+                                {/*<FormGrid direction="row" theme="dark">*/}
+                                {/*    <FormGroup label="Naam" htmlFor={`cylinder-name-${cylinder.id}`}>*/}
+                                {/*        <InputField*/}
+                                {/*            id={`cylinder-name-${cylinder.id}`}*/}
+                                {/*            type="text"*/}
+                                {/*            inputValue={cylinder.name}*/}
+                                {/*            handleInputChange={(val) => updateCylinder(cylinder.id, "name", val)}*/}
+                                {/*            variant="narrow"*/}
+                                {/*            disabled*/}
+                                {/*        />*/}
+                                {/*    </FormGroup>*/}
+                                {/*</FormGrid>*/}
 
                                 {cylinder.plates.map((plate) => (
                                     <FormGrid direction="row" theme="dark" key={plate.id}>
-                                        <span>Plate {plate.id}</span>
-
+                                        <h3 className="section-title boxed-section-title">Plate {plate.id}</h3>
                                         <FormGroup label="Width" htmlFor={`plate-${plate.id}-width`}>
                                             <InputField
                                                 id={`plate-${plate.id}-width`}
@@ -411,6 +464,7 @@ const JobCreator = () => {
                                                     updatePlate(cylinder.id, plate.id, "width", val)
                                                 }
                                                 variant="narrow"
+                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].width`]}
                                             />
                                         </FormGroup>
 
@@ -423,6 +477,7 @@ const JobCreator = () => {
                                                     updatePlate(cylinder.id, plate.id, "topHeight", val)
                                                 }
                                                 variant="narrow"
+                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].topHeight`]}
                                             />
                                         </FormGroup>
 
@@ -435,6 +490,7 @@ const JobCreator = () => {
                                                     updatePlate(cylinder.id, plate.id, "bottomHeight", val)
                                                 }
                                                 variant="narrow"
+                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].bottomHeight`]}
                                             />
                                         </FormGroup>
 
@@ -447,6 +503,7 @@ const JobCreator = () => {
                                                     updatePlate(cylinder.id, plate.id, "x", val)
                                                 }
                                                 variant="narrow"
+                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].x`]}
                                             />
                                         </FormGroup>
 
@@ -459,6 +516,7 @@ const JobCreator = () => {
                                                     updatePlate(cylinder.id, plate.id, "y", val)
                                                 }
                                                 variant="narrow"
+                                                error={errors[`cylinder[${cylinder.id}].plate[${plate.id}].y`]}
                                             />
                                         </FormGroup>
                                     </FormGrid>

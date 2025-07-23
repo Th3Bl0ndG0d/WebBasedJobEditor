@@ -9,6 +9,8 @@ function InputField({
 						required = false,
 						variant = 'normal',
 						className: additionalClass = '',
+						error = false,
+						disabled=false,
 					}) {
 	// Map variant naar classnames
 	const variantMap = {
@@ -18,7 +20,13 @@ function InputField({
 	};
 
 	// Gebruik variant of fallback
-	const className = `${variantMap[variant] || variantMap.normal} ${additionalClass}`.trim();
+	const className = [
+		variantMap[variant] || variantMap.normal,
+		additionalClass,
+		error && 'input-error'
+	].filter(Boolean).join(' ');
+
+
 
 	return (
 		<input
@@ -28,6 +36,7 @@ function InputField({
 			value={inputValue}
 			placeholder={placeholder}
 			required={required}
+			disabled={disabled}
 			onChange={(e) => handleInputChange(e.target.value)}
 		/>
 	);
