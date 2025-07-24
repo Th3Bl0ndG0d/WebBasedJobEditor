@@ -1,4 +1,25 @@
 # Web Based Job Editor (WBJE)
+
+## Inhoudsopgave
+
+- [Introductie](#Inleiding)
+- [Benodigdheden uit `.env`](#required-env-data)
+- [Database script uploaden](#db-script-uploaden-in-noviapi)
+- [Installaties en hun betekenis](#installaties-en-hun-betekenis)
+- [Toasts en iconen](#visuele-feedback-mbv-toast)
+- [Applicatie starten](#applicatie-starten)
+- [Inloggen als operator](#inloggen-operator)
+- [Inloggen als beheerder](#inloggen-administrator)
+- [Job overzicht](#joboverzicht)
+- [Job bewerken](#job-bewerken)
+- [Job verwijderen](#job-verwijderen)
+- [Job aanmaken](#job-aanmaken)
+- [Nieuwe gebruiker via loginpagina](#nieuwe-gebruiker-toevoegen-vanuit-login-scherm)
+- [Nieuwe gebruiker via profielpagina (admin)](#nieuwe-gebruiker-toevoegen-vanuit-de-profiel-pagina-alleen-beschikbaar-voor-beheerders)
+- [Profiel bewerken als operator](#gebruiker-profiel-bewerken-vanuit-de-profiel-pagina-operator)
+- [Profiel bewerken of verwijderen als admin](#gebruiker-profiel-bewerken-vanuit-de-profiel-pagina-administrator)
+
+# Inleiding
 De Web Based Job Editor (WBJE) is een moderne React-applicatie. De applicatie stelt gebruikers in staat om visueel jobs 
 samen te stellen, cilinders en platen te creëren. Inclusief ondersteuning voor gebruikersauthenticatie, rol beheer en 
 een gebruiksvriendelijke interface.
@@ -202,7 +223,7 @@ Velden die worden ingevoerd:
 Klok nu op **Genereer Job** Er wordt nu een overzicht getoond waarin alle gegenereerde cilinders en platen nog bewerkt 
 kunnen worden voordat de job wordt opgeslagen.
 
-![NewJobOverZicht.png](/src/assets/screenshots/NewJobOverZicht.png)
+![NewJobOverzicht.png](/src/assets/screenshots/NewJobOverzicht.png)
 
 Druk op **Creëer Job** om de job daadwerkelijk naar de API te sturen voor opslag. 
 Een toast melding zal een melding sturen dat het gelukt is.
